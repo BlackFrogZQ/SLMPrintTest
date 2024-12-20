@@ -1,15 +1,24 @@
 #include "src/ui/mainWindow.h"
-#include <QApplication>
 #include <QIcon>
+#include <QtSingleApplication>
+#pragma comment(lib, "user32.lib")
 
 void initSystemService();
+void closeSystemService();
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    a.setWindowIcon(QIcon(":res/ico.png"));
+    QtSingleApplication instance(argc, argv);
+    if (instance.sendMessage("Wake up!"))
+    {
+        return 0;
+    }
+    instance.setWindowIcon(QIcon(":res/ico.png"));
     initSystemService();
     CMainWindow w;
     w.show();
-    return a.exec();
+    instance.setActivationWindow(&w);
+    int code = instance.exec();
+    closeSystemService();
+    return code;
 }

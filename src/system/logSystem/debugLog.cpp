@@ -1,24 +1,18 @@
-#include "../../ui/mainWindow.h"
-#include "../systemService.h"
+#include "system/systemService.h"
 #include <QString>
 #include <QDateTime>
 #include <iostream>
 
-void logOutput(QtMsgType p_type, const QMessageLogContext& p_context, const QString& p_msg)
+void logOutput(QtMsgType p_type, const QMessageLogContext &p_context, const QString &p_msg)
 {
     QString msgType("");
     QString msg = p_msg;
-    msg.replace('\"', "");
-    QString wirteMsg = QString::fromLocal8Bit("[%1]:%2").arg(QDateTime::currentDateTime().toString("hh.mm.ss")).arg(msg);
+    QString wirteMsg = QString("[%1]:%2").arg(QDateTime::currentDateTime().toString("hh.mm.ss.zzz")).arg(msg);
     switch (p_type)
     {
     case QtInfoMsg:
         msgType = QString("Info");
-        if (mainWindow() != nullptr)
-        {
-            mainWindow()->printMsg(msg);
-            msg.clear();
-        }
+        sys()->printMsg(msg);
         break;
     case QtDebugMsg:
         msgType = QString("Debug");
@@ -36,7 +30,11 @@ void logOutput(QtMsgType p_type, const QMessageLogContext& p_context, const QStr
         msgType = QString("Unknown Type");
         break;
     }
-    wirteMsg = QString::fromLocal8Bit("%1消息--%2,\nfile:%3,line:%4").arg(msgType, 12, ' ').arg(wirteMsg).arg(p_context.file).arg(p_context.line);
-    // 设置输出信息格式
-    std::cout << wirteMsg.toLocal8Bit().data() << std::endl;
+    const QString cFile = QString("file:%1,line:%2")
+                              .arg(p_context.file, 20, ' ')
+                              .arg(p_context.line);
+
+    wirteMsg = QString("%3%1msg--%2\n").arg(msgType, 12, '-').arg(wirteMsg).arg(cFile,-100,' ');
+    // 璁剧疆杈撳嚭淇℃伅鏍煎紡
+    std::cout << wirteMsg.toUtf8().data() << std::endl;
 };
