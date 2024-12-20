@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <QAbstractItemModel>
 namespace TIGER_ParaDef
 {

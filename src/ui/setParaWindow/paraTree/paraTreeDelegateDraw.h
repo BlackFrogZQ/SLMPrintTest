@@ -1,4 +1,4 @@
-﻿#include <QPainter>
+#include <QPainter>
 #include <QDebug>
 #include "para/define/paraDef.h"
 using namespace TIGER_ParaDef;
@@ -12,8 +12,7 @@ int getIndentation(IParaNode *node)
         indentation++;
         node = node->m_parent;
     };
-    // 是否可见拷贝了一层
-    return indentation-1;
+    return indentation;
 }
 
 IParaNode *nodeFromIndex(const QModelIndex &index)

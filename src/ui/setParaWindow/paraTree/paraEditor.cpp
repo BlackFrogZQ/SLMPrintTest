@@ -1,4 +1,4 @@
-﻿#include "paraEditor.h"
+#include "paraEditor.h"
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QRadioButton>
@@ -33,8 +33,8 @@ CParaEditor::CParaEditor(QWidget *parent, const TIGER_ParaDef::CParaNodeAttribut
         pEditor->setCheckable(true);
         pEditor->setStyleSheet(
             QString("QRadioButton::indicator{width:%1px;height:%2px;}"
-                    "QRadioButton::indicator:unchecked{image:url(%3);}"
-                    "QRadioButton::indicator:checked {image:url(%4);}")
+                    "QRadioButton::indicator:unchecked{image: url(%3);}"
+                    "QRadioButton::indicator:checked {image: url(%4);}")
                 .arg(w)
                 .arg(h)
                 .arg(cBoolCloseIco)

@@ -1,10 +1,10 @@
-﻿#include "paraTreeDelegate.h"
+#include "paraTreeDelegate.h"
 #include "paraEditor.h"
 #include <QPainter>
 #include <QDebug>
 #include "paraTreeDelegateDraw.h"
 
-const int cMargin = 20;
+const int cMargin = 5;
 const int cMinH = 35;
 const int cMinFontSize = 10;
 
@@ -74,10 +74,9 @@ void CParaTreeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     const int cWidth = option.rect.width();
     const int cHeight = option.rect.height();
     const int cColumn = index.column();
-    if (cColumn == 0)
+    if (cColumn)
     {
-        int margin = qMax(0,  getIndentation(node) * cMargin);
-        styleOption.rect = QRect(cX + margin, option.rect.y(), cWidth - margin, cHeight);
+        styleOption.rect = QRect(cX + getIndentation(node) * cMargin, option.rect.y(), cWidth - getIndentation(node) * cMargin, cHeight);
     }
     const CParaNodeAttributes cParaNodeAttributes = node->m_attributes;
     drawBack(painter, styleOption, option.rect, cParaNodeAttributes.type, cColumn);

@@ -157,11 +157,11 @@ QVariant CParaTreeModel::headerData(int section, Qt::Orientation orientation, in
     {
         if (section == 0)
         {
-            return QString::fromLocal8Bit("变量名称");
+            return QObject::tr("变量名称");
         }
         else if (section == 1)
         {
-            return QString::fromLocal8Bit("变量值");
+            return QObject::tr("变量值");
         }
     }
     return QVariant();

@@ -1,4 +1,4 @@
-﻿#include <QWidget>
+#include <QWidget>
 #include "para/define/paraDef.h"
 class CParaEditor : public QWidget
 {

@@ -1,6 +1,7 @@
 ﻿#include "setParaWindow.h"
 #include "paraTree/paraModel.h"
 #include "paraTree/paraTreeDelegate.h"
+#include "para/para.h"
 #include "para/define/paraDef.h"
 #include "ui/mainWindow.h"
 
@@ -12,14 +13,15 @@
 #include <QScrollBar>
 using namespace TIGER_ParaDef;
 CSetParaWindow::CSetParaWindow(QWidget *parent)
-    : INoExcCancelDialog(parent),
+    : TIGER_UIBasic::INoExcCancelDialog(parent,Qt::WindowTitleHint | Qt::CustomizeWindowHint),
       m_pTreeModel(nullptr)
 {
-    // setWindowFlag(Qt::WindowStaysOnTopHint, CUiBasic::isTop);
+    setWindowFlag(Qt::WindowStaysOnTopHint, CUiBasic::isTop);
     setWindowFlag(Qt::WindowCloseButtonHint, false);
     setWindowFlag(Qt::WindowContextHelpButtonHint, false);
 
-    setWindowTitle(cnStr("设置参数"));
+    setWindowTitle(tr("设置参数"));
+    // setMinimumSize(mainWindow()->centerWiget()->size() * 0.85);
     setAutoFillBackground(true);
     m_treeView = new QTreeView;
     const QString cStyleSheet = "border:1px groove rgb(203,217,235);border-radius:3px;background:transparent;background-color: rgb(235,244,255);";
@@ -31,13 +33,17 @@ CSetParaWindow::CSetParaWindow(QWidget *parent)
     m_treeView->setItemDelegate(new CParaTreeDelegate);
     m_treeView->setModel(m_pTreeModel);
     m_treeView->header()->setSectionResizeMode(QHeaderView::Stretch);
-    auto pSave = new QPushButton(cnStr("保存"));
+    auto pOpenParaPath = TIGER_UIBasic::noKeyPushButton(tr("参数文件夹"));
+    connect(pOpenParaPath, &QPushButton::clicked, this, [this]()
+            {paraService()->openFilePath();});
+    auto pSave = TIGER_UIBasic::noKeyPushButton(tr("保存"));
     connect(pSave, &QPushButton::clicked, this, [this]()
             {m_bIsSave = true;this->close(); });
-    auto pCancel = new QPushButton(cnStr("取消"));
+    auto pCancel = TIGER_UIBasic::noKeyPushButton(tr("取消"));
     connect(pCancel, &QPushButton::clicked, this, [this]()
             {m_bIsSave = false;this->close(); });
     QHBoxLayout *pbLayout = new QHBoxLayout;
+    pbLayout->addWidget(pOpenParaPath);
     pbLayout->addStretch();
     pbLayout->addWidget(pSave);
     pbLayout->addWidget(pCancel);
@@ -46,10 +52,9 @@ CSetParaWindow::CSetParaWindow(QWidget *parent)
     hLayout->addWidget(m_treeView);
     hLayout->addLayout(pbLayout);
     this->setLayout(hLayout);
-    connect(m_treeView->verticalScrollBar(), &QScrollBar::valueChanged, this, [=](const int &p_value)
+    connect(m_treeView->verticalScrollBar(), &QScrollBar::valueChanged, this, [this]()
             { m_treeView->viewport()->update(); });
-    setMinimumSize(650, 550);
-    setMaximumSize(mainWindow()->size() * 0.85);
+    resize(this->minimumSize());
 }
 
 CSetParaWindow ::~CSetParaWindow()

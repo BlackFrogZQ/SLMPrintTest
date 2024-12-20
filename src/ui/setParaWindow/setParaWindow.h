@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "ui/basic.h"
 namespace TIGER_ParaDef
 {
@@ -6,7 +6,7 @@ namespace TIGER_ParaDef
 }
 class QTreeView;
 class CParaTreeModel;
-class CSetParaWindow : public INoExcCancelDialog
+class CSetParaWindow : public TIGER_UIBasic::INoExcCancelDialog
 {
     Q_OBJECT
 public:

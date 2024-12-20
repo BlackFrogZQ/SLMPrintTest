@@ -1,5 +1,6 @@
 ﻿#include "mainWindow.h"
 #include "basic.h"
+#include "logTextBrowser/textBrowser.h"
 #include "system/basic.h"
 #include "hal/DZSTMark/DZSTMark.h"
 #include "controlWindow/controlWindow.h"
@@ -21,6 +22,8 @@ CMainWindow::CMainWindow(QWidget *parent) : QWidget(parent)
     m_pCDZSTMark = new CDZSTMark(m_hWnd);
 
     init();
+
+    myInfo << cnStr("程序开始");
 }
 
 CMainWindow::~CMainWindow()
@@ -30,7 +33,8 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::printMsg(QString p_msg)
 {
-    m_pOutMsg->append(p_msg);
+    const QString cFont = "<font color=\"#0000FF\">%1</font>";
+    m_pOutMsg->append(cFont.arg(p_msg.replace("\n", "<br>")));
     m_pOutMsg->moveCursor(m_pOutMsg->textCursor().End);
 }
 
@@ -50,9 +54,8 @@ void CMainWindow::init()
     m_pControl = new CControl(this, m_pCDZSTMark);
 
     // 输入输出窗口
-    m_pOutMsg = new QTextBrowser;
-    m_pOutMsg->setOpenLinks(false);
-    m_pOutMsg->setOpenExternalLinks(false);
+    m_pOutMsg = new CTextBrowser(this, this);
+    const QString cStyleSheet = "border:1px groove rgb(203,217,235);border-radius:3px;background:transparent;background-color: rgba(255, 255, 255,150);";
     m_pOutMsg->setStyleSheet(cStyleSheet);
     m_pOutMsg->document()->setMaximumBlockCount(300);
     m_pOutMsg->setFixedHeight(100);

@@ -4,7 +4,10 @@
 #include <QXmlStreamReader>
 #include <QFile>
 #include <QDir>
+#include <QUrl>
 #include <QDebug>
+#include <QDesktopServices>
+#include <QStandardPaths>
 
 namespace TIGER_Para
 {
@@ -12,6 +15,11 @@ namespace TIGER_Para
     {
         assert(!p_file.isEmpty());
         m_xmlFilePath = cnStr("%1/%2").arg(QDir::currentPath()).arg(p_file);
+    }
+
+    void IParaService::openFilePath() const
+    {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo(m_xmlFilePath).absolutePath()));
     }
 
     using namespace TIGER_ParaDef;

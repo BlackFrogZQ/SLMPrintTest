@@ -1,74 +1,152 @@
-﻿#include "basic.h"
+#include "basic.h"
 #include "messageBox/messageBox.h"
-#include <QLayout>
-#include <QToolTip>
 #include <QKeyEvent>
-#include <QPainter>
-#include <QGuiApplication>
 #include <QScreen>
+#include <QGuiApplication>
+#include <QPushButton>
+#include <QLayout>
+#include <QTableWidgetItem>
+#include <QPainter>
 #include <QPainterPath>
-
-int warningBox(QWidget *parent, const QString &title, const QString &text)
+#include <QLabel>
+#include <QToolTip>
+namespace TIGER_UIBasic
 {
-    return CMessageBox::warning(parent, title, text);
-}
-void showToolTip(QWidget *p_pWidget, const QString &p_tip)
-{
-    QFont font = QToolTip::font();
-    font.setBold(true);
-    font.setPointSize(12);
-    QToolTip::setFont(font);
-    int w = QFontMetrics(font).maxWidth();
-    const QString st = "<b style=\"color:red; bordet-radius:5px; background-color: white;\">%1</b>";
-    QToolTip::showText(QCursor::pos() + QPoint(w, 0), st.arg(p_tip), p_pWidget, QRect(), 3000);
-    myInfo << "showToolTip" << p_tip;
-}
-
-void deleteLayout(QLayout *p_layout)
-{
-    if (p_layout == nullptr)
+    int warningBox(QWidget *parent, const QString &title, const QString &text)
     {
-        return;
+        return CMessageBox::warning(parent, title, text);
     }
 
-    int itemCount = p_layout->count();
-    for (int i = (itemCount - 1); i >= 0; --i)
+    int questionBox(QWidget *parent, const QString &title, const QString &text)
     {
-        QLayoutItem *item = p_layout->takeAt(i);
-        if (item != NULL)
+        return CMessageBox::question(parent, title, text);
+    }
+
+    void showToolTip(QWidget *p_pWidget, const QString &p_tip)
+    {
+        QFont font = QToolTip::font();
+        font.setBold(true);
+        font.setPointSize(12);
+        QToolTip::setFont(font);
+        int w = QFontMetrics(font).maxWidth();
+        const QString st = "<b style=\"color:red; bordet-radius:5px; background-color: white;\">%1</b>";
+        QToolTip::showText(QCursor::pos() + QPoint(w, 0), st.arg(p_tip), p_pWidget, QRect(), 3000);
+        myInfo << p_tip;
+    }
+    QTableWidgetItem *getTableWidgetItem(const QString &p_text, int p_textAlignment)
+    {
+        QTableWidgetItem *pItem = new QTableWidgetItem(p_text);
+        pItem->setTextAlignment(p_textAlignment);
+        return pItem;
+    }
+    QPushButton *noKeyPushButton(QString p_name)
+    {
+        auto p = new QPushButton(p_name);
+        p->setFocusPolicy(Qt::NoFocus);
+        return p;
+    }
+
+    QToolButton *getToolBtn(QWidget *p_pParent, QString text,int p_h,  Qt::ToolButtonStyle p_toolBtnStyle)
+    {
+        auto pToolBtn = new QToolButton(p_pParent);
+        pToolBtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        pToolBtn->setFixedHeight(p_h);
+        pToolBtn->setToolButtonStyle(p_toolBtnStyle);
+        pToolBtn->setText(text);
+        return pToolBtn;
+    }
+
+    QHBoxLayout *getHLableLayout(QString p_lbName, QWidget *p_w, int p_h)
+    {
+        QLabel *lb = getLabel(p_lbName, p_h);
+        lb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        p_w->setFixedHeight(p_h);
+        QHBoxLayout *pLayout = new QHBoxLayout;
+        pLayout->addWidget(lb);
+        pLayout->addWidget(p_w);
+        pLayout->setMargin(0);
+        pLayout->setSpacing(0);
+        return pLayout;
+    }
+    QVBoxLayout *getVLableLayout(QString p_lbName, QWidget *p_widget, int p_w)
+    {
+        QLabel *lb = getLabel(p_lbName);
+        lb->setAlignment(Qt::AlignCenter);
+        if (p_w == 0)
         {
-            p_layout->removeWidget(item->widget());
+            lb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+            p_widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        }
+        else
+        {
+            lb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            lb->setFixedWidth(qMax(double(p_w), p_w * CUiBasic::getScale()));
+            p_widget->setFixedWidth(qMax(double(p_w), p_w * CUiBasic::getScale()));
+            p_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        }
+        QVBoxLayout *pLayout = new QVBoxLayout;
+        pLayout->addWidget(lb);
+        pLayout->addWidget(p_widget);
+        pLayout->setMargin(0);
+        pLayout->setSpacing(0);
+        return pLayout;
+    }
+
+    QLabel *getLabel(QString p_name, int p_h, Qt::Alignment p_aalignment)
+    {
+        QLabel *lb = new QLabel(p_name);
+        lb->setAlignment(p_aalignment);
+        lb->setFixedHeight(p_h);
+        lb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        return lb;
+    }
+
+    void TIGER_UIBasic::deleteLayout(QLayout *p_layout)
+    {
+        if (p_layout == nullptr)
+        {
+            return;
+        }
+
+        int itemCount = p_layout->count();
+        for (int i = (itemCount - 1); i >= 0; --i)
+        {
+            QLayoutItem *item = p_layout->takeAt(i);
+            if (item != NULL)
+            {
+                p_layout->removeWidget(item->widget());
+            }
+        }
+        delete p_layout;
+        p_layout = nullptr;
+    };
+
+    void IDialog::paintEvent(QPaintEvent *event)
+    {
+        QPainter paint;
+        paint.begin(this);
+        paint.setRenderHint(QPainter::Antialiasing);
+        QPainterPath path;
+        path.addRoundedRect(this->rect(), 5, 5);
+        // Qt默认颜色
+
+        paint.fillPath(path, QColor(235, 244, 255));
+        paint.setPen(QPen(QColor(197, 197, 197), 2));
+        paint.drawPath(path);
+        QDialog::paintEvent(event);
+    }
+
+    void INoExcCancelDialog::keyPressEvent(QKeyEvent *event)
+    {
+        switch (event->key())
+        {
+        case Qt::Key_Escape:
+            break;
+        default:
+            IDialog::keyPressEvent(event);
         }
     }
-    delete p_layout;
-    p_layout = nullptr;
 };
-
-void IDialog::paintEvent(QPaintEvent *event)
-{
-    QPainter paint;
-    paint.begin(this);
-    paint.setRenderHint(QPainter::Antialiasing);
-    QPainterPath path;
-    path.addRoundedRect(this->rect(), 5, 5);
-    // Qt默认颜色
-
-    paint.fillPath(path, QColor(235, 244, 255));
-    paint.setPen(QPen(QColor(197, 197, 197), 2));
-    paint.drawPath(path);
-    QDialog::paintEvent(event);
-}
-
-void INoExcCancelDialog::keyPressEvent(QKeyEvent *event)
-{
-    switch (event->key())
-    {
-    case Qt::Key_Escape:
-        break;
-    default:
-        IDialog::keyPressEvent(event);
-    }
-}
 
 double CUiBasic::stScale = CUiBasic::getDefScale();
 bool CUiBasic::isTop = false;
@@ -120,84 +198,4 @@ void CUiBasic::getScreen(int &p_w, int &p_h)
     p_w = size.width();
     p_h = size.height();
     // screen->primaryOrientation();
-}
-
-
-
-#include <QMouseEvent>
-#include <QPainter>
-
-CDragMainWidgetLabel::CDragMainWidgetLabel(QWidget *p_pParent)
-    : QLabel(p_pParent), m_canDragMove(true), m_isDragMove(false), m_isOnlyShowImage(false)
-{
-    setAlignment(Qt::AlignCenter);
-}
-
-CDragMainWidgetLabel::~CDragMainWidgetLabel()
-{
-}
-
-void CDragMainWidgetLabel::setCanMove(bool p_canMove)
-{
-    m_canDragMove = p_canMove;
-}
-
-void CDragMainWidgetLabel::slotSetOnlyShowImage(bool p_isOnlyShowImage)
-{
-    m_isOnlyShowImage = p_isOnlyShowImage;
-    emit sigOnlyShowImage(m_isOnlyShowImage);
-}
-
-void CDragMainWidgetLabel::leaveEvent(QEvent *event)
-{
-    m_isDragMove = false;
-}
-
-void CDragMainWidgetLabel::mousePressEvent(QMouseEvent *ev)
-{
-    if (m_canDragMove && (ev->button() & Qt::LeftButton) && (!m_isDragMove))
-    {
-        m_isDragMove = true;
-        m_lastPoint = ev->globalPos();
-        return;
-    }
-    QLabel::mousePressEvent(ev);
-}
-
-void CDragMainWidgetLabel::mouseMoveEvent(QMouseEvent *p_event)
-{
-    if (m_canDragMove && m_isDragMove && (p_event->buttons() & Qt::LeftButton))
-    {
-        emit sigDragMove(p_event->globalPos() - m_lastPoint);
-        m_lastPoint = p_event->globalPos();
-        return;
-    }
-    QLabel::mouseMoveEvent(p_event);
-}
-
-void CDragMainWidgetLabel::mouseReleaseEvent(QMouseEvent *p_event)
-{
-    if (m_isDragMove && (p_event->button() & Qt::LeftButton))
-    {
-        m_isDragMove = false;
-        return;
-    }
-    QLabel::mouseReleaseEvent(p_event);
-}
-
-void CDragMainWidgetLabel::mouseDoubleClickEvent(QMouseEvent *p_event)
-{
-    if ((p_event->buttons() & Qt::LeftButton))
-    {
-        slotSetOnlyShowImage(!m_isOnlyShowImage);
-        emit sigMouseDoubleClick();
-        return;
-    }
-    QLabel::mouseDoubleClickEvent(p_event);
-}
-
-void CDragMainWidgetLabel::resizeEvent(QResizeEvent *p_event)
-{
-    QLabel::resizeEvent(p_event);
-    emit sigResize(p_event->size(),p_event->oldSize());
 }

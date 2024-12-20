@@ -11,6 +11,7 @@ namespace TIGER_Para
     public:
         virtual ~IParaService(){};
         void setFileName(QString p_basiceName);
+        void openFilePath() const;
         virtual void load() = 0;
         virtual void save() = 0;
 

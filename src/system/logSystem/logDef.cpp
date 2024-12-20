@@ -1,6 +1,5 @@
 #include "logDef.h"
 #include "system/tool/fileTool.h"
-#include "../basic.h"
 #include <QDateTime>
 #include <QMutex>
 #include <QDir>
