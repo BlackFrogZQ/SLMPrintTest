@@ -36,20 +36,20 @@ namespace TIGER_DZSTMarkDef
     struct CLaserParas
     {
         CLaserDevice LaserDevice = cltIPG;       //激光器类型
-        float LaserOnDelay = 111;             //开激光延时(单位us)
-        float LaserOffDelay = 111;            //关激光延时(单位us)
-        float FPKDelay;                 //首脉冲抑制延时(单位us)
-        float FPKLength;                //首脉冲抑制长度(单位us)
-        float QDelay;                   //出光Q频率延时(单位us)
-        float DutyCycle = 0.5;                //出光时占空比，(0~1)
-        float Frequency = 20;                //出光时频率kHz
-        float StandbyFrequency = 20;         //不出光Q频率(单位kHz);
-        float StandbyDutyCycle = 0.5;         //不出光Q占空比(0~1);
-        float LaserPower = 50;               //激光能量百分比(0~100)，50代表50%
+        double LaserOnDelay = 111;             //开激光延时(单位us)
+        double LaserOffDelay = 111;            //关激光延时(单位us)
+        double FPKDelay;                 //首脉冲抑制延时(单位us)
+        double FPKLength;                //首脉冲抑制长度(单位us)
+        double QDelay;                   //出光Q频率延时(单位us)
+        double DutyCycle = 0.5;                //出光时占空比，(0~1)
+        double Frequency = 20;                //出光时频率kHz
+        double StandbyFrequency = 20;         //不出光Q频率(单位kHz);
+        double StandbyDutyCycle = 0.5;         //不出光Q占空比(0~1);
+        double LaserPower = 50;               //激光能量百分比(0~100)，50代表50%
         unsigned int AnalogMode = 0;        //1代表使用模拟量输出来控制激光器能量（0~10V）
         unsigned int Waveform = 1;          //SPI激光器波形号（0~63）
         unsigned int PulseWidthMode;    //0,不开启MOPA脉宽使能模式， 1,开启MOPA激光器脉宽使能
-        unsigned int PulseWidth;        //MOPA激光器脉宽值 单位（ns）
+        unsigned int PulseWidth;        //MOPA激光器脉宽值 单位（us）
         CLaserParas::CLaserParas()
         {}
     };

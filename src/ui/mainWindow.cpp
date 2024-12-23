@@ -5,6 +5,7 @@
 #include "hal/DZSTMark/DZSTMark.h"
 #include "controlWindow/controlWindow.h"
 #include "multipointCorrectWindow/multipointCorrectWindow.h"
+#include "menuBar/menuBar.h"
 #include <QTextBrowser>
 #include <QVBoxLayout>
 
@@ -52,6 +53,7 @@ void CMainWindow::init()
 {
     m_pMultipointCorrect = new CMultipointCorrect(this, m_pCDZSTMark);
     m_pControl = new CControl(this, m_pCDZSTMark);
+    m_pMenuBar = new CMainWindowMenuBar(this);
 
     // 输入输出窗口
     m_pOutMsg = new CTextBrowser(this, this);
@@ -61,6 +63,7 @@ void CMainWindow::init()
     m_pOutMsg->setFixedHeight(100);
 
     QVBoxLayout *pLayout = new QVBoxLayout();
+    pLayout->addWidget(m_pMenuBar);
     pLayout->addWidget(m_pMultipointCorrect);
     pLayout->addWidget(m_pControl);
     pLayout->addWidget(m_pOutMsg);

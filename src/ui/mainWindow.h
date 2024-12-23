@@ -6,6 +6,7 @@
 
 class CDZSTMark;
 class QTextBrowser;
+class CMainWindowMenuBar;
 const QString cStyleSheet = "border:1px groove gray;\nborder-radius:10px;\npadding:2px 3px;\nbackground:transparent;\nbackground-color: rgb(255, 255, 255,150);";
 
 class CMainWindow: public QWidget
@@ -28,6 +29,7 @@ private:
 	QTextBrowser* m_pOutMsg;
     QWidget* m_pControl;
     QWidget* m_pMultipointCorrect;
+    CMainWindowMenuBar *m_pMenuBar;
 };
 
 CMainWindow* mainWindow();

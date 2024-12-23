@@ -20,7 +20,7 @@ CSetParaWindow::CSetParaWindow(QWidget *parent)
     setWindowFlag(Qt::WindowCloseButtonHint, false);
     setWindowFlag(Qt::WindowContextHelpButtonHint, false);
 
-    setWindowTitle(tr("设置参数"));
+    setWindowTitle(cnStr("设置参数"));
     // setMinimumSize(mainWindow()->centerWiget()->size() * 0.85);
     setAutoFillBackground(true);
     m_treeView = new QTreeView;
@@ -33,13 +33,13 @@ CSetParaWindow::CSetParaWindow(QWidget *parent)
     m_treeView->setItemDelegate(new CParaTreeDelegate);
     m_treeView->setModel(m_pTreeModel);
     m_treeView->header()->setSectionResizeMode(QHeaderView::Stretch);
-    auto pOpenParaPath = TIGER_UIBasic::noKeyPushButton(tr("参数文件夹"));
+    auto pOpenParaPath = TIGER_UIBasic::noKeyPushButton(cnStr("参数文件夹"));
     connect(pOpenParaPath, &QPushButton::clicked, this, [this]()
             {paraService()->openFilePath();});
-    auto pSave = TIGER_UIBasic::noKeyPushButton(tr("保存"));
+    auto pSave = TIGER_UIBasic::noKeyPushButton(cnStr("保存"));
     connect(pSave, &QPushButton::clicked, this, [this]()
             {m_bIsSave = true;this->close(); });
-    auto pCancel = TIGER_UIBasic::noKeyPushButton(tr("取消"));
+    auto pCancel = TIGER_UIBasic::noKeyPushButton(cnStr("取消"));
     connect(pCancel, &QPushButton::clicked, this, [this]()
             {m_bIsSave = false;this->close(); });
     QHBoxLayout *pbLayout = new QHBoxLayout;

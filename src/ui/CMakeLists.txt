@@ -3,6 +3,8 @@ add_subdirectory(messageBox)
 add_subdirectory(controlWindow)
 add_subdirectory(multipointCorrectWindow)
 add_subdirectory(logTextBrowser)
+add_subdirectory(menuBar)
+add_subdirectory(inputDialog)
 
 aux_source_directory(. DIR_SYSTEM_SRCS)
 add_library(uiLib ${DIR_SYSTEM_SRCS})
@@ -12,4 +14,6 @@ target_link_libraries(uiLib
     messageBoxLib
     controlLib
     multipointCorrectLib
-    logTextBrowserLib)
+    logTextBrowserLib
+    menuBarLib
+    inputDialogLib)
