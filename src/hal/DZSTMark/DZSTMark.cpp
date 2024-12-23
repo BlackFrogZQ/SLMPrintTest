@@ -4,7 +4,7 @@
 
 using namespace TIGER_DZSTMarkDef;
 typedef unsigned char byte2;
-#define PI 3.1415926;
+#define PI 3.1415926
 
 CDZSTMark::CDZSTMark(HWND p_hWnd): m_hWnd(p_hWnd)
 {
@@ -208,8 +208,7 @@ void CDZSTMark::creatUdmBin()
             {
                 structUdmPos polyline2d[61];
                 float radius = (markShapeParas()->diameter)/2;
-                // double dAngle = 2 * PI / 60;
-                double dAngle = 2;
+                double dAngle = 2 * PI / 60;
                 for (int i = 0; i < 61; i++)
                 {
                     polyline2d[i].x = radius * cos(dAngle * i);
