@@ -3,6 +3,22 @@
 
 namespace TIGER_DZSTMarkDef
 {
+#pragma region "振镜卡通信参数"
+    enum CMarkProtocol: int
+    {
+        cmpSPI = 0,
+        cmpXY2_100,
+        cmpSL2,
+        cmpUnKnow
+    };
+    struct CDZSTMarConnectkParas
+    {
+        QString ip = "172.18.34.227";
+        CMarkProtocol MarkProtocol = cmpXY2_100;  //打标协议
+    };
+    CDZSTMarConnectkParas *DZSTMarkConnectPara();
+#pragma endregion
+
 #pragma region "振镜扫描系统参数"
     struct CGalvoScanningSystemParas
     {
@@ -61,16 +77,16 @@ namespace TIGER_DZSTMarkDef
     {
         cmsRound,
         cmsCross,
-        cmsRectangular,
+        cmsGrid,
         cmsUnKnow
     };
     const QStringList cmarkSape = {cnStr("圆形"), cnStr("十字叉"), cnStr("矩形")};
     struct CMarkShapeParas
     {
         CMarkShape shapeType = cmsRound;  // 打标形状
-        int markRange = 100;              // 打标范围
-        int rowAndCol = 3;                // (行/列)数
-        int diameter = 5;                 // 形状直径
+        unsigned int markRange = 40;              // 打标范围
+        unsigned int rowAndCol = 3;                // (行/列)数
+        unsigned int diameter = 5;                 // 形状直径
     };
     CMarkShapeParas *markShapeParas();
 #pragma endregion

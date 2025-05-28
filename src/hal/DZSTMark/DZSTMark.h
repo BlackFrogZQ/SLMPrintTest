@@ -18,8 +18,10 @@ protected:
 
 public:
     void nativeEvent(MSG* p_message);
-    LRESULT deviceStatusUpdate(WPARAM wParam, LPARAM lParam);
-    LRESULT UDMDownloadEnd(WPARAM wParam, LPARAM lParam);
+    LRESULT OnMsgDeviceEhco(WPARAM wParam, LPARAM lParam);
+    LRESULT OnMsgUDMDownloadEnd(WPARAM wParam, LPARAM lParam);
+    LRESULT OnMsgUDMRunHalt(WPARAM wParam, LPARAM lParam);
+    LRESULT ExecProcess(WPARAM wParam, LPARAM lParam);
 
     void indexConnectDevice();
     void ipConnectDevice(QString p_ip);

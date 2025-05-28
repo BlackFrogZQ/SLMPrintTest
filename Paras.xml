@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ParameterRoot remark="" cnName="ParameterRoot" visible="1">
+    <DZSTMarkConnectPara remark="/" cnName="振镜卡连接参数" visible="1">
+        <ip remark="" cnName="ip" visible="1">
+            <value>172.18.34.227</value>
+        </ip>
+        <MarkProtocol remark="SPI*XY2-100*SL2" cnName="打标协议" visible="1">
+            <value>1</value>
+        </MarkProtocol>
+    </DZSTMarkConnectPara>
     <GalvoScanningSystemParas remark="/" cnName="振镜扫描系统参数" visible="1">
         <MarkSpeed remark="mm/s" cnName="打标速度" visible="1">
             <value>1000</value>
@@ -22,13 +30,13 @@
     </GalvoScanningSystemParas>
     <CLaserParas remark="/" cnName="激光参数" visible="1">
         <LaserDevice remark="IPG*SPI*CO2/紫外" cnName="激光器类型" visible="1">
-            <value>0</value>
+            <value>1</value>
         </LaserDevice>
         <LaserOnDelay remark="us" cnName="开激光延时" visible="1">
-            <value>111</value>
+            <value>10</value>
         </LaserOnDelay>
         <LaserOffDelay remark="us" cnName="关激光延时" visible="1">
-            <value>111</value>
+            <value>200</value>
         </LaserOffDelay>
         <FPKDelay remark="us" cnName="首脉冲抑制延时" visible="1">
             <value>0</value>
@@ -52,7 +60,7 @@
             <value>0.5</value>
         </StandbyDutyCycle>
         <LaserPower remark="(0~100)%, 50代表50%" cnName="激光能量百分比" visible="1">
-            <value>60</value>
+            <value>15</value>
         </LaserPower>
         <AnalogMode remark="0~10V" cnName="激光器能量" visible="1">
             <value>0</value>

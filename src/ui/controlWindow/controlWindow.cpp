@@ -1,11 +1,13 @@
 ﻿#include "controlWindow.h"
 #include "system/basic.h"
 #include "hal/DZSTMark/DZSTMark.h"
+#include "hal/DZSTMark/DZSTMarkDef.h"
 #include <QPushButton>
 #include <QLabel>
 #include <QTextBrowser>
-#include <QLineEdit>
 #include <QVBoxLayout>
+
+using namespace TIGER_DZSTMarkDef;
 
 CControl::CControl(QWidget *parent, CDZSTMark *p_CDZSTMark): QWidget(parent), m_pCDZSTMark(p_CDZSTMark)
 {
@@ -18,8 +20,6 @@ CControl::~CControl()
 
 void CControl::init()
 {
-    QLabel* pDeviceLabel = new QLabel(cnStr("设备IP"));
-    m_pDeviceIp = new QLineEdit("172.18.34.227");
     m_pConnect = new QPushButton(cnStr("连接"));
     m_pDisconnect = new QPushButton(cnStr("断开"));
     m_pCreateUDM = new QPushButton(cnStr("生成UDM"));
@@ -29,16 +29,14 @@ void CControl::init()
     m_pContinueMark = new QPushButton(cnStr("继续"));
     m_pStopMark = new QPushButton(cnStr("停止"));
     QGridLayout *pConnectLayout = new QGridLayout;
-    pConnectLayout->addWidget(pDeviceLabel, 0, 0, 1, 1);
-    pConnectLayout->addWidget(m_pDeviceIp, 0, 1, 1, 2);
-    pConnectLayout->addWidget(m_pConnect, 1, 0, 1, 1);
-    pConnectLayout->addWidget(m_pDisconnect, 1, 1, 1, 1);
-    pConnectLayout->addWidget(m_pCreateUDM, 1, 2, 1, 1);
-    pConnectLayout->addWidget(m_pDownloadUDM, 1, 3, 1, 1);
-    pConnectLayout->addWidget(m_pStartMark, 2, 0, 1, 1);
-    pConnectLayout->addWidget(m_pPauseMark, 2, 1, 1, 1);
-    pConnectLayout->addWidget(m_pContinueMark, 2, 2, 1, 1);
-    pConnectLayout->addWidget(m_pStopMark, 2, 3, 1, 1);
+    pConnectLayout->addWidget(m_pConnect, 0, 0, 1, 1);
+    pConnectLayout->addWidget(m_pDisconnect, 0, 1, 1, 1);
+    pConnectLayout->addWidget(m_pCreateUDM, 0, 2, 1, 1);
+    pConnectLayout->addWidget(m_pDownloadUDM, 0, 3, 1, 1);
+    pConnectLayout->addWidget(m_pStartMark, 1, 0, 1, 1);
+    pConnectLayout->addWidget(m_pPauseMark, 1, 1, 1, 1);
+    pConnectLayout->addWidget(m_pContinueMark, 1, 2, 1, 1);
+    pConnectLayout->addWidget(m_pStopMark, 1, 3, 1, 1);
     connect(m_pConnect, &QPushButton::clicked, this, &CControl::OnBnClickedButtonConnect);
     connect(m_pDisconnect, &QPushButton::clicked, this, &CControl::OnBnClickedButtonDisconnect);
     connect(m_pCreateUDM, &QPushButton::clicked, this, &CControl::OnBnClickedButtonCreateUDM);
@@ -53,15 +51,14 @@ void CControl::init()
 
 void CControl::OnBnClickedButtonConnect()
 {
-    QString pIp = m_pDeviceIp->text();
-    m_pCDZSTMark->ipConnectDevice(pIp);
-    // m_pCDZSTMark->indexConnectDevice();
+    m_pCDZSTMark->ipConnectDevice(DZSTMarkConnectPara()->ip);
 }
 
 void CControl::OnBnClickedButtonDisconnect()
 {
     m_pCDZSTMark->disconnectDevice();
 }
+
 
 
 void CControl::OnBnClickedButtonCreateUDM()
@@ -73,6 +70,7 @@ void CControl::OnBnClickedButtonDownloadUDM()
 {
     m_pCDZSTMark->downloadMarkFile();
 }
+
 
 
 void CControl::OnBnClickedButtonStartMark()

@@ -2,6 +2,12 @@
 
 namespace TIGER_DZSTMarkDef
 {
+    CDZSTMarConnectkParas *DZSTMarkConnectPara()
+    {
+        static CDZSTMarConnectkParas g_DZSTMarkConnectPara;
+        return &g_DZSTMarkConnectPara;
+    }
+
     CGalvoScanningSystemParas *scanSystemParas()
     {
         static CGalvoScanningSystemParas g_scanSystemParas;

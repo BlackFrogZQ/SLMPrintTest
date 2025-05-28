@@ -7,6 +7,22 @@ using namespace TIGER_DZSTMarkDef;
 
 namespace TIGER_ParaItemDef
 {
+    class CDZSTMarkPara : public IParaItem
+    {
+    public:
+        CDZSTMarkPara() : IParaItem(cnStr("DZSTMarkConnectPara"), cnStr("振镜卡通信参数"), true)
+        {
+            CParaNode *node = nullptr;
+            _AddNode(m_currentNode, pntString, "ip", "ip", true, "", &DZSTMarkConnectPara()->ip);
+            _AddNode(m_currentNode, pntEnum, "MarkProtocol", "打标协议", true, "SPI*XY2-100*SL2", &DZSTMarkConnectPara()->MarkProtocol);
+        };
+    };
+    IParaItem *DZSTMarkParaItem()
+    {
+        static CDZSTMarkPara g_DZSTMarkConnectParasNode;
+        return &g_DZSTMarkConnectParasNode;
+    }
+
     class CScanSystemPara : public IParaItem
     {
     public:

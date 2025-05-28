@@ -50,11 +50,12 @@ void CMainWindowMenuBar::initLayout()
         m_pSetParaPB = getToolPb();
         m_pSetParaPB->setToolButtonStyle(Qt::ToolButtonIconOnly);
         m_pSetParaPB->setIcon(QIcon(":res/menu/setting.png"));
-        m_pSetParaPB->setToolTip(tr("设置"));
+        m_pSetParaPB->setToolTip(cnStr("设置"));
         connect(m_pSetParaPB, &QToolButton::clicked, this, &CMainWindowMenuBar::slotSetPara);
         pLayout->addWidget(m_pSetParaPB);
     }
 
+    pLayout->addStretch();
     pLayout->setMargin(0);
     pLayout->setSpacing(1);
     this->setLayout(pLayout);

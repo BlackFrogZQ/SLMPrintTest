@@ -3,7 +3,6 @@
 
 class CDZSTMark;
 class QTextBrowser;
-class QLineEdit;
 class QPushButton;
 
 class CControl: public QWidget
@@ -30,7 +29,6 @@ protected slots:
 private:
     CDZSTMark *m_pCDZSTMark;
 
-    QLineEdit* m_pDeviceIp;
     QPushButton *m_pConnect;
     QPushButton *m_pDisconnect;
     QPushButton *m_pCreateUDM;
