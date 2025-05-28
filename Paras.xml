@@ -75,4 +75,15 @@
             <value>0</value>
         </PulseWidth>
     </CLaserParas>
+    <PLCConnectPara remark="/" cnName="PLC通信参数" visible="1">
+        <ip remark="" cnName="ip" visible="1">
+            <value>192.168.0.32</value>
+        </ip>
+        <port remark="" cnName="通道" visible="1">
+            <value>502</value>
+        </port>
+        <mac remark="" cnName="端口" visible="1">
+            <value>64</value>
+        </mac>
+    </PLCConnectPara>
 </ParameterRoot>

@@ -1,6 +1,6 @@
-﻿#include "DZSTMarkDef.h"
+﻿#include "ncDef.h"
 
-namespace TIGER_DZSTMarkDef
+namespace TIGER_VMSLM
 {
     CDZSTMarConnectkParas *DZSTMarkConnectPara()
     {
@@ -25,4 +25,10 @@ namespace TIGER_DZSTMarkDef
         static CMarkShapeParas g_markShapeParas;
         return &g_markShapeParas;
     }
+
+    CPLCParas *plcParas()
+    {
+        static CPLCParas g_plcParas;
+        return &g_plcParas;
+    };
 }

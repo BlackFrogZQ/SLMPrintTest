@@ -1,13 +1,11 @@
 ﻿#pragma once
 #include <QObject>
 #include <QQueue>
-#include "../ncDef.h"
-#include "hal/print/printDef.h"
 
 
-namespace TIGER_VM3DP
+namespace TIGER_VMSLM
 {
-    using namespace TIGER_NCDef;
+    // using namespace TIGER_NCDef;
     class IVM : public QObject
     {
         Q_OBJECT

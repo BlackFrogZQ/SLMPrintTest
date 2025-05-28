@@ -1,9 +1,9 @@
 ﻿#include "scanSystemParaItem.h"
-#include "hal/DZSTMark/DZSTMarkDef.h"
+#include "hal/vm/ncDef.h"
 #include "../paraNode.h"
 
 using namespace TIGER_ParaDef;
-using namespace TIGER_DZSTMarkDef;
+using namespace TIGER_VMSLM;
 
 namespace TIGER_ParaItemDef
 {
@@ -70,5 +70,22 @@ namespace TIGER_ParaItemDef
     {
         static CLaserPara g_laserParasNode;
         return &g_laserParasNode;
+    }
+
+    class CPLCPara : public IParaItem
+    {
+    public:
+        CPLCPara() : IParaItem(cnStr("PLCConnectPara"), cnStr("PLC通信参数"), true)
+        {
+            CParaNode *node = nullptr;
+            _AddNode(m_currentNode, pntString, "ip", "ip", true, "", &plcParas()->ip);
+            _AddNode(m_currentNode, pntUInt, "port", "通道", true, "", &plcParas()->ipPort);
+            _AddNode(m_currentNode, pntUInt, "mac", "端口", true, "", &plcParas()->ipMAC);
+        };
+    };
+    IParaItem *PLCParaItem()
+    {
+        static CPLCPara g_PLCConnectParasNode;
+        return &g_PLCConnectParasNode;
     }
 }

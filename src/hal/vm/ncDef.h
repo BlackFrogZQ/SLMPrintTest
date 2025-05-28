@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "system/basic.h"
 
-namespace TIGER_DZSTMarkDef
+namespace TIGER_VMSLM
 {
 #pragma region "振镜卡通信参数"
     enum CMarkProtocol: int
@@ -89,5 +89,15 @@ namespace TIGER_DZSTMarkDef
         unsigned int diameter = 5;                 // 形状直径
     };
     CMarkShapeParas *markShapeParas();
+#pragma endregion
+
+#pragma region "PLC参数"
+    struct CPLCParas
+    {
+        QString ip = "192.168.0.32";
+        int ipPort = 502;
+        int ipMAC = 64;
+    };
+    CPLCParas *plcParas();
 #pragma endregion
 }

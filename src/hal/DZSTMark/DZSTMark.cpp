@@ -1,8 +1,8 @@
 ﻿#include "DZSTMark.h"
-#include "DZSTMarkDef.h"
+#include "vm/ncDef.h"
 #include "system/basic.h"
 
-using namespace TIGER_DZSTMarkDef;
+using namespace TIGER_VMSLM;
 typedef unsigned char byte2;
 #define PI 3.1415926
 

@@ -1,13 +1,13 @@
 ﻿#include "controlWindow.h"
 #include "system/basic.h"
 #include "hal/DZSTMark/DZSTMark.h"
-#include "hal/DZSTMark/DZSTMarkDef.h"
+#include "hal/vm/ncDef.h"
 #include <QPushButton>
 #include <QLabel>
 #include <QTextBrowser>
 #include <QVBoxLayout>
 
-using namespace TIGER_DZSTMarkDef;
+using namespace TIGER_VMSLM;
 
 CControl::CControl(QWidget *parent, CDZSTMark *p_CDZSTMark): QWidget(parent), m_pCDZSTMark(p_CDZSTMark)
 {

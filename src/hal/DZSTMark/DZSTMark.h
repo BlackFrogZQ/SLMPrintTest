@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <QString>
 
-namespace TIGER_DZSTMarkDef
+namespace TIGER_VMSLM
 {}
 
 class CDZSTMark
