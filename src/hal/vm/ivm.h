@@ -2,7 +2,6 @@
 #include <QObject>
 #include <QQueue>
 
-
 namespace TIGER_VMSLM
 {
     // using namespace TIGER_NCDef;
@@ -51,7 +50,9 @@ namespace TIGER_VMSLM
 
         // virtual void changeVMStatus(CVMStatus p_status) = 0;
 
-        // virtual bool sendDisColis(int p_addr, bool p_value) = 0;
+        virtual void autoWork() = 0;
+        virtual void stopWork() = 0;
+        virtual bool sendDisColis(int p_addr, bool p_value) = 0;
 
     signals:
         void sigConnected();

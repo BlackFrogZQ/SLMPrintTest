@@ -3,8 +3,8 @@
 #include "system/basic.h"
 enum CPlcColis : unsigned char
 {
-    cpcSandReady = 0,
-    cpcCylinderWork,
+    cpcReady = 0,
+    cpcSpreadEnd,
     cpcTemp3,
     cpcTemp4,
     cpcTemp5,
@@ -18,8 +18,8 @@ enum CPlcColis : unsigned char
 
 enum CPcDisColis : unsigned char
 {
-    cpdcSpreadFinish = 0,
-    cpdcTemp2,
+    cpdcStartSpread = 0,
+    cpdcStartMark,
     cpdcTemp3,
     cpdcTemp4,
     cpdcTemp5,

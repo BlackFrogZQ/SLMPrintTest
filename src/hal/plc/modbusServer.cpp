@@ -1,6 +1,7 @@
 ﻿#include "modbusServer.h"
 #include "plcSigDef.h"
 #include "system/systemService.h"
+#include "system/basic.h"
 #include <QModbusTcpServer>
 #include <QTimer>
 
@@ -152,7 +153,7 @@ void CModbusServer::slotConnected()
 {
     m_isConnected = true;
     plcServerData()->setConnectState(m_isConnected);
-    // sys()->msgOut(cnStr("%1(%2:%3:%4)已连接").arg(m_ip.name).arg(m_ip.ip).arg(m_ip.ipPort).arg(m_ip.ipMAC), true);
+    myInfo << cnStr("%1(%2:%3:%4)已连接").arg(m_ip.name).arg(m_ip.ip).arg(m_ip.ipPort).arg(m_ip.ipMAC);
     m_reConnectTimes = 0;
 }
 
@@ -162,7 +163,7 @@ void CModbusServer::slotDisconnected()
     plcServerData()->setConnectState(m_isConnected);
     if (m_reConnectTimes % 10 == 0)
     {
-        // sys()->msgOutWarning(cnStr("%1(%2:%3:%4)已连接").arg(m_ip.name).arg(m_ip.ip).arg(m_ip.ipPort).arg(m_ip.ipMAC) + cnStr(".尝试第%1次重连").arg((m_reConnectTimes == 0)?1:m_reConnectTimes), true);
+        myInfo << cnStr("%1(%2:%3:%4)已断开连接").arg(m_ip.name).arg(m_ip.ip).arg(m_ip.ipPort).arg(m_ip.ipMAC) + cnStr(".尝试第%1次重连").arg((m_reConnectTimes == 0)?1:m_reConnectTimes);
     }
     m_reConnectTimes++;
     QTimer::singleShot(cReconnectInterval, this, &CModbusServer::slotConnectDevice);
