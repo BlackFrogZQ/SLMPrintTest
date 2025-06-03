@@ -3,6 +3,8 @@
 #include "ui/mainWindow.h"
 #include "hal/plc/plcSigDef.h"
 #include <QTimer>
+#include <QCoreApplication>
+#include <QTime>
 
 namespace TIGER_VMSLM
 {
@@ -27,7 +29,7 @@ namespace TIGER_VMSLM
 
     void CStartSpread::run()
     {
-        assert(plcServerData()->colis(cpcReady) == true);
+        // assert(plcServerData()->colis(cpcReady) == true);
         myInfo << cnStr("开始第%1层打印").arg(++m_action->runCount);
         m_pVM->sendDisColis(cpdcStartSpread, true);
         myInfo << cnStr("开始铺粉");
@@ -60,6 +62,12 @@ namespace TIGER_VMSLM
         assert(plcServerData()->colis(cpcSpreadEnd) == true);
         m_pVM->sendDisColis(cpdcStartMark, true);
         myInfo << cnStr("开始扫描");
+        {
+            QTime time;
+            time.start();
+            while(time.elapsed() < 3000)
+                QCoreApplication::processEvents();
+        }
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 

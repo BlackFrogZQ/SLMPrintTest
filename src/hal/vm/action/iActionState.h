@@ -3,7 +3,7 @@
 
 namespace TIGER_VMSLM
 {
-    constexpr int cSenMessageInterval = 50; // 硬件状态刷新间隔
+    constexpr int cSenMessageInterval = 100; // 硬件状态刷新间隔
     class IActionState : public QObject
     {
         Q_OBJECT

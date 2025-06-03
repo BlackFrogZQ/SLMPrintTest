@@ -50,6 +50,8 @@ void CControl::init()
     connect(m_pPauseMark, &QPushButton::clicked, this, &CControl::OnBnClickedButtonPauseMark);
     connect(m_pContinueMark, &QPushButton::clicked, this, &CControl::OnBnClickedButtonContinueMark);
     connect(m_pStopMark, &QPushButton::clicked, this, &CControl::OnBnClickedButtonStopMark);
+    connect(m_pStartWork, &QPushButton::clicked, this, &CControl::OnBnClickedButtonStartWork);
+    connect(m_pStopWork, &QPushButton::clicked, this, &CControl::OnBnClickedButtonStopwork);
 
     this->setLayout(pConnectLayout);
 }

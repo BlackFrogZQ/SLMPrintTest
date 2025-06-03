@@ -141,36 +141,36 @@ Macro_LinkLib(${PROJECT_NAME})
 
 # 打包
 function(Fun_CopyDll exeBasicName)
-set(exeDir ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE})
-message(STATUS "${exeBasicName}.exe 所在目录:" ${exeDir})
-file(GLOB currentDlls "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/*.dll")
+    set(exeDir ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE})
+    message(STATUS "${exeBasicName}.exe 所在目录:" ${exeDir})
+    file(GLOB currentDlls "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/*.dll")
 
-foreach(currentDll ${currentDlls})
-    file(REMOVE ${currentDll})
-endforeach()
+    foreach(currentDll ${currentDlls})
+        file(REMOVE ${currentDll})
+    endforeach()
 
-get_property(currentDlls GLOBAL PROPERTY libDlls)
-string(REPLACE ";" "\n\t" outLibDllNames "${currentDlls}")
-message(STATUS "拷贝 libDlls 库...\n\t${outLibDllNames}")
-file(COPY ${currentDlls} DESTINATION ${exeDir})
-message(STATUS "拷贝结束...")
-message(STATUS "运行qt打包程序...")
-execute_process(
-    COMMAND windeployqt ${exeDir}\\${exeBasicName}.exe
-    WORKING_DIRECTORY $ENV{QT_Dir}\\bin
-    OUTPUT_QUIET
+    get_property(currentDlls GLOBAL PROPERTY libDlls)
+    string(REPLACE ";" "\n\t" outLibDllNames "${currentDlls}")
+    message(STATUS "拷贝 libDlls 库...\n\t${outLibDllNames}")
+    file(COPY ${currentDlls} DESTINATION ${exeDir})
+    message(STATUS "拷贝结束...")
+    message(STATUS "运行qt打包程序...")
+    execute_process(
+        COMMAND windeployqt ${exeDir}\\${exeBasicName}.exe
+        WORKING_DIRECTORY $ENV{QT_Dir}\\bin
+        OUTPUT_QUIET
 
-    # ERROR_QUIET
-    ERROR_STRIP_TRAILING_WHITESPACE
-    ERROR_VARIABLE errorMsg
-)
+        # ERROR_QUIET
+        ERROR_STRIP_TRAILING_WHITESPACE
+        ERROR_VARIABLE errorMsg
+    )
 
-if("${errorMsg}" STREQUAL "")
-    message(STATUS "qt打包成功...")
-else()
-    message(STATUS "copy error:${errorMsg}")
-    message(WARNING "qt打包失败...请按F7生成exe后,重新运行cmake(在此文件中ctrl+s)")
-endif()
+    if("${errorMsg}" STREQUAL "")
+        message(STATUS "qt打包成功...")
+    else()
+        message(STATUS "copy error:${errorMsg}")
+        message(WARNING "qt打包失败...请按F7生成exe后,重新运行cmake(在此文件中ctrl+s)")
+    endif()
 endfunction()
 
 Fun_CopyDll(${PROJECT_NAME})
