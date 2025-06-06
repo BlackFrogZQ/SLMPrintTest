@@ -163,7 +163,7 @@ void CModbusServer::slotDisconnected()
     plcServerData()->setConnectState(m_isConnected);
     if (m_reConnectTimes % 10 == 0)
     {
-        myInfo << cnStr("%1(%2:%3:%4)已断开连接").arg(m_ip.name).arg(m_ip.ip).arg(m_ip.ipPort).arg(m_ip.ipMAC) + cnStr(".尝试第%1次重连").arg((m_reConnectTimes == 0)?1:m_reConnectTimes);
+        myInfo << cnStr("%1(%2:%3:%4)已断开连接").arg(m_ip.name).arg(m_ip.ip).arg(m_ip.ipPort).arg(m_ip.ipMAC) + cnStr(".尝试第%1次重连").arg((m_reConnectTimes == 0) ? 1 : m_reConnectTimes);
     }
     m_reConnectTimes++;
     QTimer::singleShot(cReconnectInterval, this, &CModbusServer::slotConnectDevice);

@@ -4,16 +4,15 @@
 
 namespace TIGER_VMSLM
 {
-    class CAutoWorkAction : public IAction
+    class CSpreadAction : public IAction
     {
-        friend class CAutoWorkIdleState;
-        friend class CStartAutoSpread;
-        friend class CStartAutoMark;
+        friend class CSpreadIdleState;
+        friend class CStartSpread;
 
         Q_OBJECT
     public:
-        CAutoWorkAction(CVM *p_vm);
-        ~CAutoWorkAction();
+        CSpreadAction(CVM *p_vm);
+        ~CSpreadAction();
 
         virtual void start() override;
         virtual void stop() override;
@@ -21,6 +20,6 @@ namespace TIGER_VMSLM
     protected:
         IActionState* m_idle;
         IActionState* m_startSpread;
-        IActionState* m_startMark;
+        // int runCount; // 记录铺粉层数
     };
 }

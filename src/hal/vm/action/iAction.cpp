@@ -1,5 +1,7 @@
 ﻿#include "iAction.h"
 #include "./autoWork/autoWorkAction.h"
+#include "./markOnce/markOnceAction.h"
+#include "./spread/spreadAction.h"
 
 namespace TIGER_VMSLM
 {
@@ -31,5 +33,15 @@ namespace TIGER_VMSLM
     IAction *CActionCreater::autoWorkAction()
     {
         return new CAutoWorkAction(m_pVM);
+    }
+
+    IAction *CActionCreater::markOnceAction()
+    {
+        return new CMarkOnceAction(m_pVM);
+    }
+
+    IAction *CActionCreater::spreadAction()
+    {
+        return new CSpreadAction(m_pVM);
     }
 }

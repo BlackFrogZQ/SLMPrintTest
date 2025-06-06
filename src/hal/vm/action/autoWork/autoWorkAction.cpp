@@ -7,8 +7,8 @@ namespace TIGER_VMSLM
     CAutoWorkAction::CAutoWorkAction(CVM *p_vm) : IAction(p_vm)
     {
         m_idle = new CAutoWorkIdleState(this);
-        m_startSpread = new CStartSpread(this);
-        m_startMark = new CStartMark(this);
+        m_startSpread = new CStartAutoSpread(this);
+        m_startMark = new CStartAutoMark(this);
     }
 
     CAutoWorkAction::~CAutoWorkAction()

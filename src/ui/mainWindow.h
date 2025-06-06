@@ -1,13 +1,16 @@
 ﻿#pragma once
+#include "mainWindowDef.h"
 #include <qt_windows.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <QWidget>
 
-class CDZSTMark;
 class QTextBrowser;
 class CMainWindowMenuBar;
-const QString cStyleSheet = "border:1px groove gray;\nborder-radius:10px;\npadding:2px 3px;\nbackground:transparent;\nbackground-color: rgb(255, 255, 255,150);";
+namespace TIGER_VMSLM
+{
+    class CVM;
+}
 
 class CMainWindow: public QWidget
 {
@@ -24,11 +27,10 @@ protected:
 
 private:
     HWND m_hWnd;
-    CDZSTMark *m_pCDZSTMark;
+    TIGER_VMSLM::CVM *m_pVM;
 
 	QTextBrowser* m_pOutMsg;
     QWidget* m_pControl;
-    QWidget* m_pMultipointCorrect;
     CMainWindowMenuBar *m_pMenuBar;
 };
 

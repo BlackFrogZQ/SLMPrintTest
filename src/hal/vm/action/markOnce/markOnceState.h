@@ -4,35 +4,35 @@
 
 namespace TIGER_VMSLM
 {
-    class CAutoWorkAction;
+    class CMarkOnceAction;
 
-    class CAutoWorkIdleState : public IActionState
+    class CMarkOnceIdleState : public IActionState
     {
         Q_OBJECT
     public:
-        CAutoWorkIdleState(CAutoWorkAction* p_action);
-        ~CAutoWorkIdleState();
+        CMarkOnceIdleState(CMarkOnceAction* p_action);
+        ~CMarkOnceIdleState();
         virtual void run() override;
 
     protected:
-        CAutoWorkAction* m_action;
+        CMarkOnceAction* m_action;
         IVM* m_pVM;
     };
 
-    class CStartAutoSpread : public CAutoWorkIdleState
+    class CDownloadMarkFile : public CMarkOnceIdleState
     {
         Q_OBJECT
     public:
-        using CAutoWorkIdleState::CAutoWorkIdleState;
+        using CMarkOnceIdleState::CMarkOnceIdleState;
         virtual void run() override;
         virtual void runing() override;
     };
 
-    class CStartAutoMark : public CAutoWorkIdleState
+    class CStartMark : public CMarkOnceIdleState
     {
         Q_OBJECT
     public:
-        using CAutoWorkIdleState::CAutoWorkIdleState;
+        using CMarkOnceIdleState::CMarkOnceIdleState;
         virtual void run() override;
         virtual void runing() override;
     };

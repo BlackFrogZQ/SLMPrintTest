@@ -27,7 +27,7 @@ namespace TIGER_VMSLM
     }
 
 
-    void CStartSpread::run()
+    void CStartAutoSpread::run()
     {
         // assert(plcServerData()->colis(cpcReady) == true);
         myInfo << cnStr("开始第%1层打印").arg(++m_action->runCount);
@@ -36,7 +36,7 @@ namespace TIGER_VMSLM
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 
-    void CStartSpread::runing()
+    void CStartAutoSpread::runing()
     {
         if (m_action->m_bStop)
         {
@@ -57,7 +57,7 @@ namespace TIGER_VMSLM
     }
 
 
-    void CStartMark::run()
+    void CStartAutoMark::run()
     {
         assert(plcServerData()->colis(cpcSpreadEnd) == true);
         m_pVM->sendDisColis(cpdcStartMark, true);
@@ -71,7 +71,7 @@ namespace TIGER_VMSLM
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 
-    void CStartMark::runing()
+    void CStartAutoMark::runing()
     {
         if (m_action->m_bStop)
         {

@@ -100,4 +100,33 @@ namespace TIGER_VMSLM
     };
     CPLCParas *plcParas();
 #pragma endregion
+
+#pragma region "状态"
+    enum CVMStatus : int
+    {
+        vmsIdle = 0,          // 空闲
+        vmsManu,              // 手动
+        vmsPause,             // 暂停
+        vmsSpread,            // 铺粉
+        vmsScan,              // 扫描
+        vmsMark,              // 打标
+        vmsAutoFlush,         // 自动清洗
+        vmsManuOnce,          // 手动一次
+        vmsStatusBar,         // 状态栏
+        vmsZero,              // 归零
+        vmsMax                // 最大状态值
+    };
+    const QStringList cvmStatusCn = {
+        cnStr("空闲"),
+        cnStr("手动"),
+        cnStr("暂停"),
+        cnStr("铺粉"),
+        cnStr("打标"),
+        cnStr("清洗"),
+        cnStr("自动清洗"),
+        cnStr("手动一次"),
+        cnStr("状态栏"),
+        cnStr("归零")
+    };
+#pragma endregion
 }

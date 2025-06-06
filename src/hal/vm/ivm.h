@@ -1,6 +1,9 @@
 ﻿#pragma once
+#include "vm/ncDef.h"
+#include "printDatas/printDatasDef.h"
 #include <QObject>
 #include <QQueue>
+#include <windows.h>
 
 namespace TIGER_VMSLM
 {
@@ -9,6 +12,7 @@ namespace TIGER_VMSLM
     {
         Q_OBJECT
     public:
+        IVM(HWND p_hWnd) : QObject(), m_hWnd(p_hWnd), m_vmStatus(vmsIdle) {};
         virtual ~IVM(){};
 
         virtual void init() = 0;
@@ -47,12 +51,22 @@ namespace TIGER_VMSLM
         // virtual int getManuStartTime() = 0;
         // virtual const CNCStatus ncStatus() = 0;
         // virtual const QList<CPCStatus> pcStatus() = 0;
-
-        // virtual void changeVMStatus(CVMStatus p_status) = 0;
+        virtual void changeVMStatus(CVMStatus p_status) = 0;
 
         virtual void autoWork() = 0;
         virtual void stopWork() = 0;
+        virtual void startSpread() = 0;
+        virtual void stopSpread() = 0;
+
+        virtual void startMark() = 0;
+        virtual void pauseMark() = 0;
+        virtual void continueMark() = 0;
+        virtual void stopMark() = 0;
+        virtual void nativeEvent(MSG* p_message) = 0;
+        virtual void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::Segment>> p_segments) = 0;
+
         virtual bool sendDisColis(int p_addr, bool p_value) = 0;
+        virtual bool sendHold(int p_addr, bool p_value) = 0;
 
     signals:
         void sigConnected();
@@ -60,7 +74,7 @@ namespace TIGER_VMSLM
         // void sigAxisStatusUpdate(unsigned int p_id,QDateTime p_timestamp);
         // void sigAxisAlarm(unsigned int p_id);
         // void sigPrintUpdate();
-        // void sigVMStatusUpdate();
+        void sigVMStatusUpdate();
         // void sigDiStatusUpdate();
         // void sigDoStatusUpdate();
         // void sigSpreadEnd();
@@ -71,5 +85,15 @@ namespace TIGER_VMSLM
         // void sigSliceUpdate();
         // void sigStartPrint();
         // void sigPrintFinished();
+
+        void sigMarkEnd();
+        void sigDownloadEnd();
+        void sigExecProcess(unsigned int p_pValue);
+
+    protected:
+        HWND m_hWnd;  // 窗口句柄
+        CVMStatus m_vmStatus;  // 虚拟机状态
+        // CNCStatus m_ncStatus;  // 数控状态
+        // QList<CPCStatus> m_pcStatus;  // PC状态
     };
 }
