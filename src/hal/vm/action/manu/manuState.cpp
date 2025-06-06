@@ -29,7 +29,7 @@ namespace TIGER_VMSLM
 
     void CManuStartSpread::run()
     {
-        // assert(plcServerData()->colis(cpcReady) == true);
+        assert(plcServerData()->colis(cpcReady) == true);
         myInfo << cnStr("开始第%1层打印").arg(++m_action->runCount);
         m_pVM->sendDisColis(cpdcStartSpread, true);
         myInfo << cnStr("开始铺粉");
@@ -40,14 +40,14 @@ namespace TIGER_VMSLM
     {
         if (m_action->m_bStop)
         {
-            changeState(m_action->m_idle);
+            changeState(m_action->m_manuIdle);
             return;
         }
 
         if (plcServerData()->colis(cpcSpreadEnd) == true)
         {
             m_pVM->sendDisColis(cpdcStartSpread, false);
-            changeState(m_action->m_startMark);
+            changeState(m_action->m_manuMark);
             return;
         }
         else
@@ -75,14 +75,14 @@ namespace TIGER_VMSLM
     {
         if (m_action->m_bStop)
         {
-            changeState(m_action->m_idle);
+            changeState(m_action->m_manuIdle);
             return;
         }
 
         if (plcServerData()->colis(cpcSpreadEnd) == false)
         {
             m_pVM->sendDisColis(cpdcStartMark, false);
-            changeState(m_action->m_startSpread);
+            changeState(m_action->m_manuSpread);
             return;
         }
         else

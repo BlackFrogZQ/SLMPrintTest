@@ -6,22 +6,22 @@ namespace TIGER_VMSLM
 {
     CManuOnceAction::CManuOnceAction(CVM *p_vm) : IAction(p_vm)
     {
-        m_idle = new CManuOnceIdleState(this);
-        m_startSpreadOnce = new CManuOnceSpread(this);
-        m_startMarkOnce = new CManuOnceMark(this);
+        m_manuOnceIdle = new CManuOnceIdleState(this);
+        m_manuOnceSpread = new CManuOnceSpread(this);
+        m_manuOnceMark = new CManuOnceMark(this);
     }
 
     CManuOnceAction::~CManuOnceAction()
     {
-        delPtr(m_idle);
-        delPtr(m_startSpreadOnce);
-        delPtr(m_startMarkOnce);
+        delPtr(m_manuOnceIdle);
+        delPtr(m_manuOnceSpread);
+        delPtr(m_manuOnceMark);
     }
 
     void CManuOnceAction::start()
     {
         IAction::start();
-        m_startSpreadOnce->run();
+        m_manuOnceSpread->run();
     }
 
     void CManuOnceAction::stop()

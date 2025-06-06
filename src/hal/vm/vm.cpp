@@ -34,20 +34,22 @@ namespace TIGER_VMSLM
 
         auto pActionCreator = new CActionCreater(this);
         assert(pActionCreator != nullptr);
-        m_pAutoWorkAction = pActionCreator->autoWorkAction();
-        m_pMarkOnceAction = pActionCreator->markOnceAction();
+        m_pManuAction = pActionCreator->autoWorkAction();
+        m_pMarkAction = pActionCreator->markOnceAction();
         m_pSpreadAction = pActionCreator->spreadAction();
         delete pActionCreator;
         pActionCreator = nullptr;
         connect(m_pSpreadAction, &IAction::sigEnd, this, [this]()
         {
+            emit sigSpreadEnd();
             if (m_vmStatus == vmsSpread)
             {
                 changeVMStatus(vmsIdle);
             }
         });
-        connect(m_pMarkOnceAction, &IAction::sigEnd, this, [this]()
+        connect(m_pMarkAction, &IAction::sigEnd, this, [this]()
         {
+            emit sigMarkEnd();
             if (m_vmStatus == vmsMark)
             {
                 changeVMStatus(vmsIdle);
@@ -71,12 +73,12 @@ namespace TIGER_VMSLM
 
     void CVM::autoWork()
     {
-        m_pAutoWorkAction->start();
+        m_pManuAction->start();
     }
 
     void CVM::stopWork()
     {
-        m_pAutoWorkAction->stop();
+        m_pManuAction->stop();
     }
 
     void CVM::startSpread()

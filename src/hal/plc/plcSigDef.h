@@ -5,7 +5,7 @@ enum CPlcColis : unsigned char
 {
     cpcReady = 0,
     cpcSpreadEnd,
-    cpcSpread,
+    cpcSpreading,
     cpcTemp4,
     cpcTemp5,
     cpcTemp6,

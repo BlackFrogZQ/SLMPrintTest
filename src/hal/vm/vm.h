@@ -44,8 +44,8 @@ namespace TIGER_VMSLM
         CDZSTeGMCMegatron *m_megatron;
         IMegatronController *m_megatronController;
 
-        IAction *m_pAutoWorkAction;
-        IAction *m_pMarkOnceAction;
+        IAction *m_pManuAction;
+        IAction *m_pMarkAction;
         IAction *m_pSpreadAction;
     };
 }

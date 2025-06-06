@@ -27,6 +27,6 @@ namespace TIGER_VMSLM
         virtual void run() override;
         virtual void runing() override;
     private:
-        bool m_isSpread = false; // 是否正在铺粉
+        bool m_isSpreading = false; // 是否正在铺粉
     };
 }

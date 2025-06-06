@@ -27,6 +27,7 @@ namespace TIGER_VMSLM
     void CManuOnceSpread::run()
     {
         m_pVM->startSpread();
+        m_isSpreading = false;
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 
@@ -34,13 +35,18 @@ namespace TIGER_VMSLM
     {
         if (m_action->m_bStop)
         {
-            changeState(m_action->m_idle);
+            changeState(m_action->m_manuOnceIdle);
             return;
         }
 
-        if (plcServerData()->colis(cpcSpread) == false && plcServerData()->disColis(cpdcStartSpread) == false)
+        if (plcServerData()->colis(cpcSpreading) == true && !m_isSpreading)
         {
-            changeState(m_action->m_startMarkOnce);
+            m_isSpreading = true;
+        }
+        else if (plcServerData()->colis(cpcSpreading) == false && plcServerData()->disColis(cpdcStartSpread) == false && m_isSpreading)
+        {
+            m_isSpreading = false;
+            changeState(m_action->m_manuOnceMark);
             return;
         }
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
@@ -49,6 +55,7 @@ namespace TIGER_VMSLM
     void CManuOnceMark::run()
     {
         m_pVM->startMark();
+        m_isMarking = false;
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 
@@ -56,13 +63,18 @@ namespace TIGER_VMSLM
     {
         if (m_action->m_bStop)
         {
-            changeState(m_action->m_idle);
+            changeState(m_action->m_manuOnceIdle);
             return;
         }
 
-        if (GMCState()->getMarkingStatus() == false)
+        if(GMCState()->getMarkingStatus() == true && !m_isMarking)
         {
-            changeState(m_action->m_idle);
+            m_isMarking = true;
+        }
+        else if (GMCState()->getMarkingStatus() == false && m_isMarking)
+        {
+            m_isMarking = false;
+            changeState(m_action->m_manuOnceIdle);
             return;
         }
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });

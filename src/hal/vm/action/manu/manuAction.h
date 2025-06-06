@@ -19,8 +19,8 @@ namespace TIGER_VMSLM
         virtual void stop() override;
 
     protected:
-        IActionState* m_idle;
-        IActionState* m_startSpread;
-        IActionState* m_startMark;
+        IActionState* m_manuIdle;
+        IActionState* m_manuSpread;
+        IActionState* m_manuMark;
     };
 }

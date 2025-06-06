@@ -15,6 +15,7 @@ namespace TIGER_VMSLM
         virtual void run() override;
 
     protected:
+        QMetaObject::Connection m_connect;
         CManuOnceAction* m_action;
         IVM* m_pVM;
     };
@@ -26,6 +27,8 @@ namespace TIGER_VMSLM
         using CManuOnceIdleState::CManuOnceIdleState;
         virtual void run() override;
         virtual void runing() override;
+    private:
+        bool m_isSpreading = false;
     };
 
     class CManuOnceMark : public CManuOnceIdleState
@@ -35,5 +38,7 @@ namespace TIGER_VMSLM
         using CManuOnceIdleState::CManuOnceIdleState;
         virtual void run() override;
         virtual void runing() override;
+    private:
+        bool m_isMarking = false;
     };
 }

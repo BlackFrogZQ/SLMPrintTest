@@ -77,7 +77,7 @@ namespace TIGER_VMSLM
         void sigVMStatusUpdate();
         // void sigDiStatusUpdate();
         // void sigDoStatusUpdate();
-        // void sigSpreadEnd();
+        void sigSpreadEnd();
         // void sigFlushEnd();
         // void sigAutoFlushEnd();
         // void sigManuOnceEnd();

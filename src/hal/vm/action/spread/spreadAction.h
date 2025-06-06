@@ -20,6 +20,5 @@ namespace TIGER_VMSLM
     protected:
         IActionState* m_idle;
         IActionState* m_startSpread;
-        // int runCount; // 记录铺粉层数
     };
 }
