@@ -4,16 +4,16 @@
 
 namespace TIGER_VMSLM
 {
-    class CAutoWorkAction : public IAction
+    class CManuAction : public IAction
     {
-        friend class CAutoWorkIdleState;
-        friend class CStartAutoSpread;
-        friend class CStartAutoMark;
+        friend class CManuIdleState;
+        friend class CManuStartSpread;
+        friend class CManuStartMark;
 
         Q_OBJECT
     public:
-        CAutoWorkAction(CVM *p_vm);
-        ~CAutoWorkAction();
+        CManuAction(CVM *p_vm);
+        ~CManuAction();
 
         virtual void start() override;
         virtual void stop() override;

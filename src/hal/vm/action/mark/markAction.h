@@ -4,16 +4,16 @@
 
 namespace TIGER_VMSLM
 {
-    class CMarkOnceAction : public IAction
+    class CMarkAction : public IAction
     {
-        friend class CMarkOnceIdleState;
+        friend class CMarkIdleState;
         friend class CDownloadMarkFile;
         friend class CStartMark;
 
         Q_OBJECT
     public:
-        CMarkOnceAction(CVM *p_vm);
-        ~CMarkOnceAction();
+        CMarkAction(CVM *p_vm);
+        ~CMarkAction();
 
         virtual void start() override;
         virtual void stop() override;

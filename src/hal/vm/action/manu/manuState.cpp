@@ -1,5 +1,5 @@
-﻿#include "autoWorkState.h"
-#include "autoWorkAction.h"
+﻿#include "manuState.h"
+#include "manuAction.h"
 #include "ui/mainWindow.h"
 #include "hal/plc/plcSigDef.h"
 #include <QTimer>
@@ -8,7 +8,7 @@
 
 namespace TIGER_VMSLM
 {
-    CAutoWorkIdleState::CAutoWorkIdleState(CAutoWorkAction *p_action) : m_action(p_action)
+    CManuIdleState::CManuIdleState(CManuAction *p_action) : m_action(p_action)
     {
         assert(m_action != nullptr);
         m_pVM = m_action->m_pVM;
@@ -16,18 +16,18 @@ namespace TIGER_VMSLM
         assert(m_pVM != nullptr);
     }
 
-    CAutoWorkIdleState::~CAutoWorkIdleState()
+    CManuIdleState::~CManuIdleState()
     {
     }
 
-    void CAutoWorkIdleState::run()
+    void CManuIdleState::run()
     {
         myInfo << cnStr("自动工作结束");
         emit m_action->sigEnd();
     }
 
 
-    void CStartAutoSpread::run()
+    void CManuStartSpread::run()
     {
         // assert(plcServerData()->colis(cpcReady) == true);
         myInfo << cnStr("开始第%1层打印").arg(++m_action->runCount);
@@ -36,7 +36,7 @@ namespace TIGER_VMSLM
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 
-    void CStartAutoSpread::runing()
+    void CManuStartSpread::runing()
     {
         if (m_action->m_bStop)
         {
@@ -57,7 +57,7 @@ namespace TIGER_VMSLM
     }
 
 
-    void CStartAutoMark::run()
+    void CManuStartMark::run()
     {
         assert(plcServerData()->colis(cpcSpreadEnd) == true);
         m_pVM->sendDisColis(cpdcStartMark, true);
@@ -71,7 +71,7 @@ namespace TIGER_VMSLM
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 
-    void CStartAutoMark::runing()
+    void CManuStartMark::runing()
     {
         if (m_action->m_bStop)
         {

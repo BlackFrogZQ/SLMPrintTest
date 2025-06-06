@@ -1,29 +1,29 @@
-﻿#include "markOnceAction.h"
-#include "markOnceState.h"
+﻿#include "markAction.h"
+#include "markState.h"
 
 namespace TIGER_VMSLM
 {
-    CMarkOnceAction::CMarkOnceAction(CVM *p_vm) : IAction(p_vm)
+    CMarkAction::CMarkAction(CVM *p_vm) : IAction(p_vm)
     {
-        m_idle = new CMarkOnceIdleState(this);
+        m_idle = new CMarkIdleState(this);
         m_downloadMarkFile = new CDownloadMarkFile(this);
         m_startMark = new CStartMark(this);
     }
 
-    CMarkOnceAction::~CMarkOnceAction()
+    CMarkAction::~CMarkAction()
     {
         delPtr(m_idle);
         delPtr(m_downloadMarkFile);
         delPtr(m_startMark);
     }
 
-    void CMarkOnceAction::start()
+    void CMarkAction::start()
     {
         IAction::start();
         m_downloadMarkFile->run();
     }
 
-    void CMarkOnceAction::stop()
+    void CMarkAction::stop()
     {
         IAction::stop();
     }

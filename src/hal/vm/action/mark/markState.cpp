@@ -1,22 +1,22 @@
-﻿#include "markOnceState.h"
-#include "markOnceAction.h"
+﻿#include "markState.h"
+#include "markAction.h"
 #include "printDatas/printDatasDef.h"
 using namespace TIGER_PrintDatas;
 
 namespace TIGER_VMSLM
 {
-    CMarkOnceIdleState::CMarkOnceIdleState(CMarkOnceAction* p_action) : m_action(p_action)
+    CMarkIdleState::CMarkIdleState(CMarkAction* p_action) : m_action(p_action)
     {
         assert(m_action != nullptr);
         m_pVM = m_action->m_pVM;
         assert(m_pVM != nullptr);
     }
 
-    CMarkOnceIdleState::~CMarkOnceIdleState()
+    CMarkIdleState::~CMarkIdleState()
     {
     }
 
-    void CMarkOnceIdleState::run()
+    void CMarkIdleState::run()
     {
         emit m_action->sigEnd();
     }
