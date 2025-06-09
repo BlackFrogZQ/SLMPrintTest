@@ -27,8 +27,6 @@ namespace TIGER_VMSLM
         using CManuOnceIdleState::CManuOnceIdleState;
         virtual void run() override;
         virtual void runing() override;
-    private:
-        bool m_isSpreading = false;
     };
 
     class CManuOnceMark : public CManuOnceIdleState
@@ -38,7 +36,5 @@ namespace TIGER_VMSLM
         using CManuOnceIdleState::CManuOnceIdleState;
         virtual void run() override;
         virtual void runing() override;
-    private:
-        bool m_isMarking = false;
     };
 }

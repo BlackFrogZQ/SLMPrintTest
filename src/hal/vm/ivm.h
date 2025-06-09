@@ -24,8 +24,6 @@ namespace TIGER_VMSLM
         // virtual void stopZero(CAxisID p_id) = 0;
         // virtual void stopZero() = 0;
         // virtual void setPos(CAxisID p_id, double p_pos) = 0;
-        // virtual void spread() = 0;
-        // virtual void stopSpread() = 0;
         // virtual void zeroEncoder() = 0;
         // virtual void print(QList<QQueue<TIGER_Print::CFrameData>> p_frames) = 0;
         // virtual void stopPrint() = 0;
@@ -37,10 +35,12 @@ namespace TIGER_VMSLM
         // virtual void stopAutoFlush() =0;
         // virtual void statusBar() = 0;
         // virtual void stopStatusBar() = 0;
-        // virtual void manuOnce() = 0;
-        // virtual void stopManuOnce() = 0;
-        // virtual void manu() = 0;
-        // virtual void stopManu() = 0;
+        virtual void manu() = 0;
+        virtual void stopManu() = 0;
+        virtual void manuOnce() = 0;
+        virtual void stopManuOnce() = 0;
+        virtual void spread() = 0;
+        virtual void stopSpread() = 0;
         // virtual void pause() = 0;
         // virtual void resume() = 0;
         // virtual void openDO(unsigned int p_id) = 0;
@@ -52,11 +52,6 @@ namespace TIGER_VMSLM
         // virtual const CNCStatus ncStatus() = 0;
         // virtual const QList<CPCStatus> pcStatus() = 0;
         virtual void changeVMStatus(CVMStatus p_status) = 0;
-
-        virtual void autoWork() = 0;
-        virtual void stopWork() = 0;
-        virtual void startSpread() = 0;
-        virtual void stopSpread() = 0;
 
         virtual void startMark() = 0;
         virtual void pauseMark() = 0;
@@ -71,21 +66,23 @@ namespace TIGER_VMSLM
     signals:
         void sigConnected();
         // void sigDisconnected();
+
         // void sigAxisStatusUpdate(unsigned int p_id,QDateTime p_timestamp);
         // void sigAxisAlarm(unsigned int p_id);
         // void sigPrintUpdate();
         void sigVMStatusUpdate();
         // void sigDiStatusUpdate();
         // void sigDoStatusUpdate();
-        void sigSpreadEnd();
+
         // void sigFlushEnd();
         // void sigAutoFlushEnd();
-        // void sigManuOnceEnd();
+        void sigManuEnd();
+        void sigManuOnceEnd();
+        void sigSpreadEnd();
         // void sigStatusBarEnd();
         // void sigSliceUpdate();
         // void sigStartPrint();
         // void sigPrintFinished();
-
         void sigMarkEnd();
         void sigDownloadEnd();
         void sigExecProcess(unsigned int p_pValue);

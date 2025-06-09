@@ -29,8 +29,9 @@ namespace TIGER_VMSLM
     {
     public:
         CActionCreater(CVM *p_vm);
-        IAction *autoWorkAction();
-        IAction *markOnceAction();
+        IAction *manuAction();
+        IAction *manuOnceAction();
+        IAction *markAction();
         IAction *spreadAction();
 
     protected:

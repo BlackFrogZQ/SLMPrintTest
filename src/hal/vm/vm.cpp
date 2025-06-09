@@ -34,26 +34,43 @@ namespace TIGER_VMSLM
 
         auto pActionCreator = new CActionCreater(this);
         assert(pActionCreator != nullptr);
-        m_pManuAction = pActionCreator->autoWorkAction();
-        m_pMarkAction = pActionCreator->markOnceAction();
+        m_pManuAction = pActionCreator->manuAction();
+        m_pManuOnceAction = pActionCreator->manuOnceAction();
+        m_pMarkAction = pActionCreator->markAction();
         m_pSpreadAction = pActionCreator->spreadAction();
         delete pActionCreator;
         pActionCreator = nullptr;
+        connect(m_pManuAction, &IAction::sigEnd, this, [this]()
+        {
+            if (m_vmStatus == vmsManu)
+            {
+                changeVMStatus(vmsIdle);
+            }
+            emit sigManuEnd();
+        });
+        connect(m_pManuOnceAction, &IAction::sigEnd, this, [this]()
+        {
+            if (m_vmStatus == vmsManuOnce)
+            {
+                changeVMStatus(vmsIdle);
+            }
+            emit sigManuOnceEnd();
+        }); 
         connect(m_pSpreadAction, &IAction::sigEnd, this, [this]()
         {
-            emit sigSpreadEnd();
             if (m_vmStatus == vmsSpread)
             {
                 changeVMStatus(vmsIdle);
             }
+            emit sigSpreadEnd();
         });
         connect(m_pMarkAction, &IAction::sigEnd, this, [this]()
         {
-            emit sigMarkEnd();
             if (m_vmStatus == vmsMark)
             {
                 changeVMStatus(vmsIdle);
             }
+            emit sigMarkEnd();
         });
     }
 
@@ -71,17 +88,27 @@ namespace TIGER_VMSLM
         m_megatron->connectMegatron();
     }
 
-    void CVM::autoWork()
+    void CVM::manu()
     {
         m_pManuAction->start();
     }
 
-    void CVM::stopWork()
+    void CVM::stopManu()
     {
         m_pManuAction->stop();
     }
 
-    void CVM::startSpread()
+    void CVM::manuOnce()
+    {
+        m_pManuOnceAction->start();
+    }
+
+    void CVM::stopManuOnce()
+    {
+        m_pManuOnceAction->stop();
+    }
+
+    void CVM::spread()
     {
         m_pSpreadAction->start();
         changeVMStatus(vmsSpread);

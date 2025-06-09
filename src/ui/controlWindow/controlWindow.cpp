@@ -67,10 +67,10 @@ void CControl::OnBnClickedButtonStopMark()
 
 void CControl::OnBnClickedButtonStartWork()
 {
-    m_pVM->autoWork();
+    m_pVM->manu();
 }
 
 void CControl::OnBnClickedButtonStopwork()
 {
-    m_pVM->stopWork();
+    m_pVM->stopManu();
 }

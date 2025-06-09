@@ -1,5 +1,6 @@
 ﻿#include "iAction.h"
 #include "./manu/manuAction.h"
+#include "./manu/manuOnce/manuOnceAction.h"
 #include "./mark/markAction.h"
 #include "./spread/spreadAction.h"
 
@@ -30,12 +31,17 @@ namespace TIGER_VMSLM
         assert(m_pVM != nullptr);
     }
 
-    IAction *CActionCreater::autoWorkAction()
+    IAction *CActionCreater::manuAction()
     {
         return new CManuAction(m_pVM);
     }
 
-    IAction *CActionCreater::markOnceAction()
+    IAction *CActionCreater::manuOnceAction()
+    {
+        return new CManuOnceAction(m_pVM);
+    }
+
+    IAction *CActionCreater::markAction()
     {
         return new CMarkAction(m_pVM);
     }

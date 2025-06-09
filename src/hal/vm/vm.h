@@ -22,9 +22,11 @@ namespace TIGER_VMSLM
         virtual void init() override;
         virtual void changeVMStatus(CVMStatus p_status) override;
 
-        virtual void autoWork() override;
-        virtual void stopWork() override;
-        virtual void startSpread() override;
+        virtual void manu() override;
+        virtual void stopManu() override;
+        virtual void manuOnce() override;
+        virtual void stopManuOnce() override;
+        virtual void spread() override;
         virtual void stopSpread() override;
 
         virtual void startMark() override;
@@ -45,6 +47,7 @@ namespace TIGER_VMSLM
         IMegatronController *m_megatronController;
 
         IAction *m_pManuAction;
+        IAction *m_pManuOnceAction;
         IAction *m_pMarkAction;
         IAction *m_pSpreadAction;
     };
