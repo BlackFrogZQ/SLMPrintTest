@@ -120,6 +120,7 @@ if(isRelease)
         )
 else()
     add_executable(${PROJECT_NAME}
+        WIN32
         main.cpp
         ${sources}
         ${versionRc}

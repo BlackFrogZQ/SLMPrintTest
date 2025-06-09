@@ -3,6 +3,7 @@
 #include <QDataStream>
 #include <QCryptographicHash>
 #include <QFile>
+#include <QDir>
 namespace TIGER_FlieTool
 {
     bool isFile(const QString &p_file);
@@ -10,6 +11,8 @@ namespace TIGER_FlieTool
     bool isDir(const QString &p_dir);
 
     QStringList scanfDir(const QString &p_dir);
+    QStringList scanfDir(const QString &p_dir, QDir::Filters filters = QDir::NoFilter, QDir::SortFlags sort = QDir::NoSort);
+    QStringList scanfDir(const QString &p_dir, const QStringList &nameFilters, QDir::Filters filters = QDir::NoFilter, QDir::SortFlags sort = QDir::NoSort);
 
     bool removeDir(const QString &p_dir);
 

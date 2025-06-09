@@ -1,12 +1,10 @@
 ﻿#pragma once
-#include "mainWindowDef.h"
 #include <qt_windows.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <QWidget>
 
 class QTextBrowser;
-class CMainWindowMenuBar;
 namespace TIGER_VMSLM
 {
     class CVM;
@@ -31,7 +29,8 @@ private:
 
 	QTextBrowser* m_pOutMsg;
     QWidget* m_pControl;
-    CMainWindowMenuBar *m_pMenuBar;
+    QWidget *m_pMenuBar;
+    QWidget *m_pShowSlicePanel;
 };
 
 CMainWindow* mainWindow();

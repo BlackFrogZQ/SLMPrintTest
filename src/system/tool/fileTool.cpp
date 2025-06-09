@@ -30,6 +30,36 @@ namespace TIGER_FlieTool
         }
         return dirs;
     }
+    QStringList scanfDir(const QString &p_dir, QDir::Filters filters, QDir::SortFlags sort)
+    {
+        QFileInfo info(p_dir);
+        QStringList dirs;
+        if (!info.isDir())
+        {
+            return dirs;
+        }
+        QFileInfoList folderList = QDir(p_dir).entryInfoList(filters, sort);
+        for (const auto &folder : folderList)
+        {
+            dirs.append(folder.absoluteFilePath());
+        }
+        return dirs;
+    }
+    QStringList scanfDir(const QString &p_dir, const QStringList &nameFilters, QDir::Filters filters, QDir::SortFlags sort)
+    {
+        QFileInfo info(p_dir);
+        QStringList dirs;
+        if (!info.isDir())
+        {
+            return dirs;
+        }
+        QFileInfoList folderList = QDir(p_dir).entryInfoList(nameFilters, filters, sort);
+        for (const auto &folder : folderList)
+        {
+            dirs.append(folder.absoluteFilePath());
+        }
+        return dirs;
+    }
 
     bool removeDir(const QString &p_dir)
     {

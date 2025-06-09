@@ -80,7 +80,7 @@ namespace TIGER_VMSLM
         void sigManuOnceEnd();
         void sigSpreadEnd();
         // void sigStatusBarEnd();
-        // void sigSliceUpdate();
+        void sigSliceUpdate();
         // void sigStartPrint();
         // void sigPrintFinished();
         void sigMarkEnd();
