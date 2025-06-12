@@ -162,7 +162,7 @@ namespace TIGER_Megatron
         checkErrorCode(HM_StopMark(m_ipIndex), tr("停止打标"));
     }
 
-    void CDZSTeGMCMegatron::creatUdmBin(vector<vector<Segment>> p_segments)
+    void CDZSTeGMCMegatron::creatUdmBin(vector<vector<lineSegment>> p_segments)
     {
         UDM_NewFile();
         UDM_Main();
@@ -173,7 +173,7 @@ namespace TIGER_Megatron
         // 蛇形打印
         for (size_t row = 0; row < p_segments.size(); ++row)
         {
-            vector<Segment> segments = p_segments[row];
+            vector<lineSegment> segments = p_segments[row];
             if (row % 2 == 1)
                 reverse(segments.begin(), segments.end());  // 奇数行反向
 

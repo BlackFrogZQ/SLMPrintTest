@@ -8,11 +8,13 @@ namespace TIGER_PrintDatas
     constexpr double cInch = 25.4;
 #define MINVALUE 0.0001
 
+    // 将点数转换为DPI: 根据字体大小（pointSize）和目标长度（len），计算所对应的 DPI（每英寸点数）值; (pointSize / len)表示pointSize有多长
     constexpr int toDpi(int pointSize, double len)
     {
         return int(cInch * pointSize / len);
     }
 
+    // 将DPI转换为长度: 根据字体大小（pointSize）和 DPI 值，计算字体在实际显示/打印时所占的物理长度; (pointSize / dpi)表示pointSize有多少英寸
     constexpr double toDpiLen(int pointSize, int dpi)
     {
         return cInch * pointSize / dpi;

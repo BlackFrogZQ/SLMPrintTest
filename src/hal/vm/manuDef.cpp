@@ -1,6 +1,7 @@
 ﻿#include "manuDef.h"
 #include "system/systemService.h"
 #include <QImage>
+using namespace TIGER_PrintDatas;
 namespace TIGER_SLMManuDef
 {
     static CManuStatus g_manuStatus;
@@ -10,13 +11,8 @@ namespace TIGER_SLMManuDef
     }
     void CManuStatus::updateLayerStatus()
     {
-        // assert(currentLayer >= 0 && currentLayer < printImages.size());
-        // printer()->setDatas(QImage(printImages[currentLayer]));
-        // layerStatus.clear();
-        // layerStatus.regions.append(printer()->calcuPrintRegions());
-        // for (const auto &region : layerStatus.regions)
-        // {
-        //     layerStatus.regionFrames.enqueue(matrixPrintHead()->getFrames(region.picRect, region.positiveMove));
-        // }
+        assert(currentLayer >= 0 && currentLayer < printImages.size());
+        layerStatus.clear();
+        layerStatus.allSegments = printDatas()->setDatas(QImage(printImages[currentLayer]));
     }
 }

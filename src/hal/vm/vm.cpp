@@ -147,7 +147,7 @@ namespace TIGER_VMSLM
         }
     }
 
-    void CVM::creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::Segment>> p_segments)
+    void CVM::creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments)
     {
         m_megatron->creatUdmBin(p_segments);
     }

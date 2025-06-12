@@ -7,7 +7,7 @@
 
 namespace TIGER_PrintDatas
 {
-    struct Segment;
+    struct lineSegment;
 }
 
 namespace TIGER_Megatron
@@ -24,7 +24,7 @@ namespace TIGER_Megatron
         void ContinueMark();
         void StopMark();
         void nativeEvent(MSG* p_message);
-        void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::Segment>> p_segments);
+        void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments);
 
     protected:
         LRESULT OnMsgDeviceEhco(WPARAM wParam, LPARAM lParam);

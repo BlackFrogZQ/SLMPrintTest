@@ -207,7 +207,7 @@ namespace TIGER_UI_SLM
                     QString file = QFileDialog::getOpenFileName(this, cnStr("打开测试图片"),QString(),cnStr("测试文件(*.bmp *.jpg *.png *.jpeg *.tif)"));
                     if (!file.isEmpty())
                     {
-                        setImages(QStringList()<< file);
+                        setImages(QStringList() << file);
                         TIGER_SLMManuDef::manuStatus()->updateLayerStatus();
                     }
                 });

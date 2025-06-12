@@ -24,7 +24,7 @@ namespace TIGER_VMSLM
     void CDownloadMarkFile::run()
     {
         myInfo << cnStr("开始创建并下载打标文件");
-        vector<vector<Segment>> slicedSegments;
+        vector<vector<lineSegment>> slicedSegments;
         m_pVM->creatUdmBin(slicedSegments);
         GMCState()->setDownloadStatus(true);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });

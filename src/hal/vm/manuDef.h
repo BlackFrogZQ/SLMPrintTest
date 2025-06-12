@@ -4,6 +4,7 @@
 */
 #include "system/basic.h"
 #include "hal/printDatas/basicDef.h"
+#include "hal/printDatas/printDatas.h"
 #include "hal/printDatas/printDatasDef.h"
 #include <QQueue>
 namespace TIGER_SLMManuDef
@@ -14,18 +15,20 @@ namespace TIGER_SLMManuDef
         QQueue<QList<QQueue<TIGER_PrintDatas::CFrameData>>> regionFrames;
         TIGER_PrintDatas::CPrintRegion currentRegion;
         QList<QQueue<TIGER_PrintDatas::CFrameData>> currentFrames;
+        vector<vector<TIGER_PrintDatas::lineSegment>> allSegments;
         void clear()
         {
             regions.clear();
             regionFrames.clear();
             currentRegion = TIGER_PrintDatas::CPrintRegion();
             currentFrames.clear();
+            allSegments.clear();
         }
     };
     struct CManuStatus
     {
         QList<QString> printImages;
-        int currentLayer;
+        int currentLayer = 0;
         CLayerStatus layerStatus;
         void updateLayerStatus();
     };
