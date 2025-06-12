@@ -24,6 +24,7 @@ namespace TIGER_PrintDatas
         const int height = p_buffer.height();
         const int cx = width / 2;
         const int cy = height / 2;
+        CLaserPara *laserParas = new CLaserPara();
 
         vector<vector<lineSegment>> allSegments;
         allSegments.reserve(height);
@@ -47,10 +48,10 @@ namespace TIGER_PrintDatas
                 {
                     int xEnd = ((*p) >= 128) ? col_x - 1 : col_x;
 
-                    // 坐标变换：图像中心为原点，右为x正，上为y正
-                    int transformedXStart = xStart - cx;
-                    int transformedXEnd = xEnd - cx;
-                    int transformedY = cy - row_y;
+                    // 坐标变换：图像中心为原点，右为x正，上为y正。并转换为单位为mm
+                    int transformedXStart = (xStart - cx) * laserParas->laserLineWidth;
+                    int transformedXEnd = (xEnd - cx) * laserParas->laserLineWidth;
+                    int transformedY = (cy - row_y) * laserParas->laserLineWidth;
 
                     rowSegments.push_back({transformedXStart, transformedXEnd, transformedY});
                     isSegment = false;
@@ -62,7 +63,7 @@ namespace TIGER_PrintDatas
                 allSegments.push_back(rowSegments);
             }
         }
-
+        delete laserParas;
         return allSegments;
     }
 
