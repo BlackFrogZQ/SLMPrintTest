@@ -40,6 +40,7 @@ namespace TIGER_VMSLM
         m_pSpreadAction = pActionCreator->spreadAction();
         delete pActionCreator;
         pActionCreator = nullptr;
+        connect(m_pManuAction, &IAction::sigSliceUpdate, this, &CVM::sigSliceUpdate);
         connect(m_pManuAction, &IAction::sigEnd, this, [this]()
         {
             if (m_vmStatus == vmsManu)
@@ -123,19 +124,15 @@ namespace TIGER_VMSLM
 
     void CVM::startMark()
     {
-        m_megatron->starMark();
+        m_pMarkAction->start();
+        changeVMStatus(vmsMark);
     }
-    void CVM::pauseMark()
-    {
-        m_megatron->PauseMark();
-    }
-    void CVM::continueMark()
-    {
-        m_megatron->ContinueMark();
-    }
+
     void CVM::stopMark()
     {
-        m_megatron->StopMark();
+        assert(m_vmStatus == vmsMark);
+        m_pMarkAction->stop();
+        changeVMStatus(vmsIdle);
     }
 
     void CVM::nativeEvent(MSG* p_message)
@@ -152,14 +149,14 @@ namespace TIGER_VMSLM
         m_megatron->creatUdmBin(p_segments);
     }
 
-    bool CVM::sendDisColis(int p_addr, bool p_value)
+    bool CVM::sendDiscreteInputs(int p_addr, bool p_value)
     {
-        return m_plcServer->sendDisColis(p_addr, p_value);
+        return m_plcServer->sendDiscreteInputs(p_addr, p_value);
     }
 
-    bool CVM::sendHold(int p_addr, bool p_value)
+    bool CVM::sendInputRegisters(int p_addr, bool p_value)
     {
-        return m_plcServer->sendHold(p_addr, p_value);
+        return m_plcServer->sendInputRegisters(p_addr, p_value);
     }
 
     void CVM::changeVMStatus(CVMStatus p_status)

@@ -54,14 +54,14 @@ namespace TIGER_VMSLM
         virtual void changeVMStatus(CVMStatus p_status) = 0;
 
         virtual void startMark() = 0;
-        virtual void pauseMark() = 0;
-        virtual void continueMark() = 0;
+        // virtual void pauseMark() = 0;
+        // virtual void continueMark() = 0;
         virtual void stopMark() = 0;
         virtual void nativeEvent(MSG* p_message) = 0;
         virtual void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments) = 0;
 
-        virtual bool sendDisColis(int p_addr, bool p_value) = 0;
-        virtual bool sendHold(int p_addr, bool p_value) = 0;
+        virtual bool sendDiscreteInputs(int p_addr, bool p_value) = 0;
+        virtual bool sendInputRegisters(int p_addr, bool p_value) = 0;
 
     signals:
         void sigConnected();

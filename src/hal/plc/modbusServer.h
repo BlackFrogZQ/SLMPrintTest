@@ -14,8 +14,9 @@ class CModbusServer:public QObject
 public:
     CModbusServer(QObject* p = nullptr);
     ~CModbusServer();
-    bool sendDisColis(int p_addr,bool p_value);
-    bool sendHold(int p_addr,quint16 p_value);
+    bool sendDiscreteInputs(int p_addr,bool p_value);
+    bool sendInputRegisters(int p_addr,quint16 p_value);
+    bool sendHoldRegisters(int p_addr,quint16 p_value);
     bool readData(QModbusDataUnit::RegisterType p_type,int p_startAddr,QList<quint16>& p_readDatas);
     bool listen(QString p_ip = "127.0.0.1",quint16 p_port = 502,quint8 p_masterAddr = 0xff);
 

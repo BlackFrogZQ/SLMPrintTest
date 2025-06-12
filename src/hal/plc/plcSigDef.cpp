@@ -21,12 +21,17 @@ bool CPLCServerData::colis(CPlcColis p_id) const
     return plcColis[p_id];
 }
 
-bool CPLCServerData::disColis(CPcDisColis p_id) const
+bool CPLCServerData::disDiscreteInputs(CPcDiscreteInputs p_id) const
 {
-    return pcDisColis[p_id];
+    return pcDiscreteInputs[p_id];
 }
 
-quint16 CPLCServerData::hold(CPcHold p_id) const
+quint16 CPLCServerData::inputRegisters(CPcInputRegisters p_id) const
 {
-    return pcHold[p_id];
+    return pcInputRegisters[p_id];
+}
+
+quint16 CPLCServerData::holdRegisters(CPlcHoldRegisters p_id) const
+{
+    return plcHoldRegisters[p_id];
 }

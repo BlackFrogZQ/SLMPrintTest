@@ -16,7 +16,7 @@ enum CPlcColis : unsigned char
     cpcMax
 };
 
-enum CPcDisColis : unsigned char
+enum CPcDiscreteInputs : unsigned char
 {
     cpdcStartSpread = 0,
     cpdcStartMark,
@@ -31,7 +31,22 @@ enum CPcDisColis : unsigned char
     cpdcMax
 };
 
-enum CPcHold : unsigned char
+enum CPcInputRegisters : unsigned char
+{
+    cpdTemp1 = 0,
+    cpdTemp2,
+    cpdTemp3,
+    cpdTemp4,
+    cpdTemp5,
+    cpdTemp6,
+    cpdTemp7,
+    cpdTemp8,
+    cpdTemp9,
+    cpdTemp10,
+    cpdMax
+};
+
+enum CPlcHoldRegisters : unsigned char
 {
     cphTemp1 = 0,
     cphTemp2,
@@ -55,8 +70,9 @@ public:
     bool connected() const;
     void setConnectState(bool p_isConnected);
     bool colis(CPlcColis p_id) const;
-    bool disColis(CPcDisColis p_id) const;
-    quint16 hold(CPcHold p_id) const;
+    bool disDiscreteInputs(CPcDiscreteInputs p_id) const;
+    quint16 inputRegisters(CPcInputRegisters p_id) const;
+    quint16 holdRegisters(CPlcHoldRegisters p_id) const;
 
 signals:
     void sigPlcConnect(bool p_isConnected);
@@ -64,8 +80,9 @@ signals:
 protected:
     bool isConnected = false;
     bool plcColis[cpcMax] = {0};
-    bool pcDisColis[cpdcMax] = {0};
-    quint16 pcHold[cphMax] = {0};
+    bool pcDiscreteInputs[cpdcMax] = {0};
+    quint16 pcInputRegisters[cpdMax] = {0};
+    quint16 plcHoldRegisters[cphMax] = {0};
 };
 
 CPLCServerData *plcServerData();

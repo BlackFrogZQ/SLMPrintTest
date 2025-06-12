@@ -7,8 +7,7 @@ namespace TIGER_VMSLM
     class CManuAction : public IAction
     {
         friend class CManuIdleState;
-        friend class CManuStartSpread;
-        friend class CManuStartMark;
+        friend class CManuOnceCycle;
 
         Q_OBJECT
     public:
@@ -20,7 +19,6 @@ namespace TIGER_VMSLM
 
     protected:
         IActionState* m_manuIdle;
-        IActionState* m_manuSpread;
-        IActionState* m_manuMark;
+        IActionState* m_manuOnceCycle;
     };
 }

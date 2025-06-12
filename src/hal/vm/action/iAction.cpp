@@ -6,7 +6,7 @@
 
 namespace TIGER_VMSLM
 {
-    IAction::IAction(CVM *p_vm) : QObject(nullptr), m_pVM(p_vm), m_bStop(false), runCount(0)
+    IAction::IAction(CVM *p_vm) : QObject(nullptr), m_pVM(p_vm), m_bStop(false)
     {
         assert(m_pVM != nullptr);
     }

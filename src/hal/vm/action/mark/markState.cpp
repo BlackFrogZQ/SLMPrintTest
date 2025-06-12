@@ -1,5 +1,6 @@
 ﻿#include "markState.h"
 #include "markAction.h"
+#include "hal/vm/manuDef.h"
 #include "printDatas/printDatasDef.h"
 using namespace TIGER_PrintDatas;
 
@@ -24,8 +25,7 @@ namespace TIGER_VMSLM
     void CDownloadMarkFile::run()
     {
         myInfo << cnStr("开始创建并下载打标文件");
-        vector<vector<lineSegment>> slicedSegments;
-        m_pVM->creatUdmBin(slicedSegments);
+        m_pVM->creatUdmBin(TIGER_SLMManuDef::manuStatus()->layerStatus.allSegments);
         GMCState()->setDownloadStatus(true);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
@@ -52,7 +52,7 @@ namespace TIGER_VMSLM
         assert(plcServerData()->colis(cpcReady) == true);
         assert(plcServerData()->colis(cpcSpreadEnd) == true);
         myInfo << cnStr("开始打标");
-        m_pVM->sendDisColis(cpdcStartMark, true);
+        m_pVM->sendDiscreteInputs(cpdcStartMark, true);
         GMCState()->setMarkingStatus(true);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
@@ -68,7 +68,7 @@ namespace TIGER_VMSLM
 
         if (GMCState()->getMarkingStatus() == false)
         {
-            m_pVM->sendDisColis(cpdcStartMark, false);
+            m_pVM->sendDiscreteInputs(cpdcStartMark, false);
             myInfo << cnStr("打标完成");
             changeState(m_action->m_idle);
             return;

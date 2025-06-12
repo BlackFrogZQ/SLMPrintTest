@@ -23,7 +23,7 @@ namespace TIGER_VMSLM
     {
         assert(plcServerData()->colis(cpcSpreading) == false);
         assert(!m_isSpreading);
-        m_pVM->sendDisColis(cpdcStartSpread, true);
+        m_pVM->sendDiscreteInputs(cpdcStartSpread, true);
         myInfo << cnStr("开始铺粉");
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
@@ -40,7 +40,7 @@ namespace TIGER_VMSLM
         if (plcServerData()->colis(cpcSpreading) == true && !m_isSpreading)
         {
             m_isSpreading = true;
-            m_pVM->sendDisColis(cpdcStartSpread, false);
+            m_pVM->sendDiscreteInputs(cpdcStartSpread, false);
             myInfo << cnStr("铺粉中......");
         }
         else if (plcServerData()->colis(cpcSpreading) == false && m_isSpreading)

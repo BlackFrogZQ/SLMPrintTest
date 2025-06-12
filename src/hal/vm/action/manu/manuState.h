@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "../iActionState.h"
 #include "../../vm.h"
+#include <QFuture>
 
 namespace TIGER_VMSLM
 {
@@ -15,25 +16,20 @@ namespace TIGER_VMSLM
         virtual void run() override;
 
     protected:
+        QMetaObject::Connection m_connect;
         CManuAction* m_action;
         IVM* m_pVM;
     };
 
-    class CManuStartSpread : public CManuIdleState
+    class CManuOnceCycle : public CManuIdleState
     {
         Q_OBJECT
     public:
         using CManuIdleState::CManuIdleState;
         virtual void run() override;
         virtual void runing() override;
-    };
 
-    class CManuStartMark : public CManuIdleState
-    {
-        Q_OBJECT
-    public:
-        using CManuIdleState::CManuIdleState;
-        virtual void run() override;
-        virtual void runing() override;
+    protected:
+        QFuture<void> m_updateLayerFuture;
     };
 }

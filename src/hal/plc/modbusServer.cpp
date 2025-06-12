@@ -30,15 +30,21 @@ CModbusServer::~CModbusServer()
     delPtr(m_pServer);
 }
 
-bool CModbusServer::sendDisColis(int p_addr, bool p_value)
+bool CModbusServer::sendDiscreteInputs(int p_addr, bool p_value)
 {
-    plcServerData()->pcDisColis[p_addr] = (p_value != 0);
+    plcServerData()->pcDiscreteInputs[p_addr] = (p_value != 0);
     return writeData(QModbusDataUnit::DiscreteInputs, p_addr, QList<quint16>() << p_value);
 }
 
-bool CModbusServer::sendHold(int p_addr, quint16 p_value)
+bool CModbusServer::sendInputRegisters(int p_addr, quint16 p_value)
 {
-    plcServerData()->pcHold[p_addr] = p_value;
+    plcServerData()->plcHoldRegisters[p_addr] = p_value;
+    return writeData(QModbusDataUnit::InputRegisters, p_addr, QList<quint16>() << p_value);
+}
+
+bool CModbusServer::sendHoldRegisters(int p_addr, quint16 p_value)
+{
+    plcServerData()->plcHoldRegisters[p_addr] = p_value;
     return writeData(QModbusDataUnit::HoldingRegisters, p_addr, QList<quint16>() << p_value);
 }
 
@@ -104,11 +110,11 @@ void CModbusServer::dataChanged(QModbusDataUnit::RegisterType table, int address
             break;
         case QModbusDataUnit::DiscreteInputs:
             assert(addr >= 0 && addr < cpdcMax);
-            plcServerData()->pcDisColis[addr] = (vaule != 0);
+            plcServerData()->pcDiscreteInputs[addr] = (vaule != 0);
             break;
         case QModbusDataUnit::HoldingRegisters:
             assert(addr >= 0 && addr < cphMax);
-            plcServerData()->pcHold[addr] = vaule;
+            plcServerData()->plcHoldRegisters[addr] = vaule;
             break;
         default:
             break;

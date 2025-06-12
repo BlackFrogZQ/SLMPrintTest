@@ -17,11 +17,11 @@ namespace TIGER_VMSLM
 
     signals:
         void sigEnd();
+        void sigSliceUpdate();
 
     protected:
         CVM *m_pVM;
         bool m_bStop;
-        int runCount;
     };
 
 
