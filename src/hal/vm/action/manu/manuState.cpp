@@ -34,7 +34,7 @@ namespace TIGER_VMSLM
         m_updateLayerFuture = QtConcurrent::run([this]
         {
             manuStatus()->updateLayerStatus();
-            QMetaObject::invokeMethod(m_pVM,"sigSliceUpdate",Qt::QueuedConnection);
+            QMetaObject::invokeMethod(m_action, "sigSliceUpdate", Qt::QueuedConnection);
         });
         m_pVM->manuOnce();
         m_connect = connect(m_pVM, &IVM::sigManuOnceEnd, this, [this](){ runing(); });

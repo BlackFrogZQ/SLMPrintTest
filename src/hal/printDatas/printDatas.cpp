@@ -20,11 +20,11 @@ namespace TIGER_PrintDatas
             p_buffer = p_buffer.convertToFormat(QImage::Format_Grayscale8);
         }
 
-        const int width = p_buffer.width();
-        const int height = p_buffer.height();
-        const int cx = width / 2;
-        const int cy = height / 2;
-        CLaserPara *laserParas = new CLaserPara();
+        const float width = p_buffer.width();
+        const float height = p_buffer.height();
+        const float cx = width / 2;
+        const float cy = height / 2;
+        CLaserPara *laserParas = new CLaserPara(0.0765, 300);
 
         vector<vector<lineSegment>> allSegments;
         allSegments.reserve(height);
@@ -34,7 +34,7 @@ namespace TIGER_PrintDatas
             vector<lineSegment> rowSegments;
             rowSegments.reserve(width);
             bool isSegment = false;
-            int xStart = 0;
+            float xStart = 0;
             uchar *p = (uchar *)p_buffer.constScanLine(row_y);
 
             for (int col_x = 0; col_x < width; col_x++, p++)
@@ -46,12 +46,12 @@ namespace TIGER_PrintDatas
                 }
                 else if (((*p) >= 128 || col_x == width - 1) && isSegment)
                 {
-                    int xEnd = ((*p) >= 128) ? col_x - 1 : col_x;
+                    float xEnd = ((*p) >= 128) ? col_x - 1 : col_x;
 
                     // 坐标变换：图像中心为原点，右为x正，上为y正。并转换为单位为mm
-                    int transformedXStart = (xStart - cx) * laserParas->laserLineWidth;
-                    int transformedXEnd = (xEnd - cx) * laserParas->laserLineWidth;
-                    int transformedY = (cy - row_y) * laserParas->laserLineWidth;
+                    float transformedXStart = (xStart - cx) * laserParas->laserLineWidth;
+                    float transformedXEnd = (xEnd - cx) * laserParas->laserLineWidth;
+                    float transformedY = (cy - row_y) * laserParas->laserLineWidth;
 
                     rowSegments.push_back({transformedXStart, transformedXEnd, transformedY});
                     isSegment = false;

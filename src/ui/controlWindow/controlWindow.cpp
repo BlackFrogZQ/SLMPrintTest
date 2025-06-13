@@ -46,22 +46,19 @@ void CControl::init()
 
 void CControl::OnBnClickedButtonStartMark()
 {
-    // m_pCDZSTMark->starMark();
+    m_pVM->startMark();
 }
 
 void CControl::OnBnClickedButtonPauseMark()
 {
-    // m_pCDZSTMark->PauseMark();
 }
 
 void CControl::OnBnClickedButtonContinueMark()
 {
-    // m_pCDZSTMark->ContinueMark();
 }
 
 void CControl::OnBnClickedButtonStopMark()
 {
-    // m_pCDZSTMark->StopMark();
 }
 
 

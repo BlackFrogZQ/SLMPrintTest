@@ -49,10 +49,11 @@ namespace TIGER_VMSLM
 
     void CStartMark::run()
     {
-        assert(plcServerData()->colis(cpcReady) == true);
-        assert(plcServerData()->colis(cpcSpreadEnd) == true);
+        // assert(plcServerData()->colis(cpcReady) == true);
+        // assert(plcServerData()->colis(cpcSpreadEnd) == true);
         myInfo << cnStr("开始打标");
         m_pVM->sendDiscreteInputs(cpdcStartMark, true);
+        m_pVM->GMCStarMark();
         GMCState()->setMarkingStatus(true);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }

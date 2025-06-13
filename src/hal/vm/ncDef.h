@@ -122,7 +122,7 @@ namespace TIGER_VMSLM
         cnStr("暂停"),
         cnStr("铺粉"),
         cnStr("打标"),
-        cnStr("清洗"),
+        cnStr("打标"),
         cnStr("自动清洗"),
         cnStr("手动一次"),
         cnStr("状态栏"),

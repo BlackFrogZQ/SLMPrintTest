@@ -39,7 +39,7 @@ namespace TIGER_Megatron
 
     void CDZSTeGMCMegatron::init()
     {
-        checkErrorCode(HM_InitBoard(m_hWnd), tr("初始化振镜控制卡"));
+        checkErrorCode(HM_InitBoard(m_hWnd), cnStr("初始化振镜控制卡"));
     }
 
     void CDZSTeGMCMegatron::nativeEvent(MSG* p_message)
@@ -75,11 +75,11 @@ namespace TIGER_Megatron
         }
         catch (const std::exception& e)
         {
-            myInfo << tr("CDZSTeGMCMegatron::nativeEvent异常：%1").arg(e.what());
+            myInfo << cnStr("CDZSTeGMCMegatron::nativeEvent异常：%1").arg(e.what());
         }
         catch (...)
         {
-            myInfo << tr("CDZSTeGMCMegatron::nativeEvent未知异常");
+            myInfo << cnStr("CDZSTeGMCMegatron::nativeEvent未知异常");
         }
     }
 
@@ -94,7 +94,7 @@ namespace TIGER_Megatron
             {
                 m_ipIndex = lParam;
                 m_bConnected = true;
-                printError(tr("%1：设备已经成功连接").arg(strIP));
+                printError(cnStr("%1：设备已经成功连接").arg(strIP));
             }
                 break;
             case HM_DEV_Ready:
@@ -102,18 +102,18 @@ namespace TIGER_Megatron
                 m_ipIndex = lParam;
                 m_bConnected = false;
                 emit sigDisconnected();
-                printError(tr("%1：设备处于待机状态（已经找到设备IP，可以进行连接）").arg(strIP));
+                printError(cnStr("%1：设备处于待机状态（已经找到设备IP，可以进行连接）").arg(strIP));
             }
                 break;
             case HM_DEV_NotAvailable:
             {
                 m_bConnected = false;
                 emit sigDisconnected();
-                printError(tr("%1：未找到设备，控制卡断电或者网线未连接").arg(strIP));
+                printError(cnStr("%1：未找到设备，控制卡断电或者网线未连接").arg(strIP));
             }
                 break;
             default:
-                printError(tr("%1：未知设备状态").arg(strIP));
+                printError(cnStr("%1：未知设备状态").arg(strIP));
                 break;
         }
         return 0;
@@ -122,7 +122,7 @@ namespace TIGER_Megatron
     LRESULT CDZSTeGMCMegatron::OnMsgUDMDownloadEnd(WPARAM wParam, LPARAM lParam)
     {
         GMCState()->setDownloadStatus(false);
-        printError(tr("UDM下载完成"));
+        printError(cnStr("UDM下载完成"));
         emit sigDownloadEnd();
         return 0;
     }
@@ -130,7 +130,7 @@ namespace TIGER_Megatron
     LRESULT CDZSTeGMCMegatron::OnMsgUDMRunHalt(WPARAM wParam, LPARAM lParam)
     {
         GMCState()->setMarkingStatus(false);
-        printError(tr("打标完成"));
+        // printError(cnStr("打标完成"));
         emit sigMarkEnd();
         return 0;
     }
@@ -144,22 +144,22 @@ namespace TIGER_Megatron
 
     void CDZSTeGMCMegatron::starMark()
     {
-        checkErrorCode(HM_StartMark(m_ipIndex), tr("开始打标"));
+        checkErrorCode(HM_StartMark(m_ipIndex), cnStr("开始打标"));
     }
 
     void CDZSTeGMCMegatron::PauseMark()
     {
-        checkErrorCode(HM_PauseMark(m_ipIndex), tr("暂停打标"));
+        checkErrorCode(HM_PauseMark(m_ipIndex), cnStr("暂停打标"));
     }
 
     void CDZSTeGMCMegatron::ContinueMark()
     {
-        checkErrorCode(HM_ContinueMark(m_ipIndex), tr("继续打标"));
+        checkErrorCode(HM_ContinueMark(m_ipIndex), cnStr("继续打标"));
     }
 
     void CDZSTeGMCMegatron::StopMark()
     {
-        checkErrorCode(HM_StopMark(m_ipIndex), tr("停止打标"));
+        checkErrorCode(HM_StopMark(m_ipIndex), cnStr("停止打标"));
     }
 
     void CDZSTeGMCMegatron::creatUdmBin(vector<vector<lineSegment>> p_segments)
@@ -193,6 +193,7 @@ namespace TIGER_Megatron
         UDM_Jump(0, 0, 0);
         UDM_EndMain();
         UDM_SaveToFile((char*)"./UDM.bin");
+        downloadMarkFile();
     }
 
     MarkParameter* CDZSTeGMCMegatron::getMarkParameter()
@@ -233,8 +234,8 @@ namespace TIGER_Megatron
 
     void CDZSTeGMCMegatron::downloadMarkFile()
     {
-        checkErrorCode(HM_DownloadMarkFile(m_ipIndex, "./UDM.bin", m_hWnd), tr("下载UDM.BIN打标文件到控制卡的临时存储区中"));
-        checkErrorCode(HM_BurnMarkFile(m_ipIndex, true), tr("固化脱机打标文件"));
+        checkErrorCode(HM_DownloadMarkFile(m_ipIndex, "./UDM.bin", m_hWnd), cnStr("下载UDM.BIN打标文件到控制卡的临时存储区中"));
+        checkErrorCode(HM_BurnMarkFile(m_ipIndex, true), cnStr("固化脱机打标文件"));
     }
 
     void CDZSTeGMCMegatron::printError(const QString &p_msg)
@@ -259,10 +260,10 @@ namespace TIGER_Megatron
         {
             return;
         };
-        char* pIp = m_ip.ip.toLatin1().data();
-        if(HM_ConnectByIpStr(pIp) == HM_OK)
+        QByteArray ipBytes = m_ip.ip.toLocal8Bit();
+        if(HM_ConnectByIpStr(ipBytes.data()) == HM_OK)
         {
-            m_ipIndex = HM_GetIndexByIpAddr(pIp);
+            m_ipIndex = HM_GetIndexByIpAddr(ipBytes.data());
             emit sigConnected();
             return;
         }

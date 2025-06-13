@@ -58,6 +58,7 @@ namespace TIGER_VMSLM
         // virtual void continueMark() = 0;
         virtual void stopMark() = 0;
         virtual void nativeEvent(MSG* p_message) = 0;
+        virtual void GMCStarMark() = 0;
         virtual void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments) = 0;
 
         virtual bool sendDiscreteInputs(int p_addr, bool p_value) = 0;

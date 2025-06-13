@@ -56,7 +56,7 @@ namespace TIGER_VMSLM
                 changeVMStatus(vmsIdle);
             }
             emit sigManuOnceEnd();
-        }); 
+        });
         connect(m_pSpreadAction, &IAction::sigEnd, this, [this]()
         {
             if (m_vmStatus == vmsSpread)
@@ -147,6 +147,11 @@ namespace TIGER_VMSLM
     void CVM::creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments)
     {
         m_megatron->creatUdmBin(p_segments);
+    }
+
+    void CVM::GMCStarMark()
+    {
+        m_megatron->starMark();
     }
 
     bool CVM::sendDiscreteInputs(int p_addr, bool p_value)
