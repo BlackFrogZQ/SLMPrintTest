@@ -28,7 +28,7 @@ private:
     TIGER_VMSLM::CVM *m_pVM;
 
 	QTextBrowser* m_pOutMsg;
-    QWidget* m_pControl;
+    QWidget* m_pManuPanel;
     QWidget *m_pMenuBar;
     QWidget *m_pShowSlicePanel;
 };

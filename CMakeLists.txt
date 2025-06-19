@@ -77,9 +77,9 @@ endif()
 file(GLOB HMHaShuLIBS "${PROJECT_SOURCE_DIR}/lib/HMHaShu/*.lib")
 file(GLOB HMHaShuDlls "${PROJECT_SOURCE_DIR}/lib/HMHaShu/*.dll")
 # 所有非Qt通用dll库 不一定在统一目录 可直接追加目录
-set_property(GLOBAL APPEND PROPERTY LIBS ${HMHaShuLIBS} ${PythonLIBS} ${numpyLIBS} ${ZMotionLIBS} ${baslerLIBS})
+set_property(GLOBAL APPEND PROPERTY LIBS ${HMHaShuLIBS})
 # 所有非Qt通用dll库 不一定在统一目录 可直接追加目录
-set_property(GLOBAL APPEND PROPERTY libDlls ${HMHaShuDlls} ${numpyDlls} ${ZMotionDlls} ${baslerDlls})
+set_property(GLOBAL APPEND PROPERTY libDlls ${HMHaShuDlls})
 get_property(currentLibs GLOBAL PROPERTY LIBS)
 
 macro(Macro_SetOutPath outPath)
@@ -92,7 +92,6 @@ Macro_SetOutPath(${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(./)
 include_directories(${PROJECT_SOURCE_DIR}/include)
-# opencv
 include_directories(${PROJECT_SOURCE_DIR}/include/HMHaShu)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)

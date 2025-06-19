@@ -5,7 +5,7 @@
 #include "hal/vm/vm.h"
 #include "menuBar/menuBar.h"
 #include "logTextBrowser/textBrowser.h"
-#include "controlWindow/controlWindow.h"
+#include "manuPanel/manuPanel.h"
 #include "imageListPanel/imageListPanel.h"
 #include <QTextBrowser>
 #include <QVBoxLayout>
@@ -62,14 +62,14 @@ void CMainWindow::init()
     m_pOutMsg->document()->setMaximumBlockCount(300);
     m_pOutMsg->setFixedHeight(100);
 
-    m_pControl = new CControl(this, m_pVM);
+    m_pManuPanel = new CManuPanel(m_pVM);
     m_pShowSlicePanel = new CImageListPanel(this, m_pVM);
     m_pMenuBar = new CMainWindowMenuBar(this);
 
     QVBoxLayout *pLayout = new QVBoxLayout();
     pLayout->addWidget(m_pMenuBar);
     pLayout->addWidget(m_pShowSlicePanel);
-    pLayout->addWidget(m_pControl);
+    pLayout->addWidget(m_pManuPanel);
     pLayout->addWidget(m_pOutMsg);
     this->setLayout(pLayout);
 }

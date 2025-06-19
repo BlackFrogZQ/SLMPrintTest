@@ -47,14 +47,14 @@ namespace TIGER_UI_SLM
         m_pListWidget->setLayoutMode(QListView::Batched);
         m_pListWidget->setUniformItemSizes(true);
         m_pListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        setImageIconSize(QSize(200, 200));
+        setImageIconSize(QSize(100, 100));
     }
 
     void CImageListPanel::initGraphicsView()
     {
         m_pScene = new TIGER_Graphics::CGraphicsScene(this);
         m_pView = new TIGER_Graphics::CGraphicsView(m_pScene);
-        setPlatformSize(QSizeF(1920, 1080));
+        setPlatformSize(QSizeF(960, 540));
     }
 
     void CImageListPanel::initLayout()
