@@ -22,22 +22,3 @@ int main(int argc, char *argv[])
     closeSystemService();
     return code;
 }
-
-// #include <QPixmap>
-// #include <QApplication>
-// #include <QPushButton>
-
-// // #ifdef _WIN32
-// // #include <windows.h>
-// // #endif
-// // #include <GL/gl.h>
-
-
-// int main(int argc, char *argv[])
-// {
-//     QApplication a(argc, argv);
-//     QPushButton btn;
-//     btn.setIcon(QPixmap(":/res/ico.png"));  // 换成存在的资源
-//     btn.show();
-//     return a.exec();
-// }
