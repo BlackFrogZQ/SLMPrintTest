@@ -220,6 +220,17 @@ namespace TIGER_UI_SLM
         pAction = new QAction(cnStr("转到正在打印层"), m_pContextMenu);
         connect(pAction, &QAction::triggered, this, [this]{ setCurrentImageId(m_currentLayer); });
         m_pContextMenu->addAction(pAction);
+
+        pAction = new QAction(cnStr("打开SLC文件"), m_pContextMenu);
+        connect(pAction, &QAction::triggered, this, [this]
+            {
+                QString file = QFileDialog::getOpenFileName(this, cnStr("打开SLC文件"), QString(), cnStr("SLC文件(*.slc)"));
+                if (!file.isEmpty())
+                {
+                    TIGER_SLMManuDef::manuStatus()->testSLCDatas(file.toStdString());
+                }
+            });
+        m_pContextMenu->addAction(pAction);
     }
 
     void CImageListPanel::contextMenuEvent(QContextMenuEvent *event)

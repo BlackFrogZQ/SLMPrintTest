@@ -31,6 +31,7 @@ namespace TIGER_SLMManuDef
         int currentLayer = 0;
         CLayerStatus layerStatus;
         void updateLayerStatus();
+        void testSLCDatas(const std::string& filename);
     };
     CManuStatus *manuStatus();
 }

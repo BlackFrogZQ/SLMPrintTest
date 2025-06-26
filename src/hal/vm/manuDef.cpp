@@ -9,10 +9,16 @@ namespace TIGER_SLMManuDef
     {
         return &g_manuStatus;
     }
+
     void CManuStatus::updateLayerStatus()
     {
         assert(currentLayer >= 0 && currentLayer < printImages.size());
         layerStatus.clear();
         layerStatus.allSegments = printDatas()->setDatas(QImage(printImages[currentLayer]));
+    }
+
+    void CManuStatus::testSLCDatas(const std::string& filename)
+    {
+        auto layers = printDatas()->getSLCDatas(filename);
     }
 }
