@@ -16,7 +16,7 @@ namespace TIGER_PrintDatas
     public:
         CPrintDatas();
         ~CPrintDatas();
-        std::vector<std::vector<TIGER_PrintDatas::lineSegment>> setDatas(QImage p_buffer);
+        std::vector<std::vector<TIGER_PrintDatas::lineSegment>> getImageDatas(QImage p_buffer);
         std::vector<Layer> getSLCDatas(const std::string& p_fileName);
     };
 

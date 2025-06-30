@@ -14,11 +14,18 @@ namespace TIGER_SLMManuDef
     {
         assert(currentLayer >= 0 && currentLayer < printImages.size());
         layerStatus.clear();
-        layerStatus.allSegments = printDatas()->setDatas(QImage(printImages[currentLayer]));
+        layerStatus.allSegments = printDatas()->getImageDatas(QImage(printImages[currentLayer]));
     }
 
-    void CManuStatus::testSLCDatas(const std::string& filename)
+    vector<Layer> CManuStatus::getSLCPrintDatas(const std::string& filename)
     {
-        auto layers = printDatas()->getSLCDatas(filename);
+        layerStatus.allSLCLayers = printDatas()->getSLCDatas(filename);
+        return layerStatus.allSLCLayers;
+    }
+
+    void CManuStatus::updataSLCLayerStatus()
+    {
+        assert(currentLayer >= 0 && currentLayer < layerStatus.allSLCLayers.size());
+        layerStatus.currentSLCLayer = layerStatus.allSLCLayers[currentLayer];
     }
 }

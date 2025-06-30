@@ -11,27 +11,24 @@ namespace TIGER_SLMManuDef
 {
     struct CLayerStatus
     {
-        QQueue<TIGER_PrintDatas::CPrintRegion> regions;
-        QQueue<QList<QQueue<TIGER_PrintDatas::CFrameData>>> regionFrames;
-        TIGER_PrintDatas::CPrintRegion currentRegion;
-        QList<QQueue<TIGER_PrintDatas::CFrameData>> currentFrames;
         vector<vector<TIGER_PrintDatas::lineSegment>> allSegments;
+        vector<TIGER_PrintDatas::Layer> allSLCLayers;
+        TIGER_PrintDatas::Layer currentSLCLayer;
         void clear()
         {
-            regions.clear();
-            regionFrames.clear();
-            currentRegion = TIGER_PrintDatas::CPrintRegion();
-            currentFrames.clear();
             allSegments.clear();
+            allSLCLayers.clear();
+            currentSLCLayer = TIGER_PrintDatas::Layer();
         }
     };
     struct CManuStatus
     {
+        CLayerStatus layerStatus;
         QList<QString> printImages;
         int currentLayer = 0;
-        CLayerStatus layerStatus;
         void updateLayerStatus();
-        void testSLCDatas(const std::string& filename);
+        vector<TIGER_PrintDatas::Layer> getSLCPrintDatas(const string& filename);
+        void updataSLCLayerStatus();
     };
     CManuStatus *manuStatus();
 }

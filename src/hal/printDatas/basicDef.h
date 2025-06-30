@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <memory.h>
 #include <assert.h>
 #include "system/basic.h"

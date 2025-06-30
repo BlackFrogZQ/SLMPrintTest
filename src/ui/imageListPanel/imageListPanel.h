@@ -1,6 +1,9 @@
 ﻿#pragma once
-#include <QWidget>
 #include "imageListDef.h"
+#include "hal/printDatas/printDatasDef.h"
+#include <QWidget>
+#include <vector>
+
 namespace TIGER_Graphics
 {
     class CGraphicsScene;
@@ -34,6 +37,9 @@ namespace TIGER_UI_SLM
         QString getImageName(int id) const;
         CImageItemState getImageState(int id) const;
 
+        void setListWidgetShow(const std::vector<TIGER_PrintDatas::Layer>& layers);
+        QImage renderLayer(const TIGER_PrintDatas::Layer& layer);
+
     signals:
         void currentIdChanged(int id);
         void sigDataChanged(int dataCount);
@@ -43,6 +49,7 @@ namespace TIGER_UI_SLM
 
     protected slots:
         void slotIdChanged(int id);
+        void slotIdChangedSLC(int id);
 
     protected:
         void initListWidget();
@@ -58,5 +65,6 @@ namespace TIGER_UI_SLM
         TIGER_Graphics::CGraphicsView *m_pView;
         int& m_currentLayer;
         QMenu* m_pContextMenu;
+        QSize imageSize_ = {100, 100};
     };
 }

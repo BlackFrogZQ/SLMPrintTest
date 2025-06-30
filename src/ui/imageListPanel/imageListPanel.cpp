@@ -11,9 +11,11 @@
 #include <QMenu>
 #include <QFileDialog>
 #include <QHBoxLayout>
+#include <QPainterPath>
 
 using namespace TIGER_VMSLM;
-
+using namespace TIGER_PrintDatas;
+using namespace std;
 namespace TIGER_UI_SLM
 {
     CImageListPanel::CImageListPanel(QWidget *parent, CVM *p_pVM)
@@ -26,7 +28,8 @@ namespace TIGER_UI_SLM
         initListWidget();
         initGraphicsView();
         initLayout();
-        connect(m_pListWidget, &QListWidget::currentRowChanged, this, &CImageListPanel::slotIdChanged);
+        // connect(m_pListWidget, &QListWidget::currentRowChanged, this, &CImageListPanel::slotIdChanged);
+        connect(m_pListWidget, &QListWidget::currentRowChanged, this, &CImageListPanel::slotIdChangedSLC);
         connect(m_pVM, &CVM::sigSliceUpdate, this, &CImageListPanel::slotSliceUpdate);
         initContextMenu();
     }
@@ -186,7 +189,6 @@ namespace TIGER_UI_SLM
         emit currentIdChanged(id);
     }
 
-
     void CImageListPanel::initContextMenu()
     {
         m_pContextMenu = new QMenu;
@@ -227,7 +229,8 @@ namespace TIGER_UI_SLM
                 QString file = QFileDialog::getOpenFileName(this, cnStr("打开SLC文件"), QString(), cnStr("SLC文件(*.slc)"));
                 if (!file.isEmpty())
                 {
-                    TIGER_SLMManuDef::manuStatus()->testSLCDatas(file.toStdString());
+                    auto pAllLayers = TIGER_SLMManuDef::manuStatus()->getSLCPrintDatas(file.toStdString());
+                    setListWidgetShow(pAllLayers);
                 }
             });
         m_pContextMenu->addAction(pAction);
@@ -242,5 +245,74 @@ namespace TIGER_UI_SLM
                 m_pContextMenu->exec(QCursor::pos());
         //     }
         // }
+    }
+
+    void CImageListPanel::setListWidgetShow(const vector<Layer>& layers)
+    {
+        m_pListWidget->clear();
+        for (size_t i = 0; i < layers.size(); ++i)
+        {
+            const Layer& layer = layers[i];
+            QImage img = renderLayer(layer);
+
+            QPixmap pix = QPixmap::fromImage(img);
+            QListWidgetItem* item = new QListWidgetItem(QIcon(pix), QString(cnStr("第%1层 (Z=%2)")).arg(i+1).arg(layer.z));
+            m_pListWidget->addItem(item);
+        }
+        m_currentLayer = 0;
+        setCurrentImageId(0);
+    }
+
+    QImage CImageListPanel::renderLayer(const Layer& layer)
+    {
+        QImage image(imageSize_, QImage::Format_ARGB32_Premultiplied);
+        image.fill(Qt::cyan);
+
+        QPainter painter(&image);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(Qt::black);
+
+        float minX=1e10, minY=1e10, maxX=-1e10, maxY=-1e10;
+        for (auto& contour : layer.pContours)
+        {
+            for (auto& p : contour)
+            {
+                minX = std::min(minX, p.x);
+                minY = std::min(minY, p.y);
+                maxX = std::max(maxX, p.x);
+                maxY = std::max(maxY, p.y);
+            }
+        }
+        float dx = maxX - minX, dy = maxY - minY;
+        float scale = std::min(imageSize_.width()/dx, imageSize_.height()/dy) * 0.9f;
+        float xOff = (imageSize_.width()  - dx*scale)/2 - minX*scale;
+        float yOff = (imageSize_.height() - dy*scale)/2 - minY*scale;
+
+        QPainterPath path;
+        for (auto& contour : layer.pContours)
+        {
+            QPolygonF poly;
+            for (auto& p : contour)
+            {
+                QPointF pt(p.x*scale + xOff, p.y*scale + yOff);
+                poly << pt;
+            }
+            path.addPolygon(poly);
+        }
+        painter.setBrush(Qt::black);
+        painter.drawPath(path);
+
+        return image;
+    }
+
+    void CImageListPanel::slotIdChangedSLC(int id)
+    {
+        if (id < 0 || id >= m_pListWidget->count()) return;
+        auto *item = static_cast<CImageListItem*>( m_pListWidget->item(id) );
+        QIcon icon = item->icon();
+        QPixmap pix = icon.pixmap(m_pListWidget->iconSize());
+        m_pScene->showImage(pix);
+        m_pView->resetView();
     }
 }

@@ -19,7 +19,7 @@ namespace TIGER_PrintDatas
     {
     }
 
-    vector<vector<lineSegment>> CPrintDatas::setDatas(QImage p_buffer)
+    vector<vector<lineSegment>> CPrintDatas::getImageDatas(QImage p_buffer)
     {
         assert(!p_buffer.isNull());
         if (p_buffer.format() != QImage::Format_Grayscale8)
