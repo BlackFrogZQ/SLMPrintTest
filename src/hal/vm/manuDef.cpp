@@ -17,15 +17,15 @@ namespace TIGER_SLMManuDef
         layerStatus.allSegments = printDatas()->getImageDatas(QImage(printImages[currentLayer]));
     }
 
-    vector<Layer> CManuStatus::getSLCPrintDatas(const std::string& filename)
+    printSLCDatas CManuStatus::getSLCPrintDatas(const std::string& filename)
     {
-        layerStatus.allSLCLayers = printDatas()->getSLCDatas(filename);
-        return layerStatus.allSLCLayers;
+        layerStatus.SLCLayersStatus = printDatas()->getSLCDatas(filename);
+        return layerStatus.SLCLayersStatus;
     }
 
     void CManuStatus::updataSLCLayerStatus()
     {
-        assert(currentLayer >= 0 && currentLayer < layerStatus.allSLCLayers.size());
-        layerStatus.currentSLCLayer = layerStatus.allSLCLayers[currentLayer];
+        assert(currentLayer >= 0 && currentLayer < layerStatus.SLCLayersStatus.allSLCLayers.size());
+        layerStatus.currentSLCLayer = layerStatus.SLCLayersStatus.allSLCLayers[currentLayer];
     }
 }

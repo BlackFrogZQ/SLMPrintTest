@@ -37,18 +37,35 @@ namespace TIGER_PrintDatas
 
 #pragma region "SLC打印参数"
     // 点坐标
-    struct Point
+    struct pointDatas
     {
         float x, y;
     };
 
+    // 轮廓数据
+    struct countourDatas
+    {
+        vector<pointDatas> points;
+        bool isClosed;
+        bool isOuterContour;
+    };
+
     // 单层数据
-    struct Layer
+    struct layerDatas
     {
         float z;
-        float thick;
+        vector<countourDatas> pContours;
+    };
+
+    // SLC打印数据
+    struct printSLCDatas
+    {
+        float initialHeight;
+        float layerThickness;
         float lineWidth;
-        vector<vector<Point>> pContours;
+        float reservedSize;
+        bool isModelSlice;
+        vector<layerDatas> allSLCLayers;
     };
 
     template<typename T>

@@ -74,7 +74,7 @@ namespace TIGER_PrintDatas
         return allSegments;
     }
 
-    vector<Layer> CPrintDatas::getSLCDatas(const string& p_fileName)
+    printSLCDatas CPrintDatas::getSLCDatas(const string& p_fileName)
     {
         size_t pBbyteIndex = 0;
         ifstream file(p_fileName, ios::binary);
@@ -87,49 +87,47 @@ namespace TIGER_PrintDatas
         pBbyteIndex = pBbyteIndex + 256;                         // 跳过256字节保留区
         uint8_t size = read<uint8_t>(pSLCByteContent, pBbyteIndex);
 
-        float z, thick, lineWidth, remainSize;
+        printSLCDatas pSLCDatas;
         for (size_t i = 0; i < static_cast<int>(size); i++)
         {
-            z = read<float>(pSLCByteContent, pBbyteIndex);
-            thick = read<float>(pSLCByteContent, pBbyteIndex);
-            lineWidth = read<float>(pSLCByteContent, pBbyteIndex);
-            remainSize = read<float>(pSLCByteContent, pBbyteIndex);
+            pSLCDatas.initialHeight = read<float>(pSLCByteContent, pBbyteIndex);
+            pSLCDatas.layerThickness = read<float>(pSLCByteContent, pBbyteIndex);
+            pSLCDatas.lineWidth = read<float>(pSLCByteContent, pBbyteIndex);
+            pSLCDatas.reservedSize = read<float>(pSLCByteContent, pBbyteIndex);
         }
 
-        vector<Layer> pLayers;
         while (true)
         {
-            float height = read<float>(pSLCByteContent, pBbyteIndex);
+            float currentLayerHeight = read<float>(pSLCByteContent, pBbyteIndex);
             uint32_t boundariesNum = read<uint32_t>(pSLCByteContent, pBbyteIndex);
-            if (boundariesNum == 0xffffffff)
+            if (boundariesNum == 0xffffffff)                     //读取到尾部退出
             {
                 break;
             }
 
-            Layer pLayer;
-            pLayer.z = height;
-            pLayer.thick = thick;
-            pLayer.lineWidth = lineWidth;
+            layerDatas pLayer;
+            pLayer.z = currentLayerHeight;
+            pLayer.pContours.reserve(boundariesNum);
             for (size_t i = 0; i < boundariesNum; i++)
             {
                 uint32_t verticesNum = read<uint32_t>(pSLCByteContent, pBbyteIndex);
                 uint32_t gapsNum = read<uint32_t>(pSLCByteContent, pBbyteIndex);
-                std::vector<Point> pPoints;
-                pPoints.reserve(verticesNum);
+                countourDatas contour;
+                contour.points.reserve(verticesNum);
                 for (size_t j = 0; j < verticesNum; j++)
                 {
-                    Point pPoint;
+                    pointDatas pPoint;
                     float x = read<float>(pSLCByteContent, pBbyteIndex);
                     float y = read<float>(pSLCByteContent, pBbyteIndex);
                     pPoint.x = x;
                     pPoint.y = y;
-                    pPoints.push_back(pPoint);
+                    contour.points.push_back(pPoint);
                 }
-                pLayer.pContours.push_back(std::move(pPoints));
+                pLayer.pContours.push_back(std::move(contour));
             }
-            pLayers.push_back(std::move(pLayer));
+            pSLCDatas.allSLCLayers.push_back(std::move(pLayer));
         }
-        return pLayers;
+        return pSLCDatas;
     }
 
     CPrintDatas *printDatas()

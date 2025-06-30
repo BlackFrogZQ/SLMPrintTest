@@ -37,8 +37,8 @@ namespace TIGER_UI_SLM
         QString getImageName(int id) const;
         CImageItemState getImageState(int id) const;
 
-        void setListWidgetShow(const std::vector<TIGER_PrintDatas::Layer>& layers);
-        QImage renderLayer(const TIGER_PrintDatas::Layer& layer);
+        void setListWidgetShow(const TIGER_PrintDatas::printSLCDatas& p_SLCDatas);
+        QImage renderLayer(const TIGER_PrintDatas::layerDatas& layer);
 
     signals:
         void currentIdChanged(int id);
@@ -65,6 +65,8 @@ namespace TIGER_UI_SLM
         TIGER_Graphics::CGraphicsView *m_pView;
         int& m_currentLayer;
         QMenu* m_pContextMenu;
+
         QSize listWidgetSize = {150, 150};
+        TIGER_PrintDatas::printSLCDatas m_printSLCDatas;
     };
 }

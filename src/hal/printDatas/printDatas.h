@@ -7,7 +7,7 @@ class QImage;
 namespace TIGER_PrintDatas
 {
     struct lineSegment;
-    struct Layer;
+    struct printSLCDatas;
 }
 namespace TIGER_PrintDatas
 {
@@ -17,7 +17,7 @@ namespace TIGER_PrintDatas
         CPrintDatas();
         ~CPrintDatas();
         std::vector<std::vector<TIGER_PrintDatas::lineSegment>> getImageDatas(QImage p_buffer);
-        std::vector<Layer> getSLCDatas(const std::string& p_fileName);
+        TIGER_PrintDatas::printSLCDatas getSLCDatas(const std::string& p_fileName);
     };
 
     CPrintDatas *printDatas();

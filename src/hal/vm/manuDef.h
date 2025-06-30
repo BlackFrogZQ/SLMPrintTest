@@ -12,13 +12,12 @@ namespace TIGER_SLMManuDef
     struct CLayerStatus
     {
         vector<vector<TIGER_PrintDatas::lineSegment>> allSegments;
-        vector<TIGER_PrintDatas::Layer> allSLCLayers;
-        TIGER_PrintDatas::Layer currentSLCLayer;
+        TIGER_PrintDatas::printSLCDatas SLCLayersStatus;
+        TIGER_PrintDatas::layerDatas currentSLCLayer;
         void clear()
         {
             allSegments.clear();
-            allSLCLayers.clear();
-            currentSLCLayer = TIGER_PrintDatas::Layer();
+            currentSLCLayer = TIGER_PrintDatas::layerDatas();
         }
     };
     struct CManuStatus
@@ -27,7 +26,7 @@ namespace TIGER_SLMManuDef
         QList<QString> printImages;
         int currentLayer = 0;
         void updateLayerStatus();
-        vector<TIGER_PrintDatas::Layer> getSLCPrintDatas(const string& filename);
+        TIGER_PrintDatas::printSLCDatas getSLCPrintDatas(const string& filename);
         void updataSLCLayerStatus();
     };
     CManuStatus *manuStatus();

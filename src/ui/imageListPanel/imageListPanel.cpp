@@ -247,12 +247,13 @@ namespace TIGER_UI_SLM
         // }
     }
 
-    void CImageListPanel::setListWidgetShow(const vector<Layer>& layers)
+    void CImageListPanel::setListWidgetShow(const printSLCDatas& p_SLCDatas)
     {
         m_pListWidget->clear();
-        for (size_t i = 0; i < layers.size(); ++i)
+        m_printSLCDatas = p_SLCDatas;
+        for (size_t i = 0; i < m_printSLCDatas.allSLCLayers.size(); ++i)
         {
-            const Layer& layer = layers[i];
+            const layerDatas& layer = m_printSLCDatas.allSLCLayers[i];
             QImage img = renderLayer(layer);
 
             QPixmap pix = QPixmap::fromImage(img);
@@ -263,18 +264,15 @@ namespace TIGER_UI_SLM
         setCurrentImageId(0);
     }
 
-    QImage CImageListPanel::renderLayer(const Layer& layer)
+    QImage CImageListPanel::renderLayer(const layerDatas& layer)
     {
         QImage image(listWidgetSize, QImage::Format_ARGB32_Premultiplied);
         image.fill(Qt::cyan);
 
-        QPainter painter(&image);
-        painter.setRenderHint(QPainter::Antialiasing);
-
         float minX=1e10, minY=1e10, maxX=-1e10, maxY=-1e10;
         for (auto& contour : layer.pContours)
         {
-            for (auto& p : contour)
+            for (auto& p : contour.points)
             {
                 minX = std::min(minX, p.x);
                 minY = std::min(minY, p.y);
@@ -290,11 +288,11 @@ namespace TIGER_UI_SLM
         QPainterPath path;
         for (auto& contour : layer.pContours)
         {
-            size_t pointNum = contour.size();
+            size_t pointNum = contour.points.size();
             if(pointNum >= 3)
             {
                 QPolygonF poly;
-                for (auto& p : contour)
+                for (auto& p : contour.points)
                 {
                     QPointF pt(p.x*scale + xOff, p.y*scale + yOff);
                     poly << pt;
@@ -303,26 +301,25 @@ namespace TIGER_UI_SLM
             }
             else if (pointNum == 2)
             {
-                QPointF pt1(contour[0].x*scale + xOff, contour[0].y*scale + yOff);
-                QPointF pt2(contour[1].x*scale + xOff, contour[1].y*scale + yOff);
+                QPointF pt1(contour.points[0].x*scale + xOff, contour.points[0].y*scale + yOff);
+                QPointF pt2(contour.points[1].x*scale + xOff, contour.points[1].y*scale + yOff);
                 path.moveTo(pt1);
                 path.lineTo(pt2);
             }
             else if (pointNum == 1)
             {
-                QPointF pt(contour[0].x*scale + xOff, contour[0].y*scale + yOff);
+                QPointF pt(contour.points[0].x*scale + xOff, contour.points[0].y*scale + yOff);
                 constexpr qreal pRadius = 2.0;
                 path.addEllipse(pt, pRadius, pRadius);
             }
         }
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(Qt::black);
-        painter.drawPath(path);
 
+        QPainter painter(&image);
+        painter.setRenderHint(QPainter::Antialiasing);
         QPen pen(Qt::blue);
-        pen.setWidthF(qMax(1.0f, layer.lineWidth * scale * 0.5f));
+        pen.setWidthF(qMax(1.0f, m_printSLCDatas.lineWidth * scale * 0.5f));
         painter.setPen(pen);
-        painter.setBrush(Qt::NoBrush);
+        painter.setBrush(Qt::black);
         painter.drawPath(path);
 
         return image;
