@@ -65,6 +65,6 @@ namespace TIGER_UI_SLM
         TIGER_Graphics::CGraphicsView *m_pView;
         int& m_currentLayer;
         QMenu* m_pContextMenu;
-        QSize imageSize_ = {100, 100};
+        QSize listWidgetSize = {150, 150};
     };
 }

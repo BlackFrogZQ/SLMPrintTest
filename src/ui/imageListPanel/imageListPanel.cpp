@@ -50,7 +50,7 @@ namespace TIGER_UI_SLM
         m_pListWidget->setLayoutMode(QListView::Batched);
         m_pListWidget->setUniformItemSizes(true);
         m_pListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        setImageIconSize(QSize(100, 100));
+        setImageIconSize(listWidgetSize);
     }
 
     void CImageListPanel::initGraphicsView()
@@ -265,13 +265,11 @@ namespace TIGER_UI_SLM
 
     QImage CImageListPanel::renderLayer(const Layer& layer)
     {
-        QImage image(imageSize_, QImage::Format_ARGB32_Premultiplied);
+        QImage image(listWidgetSize, QImage::Format_ARGB32_Premultiplied);
         image.fill(Qt::cyan);
 
         QPainter painter(&image);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(Qt::black);
 
         float minX=1e10, minY=1e10, maxX=-1e10, maxY=-1e10;
         for (auto& contour : layer.pContours)
@@ -285,22 +283,46 @@ namespace TIGER_UI_SLM
             }
         }
         float dx = maxX - minX, dy = maxY - minY;
-        float scale = std::min(imageSize_.width()/dx, imageSize_.height()/dy) * 0.9f;
-        float xOff = (imageSize_.width()  - dx*scale)/2 - minX*scale;
-        float yOff = (imageSize_.height() - dy*scale)/2 - minY*scale;
+        float scale = std::min(listWidgetSize.width()/dx, listWidgetSize.height()/dy) * 0.9f;
+        float xOff = (listWidgetSize.width()  - dx*scale)/2 - minX*scale;
+        float yOff = (listWidgetSize.height() - dy*scale)/2 - minY*scale;
 
         QPainterPath path;
         for (auto& contour : layer.pContours)
         {
-            QPolygonF poly;
-            for (auto& p : contour)
+            size_t pointNum = contour.size();
+            if(pointNum >= 3)
             {
-                QPointF pt(p.x*scale + xOff, p.y*scale + yOff);
-                poly << pt;
+                QPolygonF poly;
+                for (auto& p : contour)
+                {
+                    QPointF pt(p.x*scale + xOff, p.y*scale + yOff);
+                    poly << pt;
+                }
+                path.addPolygon(poly);
             }
-            path.addPolygon(poly);
+            else if (pointNum == 2)
+            {
+                QPointF pt1(contour[0].x*scale + xOff, contour[0].y*scale + yOff);
+                QPointF pt2(contour[1].x*scale + xOff, contour[1].y*scale + yOff);
+                path.moveTo(pt1);
+                path.lineTo(pt2);
+            }
+            else if (pointNum == 1)
+            {
+                QPointF pt(contour[0].x*scale + xOff, contour[0].y*scale + yOff);
+                constexpr qreal pRadius = 2.0;
+                path.addEllipse(pt, pRadius, pRadius);
+            }
         }
+        painter.setPen(Qt::NoPen);
         painter.setBrush(Qt::black);
+        painter.drawPath(path);
+
+        QPen pen(Qt::blue);
+        pen.setWidthF(qMax(1.0f, layer.lineWidth * scale * 0.5f));
+        painter.setPen(pen);
+        painter.setBrush(Qt::NoBrush);
         painter.drawPath(path);
 
         return image;
