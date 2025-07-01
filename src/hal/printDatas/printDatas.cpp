@@ -74,7 +74,7 @@ namespace TIGER_PrintDatas
         return allSegments;
     }
 
-    printSLCDatas CPrintDatas::getSLCDatas(const string& p_fileName)
+    printSLCDatas CPrintDatas::getModelDatas(const string& p_fileName, bool p_isModel)
     {
         size_t pBbyteIndex = 0;
         ifstream file(p_fileName, ios::binary);
@@ -88,6 +88,7 @@ namespace TIGER_PrintDatas
         uint8_t size = read<uint8_t>(pSLCByteContent, pBbyteIndex);
 
         printSLCDatas pSLCDatas;
+        pSLCDatas.isModelSlice = p_isModel;
         for (size_t i = 0; i < static_cast<int>(size); i++)
         {
             pSLCDatas.initialHeight = read<float>(pSLCByteContent, pBbyteIndex);
@@ -114,6 +115,7 @@ namespace TIGER_PrintDatas
                 uint32_t gapsNum = read<uint32_t>(pSLCByteContent, pBbyteIndex);
                 countourDatas contour;
                 contour.points.reserve(verticesNum);
+                contour.isModelContour = p_isModel;
                 for (size_t j = 0; j < verticesNum; j++)
                 {
                     pointDatas pPoint;
@@ -123,11 +125,66 @@ namespace TIGER_PrintDatas
                     pPoint.y = y;
                     contour.points.push_back(pPoint);
                 }
-                pLayer.pContours.push_back(std::move(contour));
+                pLayer.pContours.push_back(move(contour));
             }
-            pSLCDatas.allSLCLayers.push_back(std::move(pLayer));
+            pSLCDatas.allSLCLayers.push_back(move(pLayer));
         }
         return pSLCDatas;
+    }
+
+    printSLCDatas CPrintDatas::getModelAndSupportDatas(const string& p_modelFileName, const string& p_supportFileName)
+    {
+        printSLCDatas modelDatas = getModelDatas(p_modelFileName, true);
+        printSLCDatas sliceDatas = getModelDatas(p_supportFileName, false);
+
+        printSLCDatas mergedDatas;
+        mergedDatas.initialHeight  = sliceDatas.initialHeight;
+        mergedDatas.layerThickness = sliceDatas.layerThickness;
+        mergedDatas.lineWidth = modelDatas.lineWidth;
+        mergedDatas.reservedSize = modelDatas.reservedSize;
+
+        const auto& pModelLayers = modelDatas.allSLCLayers;
+        const auto& pSliceLayers = sliceDatas.allSLCLayers;
+        size_t modelCount   = pModelLayers.size();
+        size_t supportCount = pSliceLayers.size();
+
+        constexpr float eps = 1e-6f;    // 用于浮点数比较的容差
+        for (size_t i = 0; i < supportCount; ++i)
+        {
+            float z = pSliceLayers[i].z;
+            layerDatas layer;
+            layer.z = z;
+
+            float idxF = (z - modelDatas.initialHeight) / modelDatas.layerThickness;
+            int idx  = int(idxF + 0.5f);
+            if (idx >= 0 && idx < (int)modelCount && fabs(pModelLayers[idx].z - z) < eps)
+            {
+                for (auto& c : pModelLayers[idx].pContours)
+                {
+                    layer.pContours.push_back(c);
+                }
+            }
+
+            for (auto& c : pSliceLayers[i].pContours)
+            {
+                layer.pContours.push_back(c);
+            }
+
+            mergedDatas.allSLCLayers.push_back(std::move(layer));
+        }
+
+        for (size_t j = supportCount; j < modelCount; ++j)
+        {
+            layerDatas layer;
+            layer.z = pModelLayers[j].z;
+            for (auto& c : pModelLayers[j].pContours)
+            {
+                layer.pContours.push_back(c);
+            }
+            mergedDatas.allSLCLayers.push_back(std::move(layer));
+        }
+
+        return mergedDatas;
     }
 
     CPrintDatas *printDatas()

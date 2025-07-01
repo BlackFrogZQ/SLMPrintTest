@@ -1,7 +1,9 @@
 ﻿#include "manuDef.h"
 #include "system/systemService.h"
 #include <QImage>
-using namespace TIGER_PrintDatas;
+#include <QFileInfo>
+#include <QDir>
+
 namespace TIGER_SLMManuDef
 {
     static CManuStatus g_manuStatus;
@@ -17,9 +19,23 @@ namespace TIGER_SLMManuDef
         layerStatus.allSegments = printDatas()->getImageDatas(QImage(printImages[currentLayer]));
     }
 
-    printSLCDatas CManuStatus::getSLCPrintDatas(const std::string& filename)
+    printSLCDatas CManuStatus::getSLCPrintDatas(const QString& p_modelFilename)
     {
-        layerStatus.SLCLayersStatus = printDatas()->getSLCDatas(filename);
+        assert(!p_modelFilename.isEmpty());
+        layerStatus.clear();
+        QFileInfo fi(p_modelFilename);
+        QString dir = fi.absolutePath();
+        QString baseName = fi.completeBaseName();
+        QString suffix = fi.suffix();
+        QString supportFile = QDir(dir).filePath(baseName + "_s." + suffix);
+        if (QFile::exists(supportFile))
+        {
+            layerStatus.SLCLayersStatus = printDatas()->getModelAndSupportDatas(p_modelFilename.toStdString(), supportFile.toStdString());
+        }
+        else
+        {
+            layerStatus.SLCLayersStatus = printDatas()->getModelDatas(p_modelFilename.toStdString(), true);
+        }
         return layerStatus.SLCLayersStatus;
     }
 

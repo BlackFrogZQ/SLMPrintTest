@@ -15,7 +15,7 @@ namespace TIGER_PrintDatas
     struct CLaserPara
     {
         float laserLineWidth = 0.0765; // 激光线宽
-        int widthDpi = 300;       // 宽度DPI
+        int widthDpi = 300;            // 宽度DPI
         CLaserPara(float p_laserLineWidth = 0.0765, int p_widthDpi = 300)
             : laserLineWidth(p_laserLineWidth), widthDpi(p_widthDpi)
         {
@@ -48,6 +48,7 @@ namespace TIGER_PrintDatas
         vector<pointDatas> points;
         bool isClosed;
         bool isOuterContour;
+        bool isModelContour;
     };
 
     // 单层数据
@@ -69,10 +70,10 @@ namespace TIGER_PrintDatas
     };
 
     template<typename T>
-    T read(std::string& fs, size_t& index)
+    T read(string& fs, size_t& index)
     {
         T value;
-        std::memcpy(&value, fs.data() + index, sizeof(T));
+        memcpy(&value, fs.data() + index, sizeof(T));
         index += sizeof(T);
         return value;
     }

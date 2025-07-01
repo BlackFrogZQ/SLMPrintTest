@@ -229,7 +229,7 @@ namespace TIGER_UI_SLM
                 QString file = QFileDialog::getOpenFileName(this, cnStr("打开SLC文件"), QString(), cnStr("SLC文件(*.slc)"));
                 if (!file.isEmpty())
                 {
-                    auto pAllLayers = TIGER_SLMManuDef::manuStatus()->getSLCPrintDatas(file.toStdString());
+                    auto pAllLayers = TIGER_SLMManuDef::manuStatus()->getSLCPrintDatas(file);
                     setListWidgetShow(pAllLayers);
                 }
             });
