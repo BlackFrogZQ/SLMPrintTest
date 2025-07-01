@@ -11,12 +11,12 @@ namespace TIGER_SLMManuDef
     struct CLayerStatus
     {
         vector<vector<lineSegment>> allSegments;
-        printSLCDatas SLCLayersStatus;
+        printSLCDatas allSLCLayers;
         layerDatas currentSLCLayer;
         void clear()
         {
             allSegments.clear();
-            SLCLayersStatus = printSLCDatas();
+            allSLCLayers = printSLCDatas();
             currentSLCLayer = layerDatas();
         }
     };

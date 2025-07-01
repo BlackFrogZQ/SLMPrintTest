@@ -66,7 +66,7 @@ namespace TIGER_PrintDatas
         float lineWidth;
         float reservedSize;
         bool isModelSlice;
-        vector<layerDatas> allSLCLayers;
+        vector<layerDatas> pLayerDatas;
     };
 
     template<typename T>

@@ -127,7 +127,7 @@ namespace TIGER_PrintDatas
                 }
                 pLayer.pContours.push_back(move(contour));
             }
-            pSLCDatas.allSLCLayers.push_back(move(pLayer));
+            pSLCDatas.pLayerDatas.push_back(move(pLayer));
         }
         return pSLCDatas;
     }
@@ -143,8 +143,8 @@ namespace TIGER_PrintDatas
         mergedDatas.lineWidth = modelDatas.lineWidth;
         mergedDatas.reservedSize = modelDatas.reservedSize;
 
-        const auto& pModelLayers = modelDatas.allSLCLayers;
-        const auto& pSliceLayers = sliceDatas.allSLCLayers;
+        const auto& pModelLayers = modelDatas.pLayerDatas;
+        const auto& pSliceLayers = sliceDatas.pLayerDatas;
         size_t modelCount   = pModelLayers.size();
         size_t supportCount = pSliceLayers.size();
 
@@ -170,7 +170,7 @@ namespace TIGER_PrintDatas
                 layer.pContours.push_back(c);
             }
 
-            mergedDatas.allSLCLayers.push_back(std::move(layer));
+            mergedDatas.pLayerDatas.push_back(move(layer));
         }
 
         for (size_t j = supportCount; j < modelCount; ++j)
@@ -181,7 +181,7 @@ namespace TIGER_PrintDatas
             {
                 layer.pContours.push_back(c);
             }
-            mergedDatas.allSLCLayers.push_back(std::move(layer));
+            mergedDatas.pLayerDatas.push_back(move(layer));
         }
 
         return mergedDatas;

@@ -251,9 +251,9 @@ namespace TIGER_UI_SLM
     {
         m_pListWidget->clear();
         m_printSLCDatas = p_SLCDatas;
-        for (size_t i = 0; i < m_printSLCDatas.allSLCLayers.size(); ++i)
+        for (size_t i = 0; i < m_printSLCDatas.pLayerDatas.size(); ++i)
         {
-            const layerDatas& layer = m_printSLCDatas.allSLCLayers[i];
+            const layerDatas& layer = m_printSLCDatas.pLayerDatas[i];
             QImage img = renderLayer(layer);
 
             QPixmap pix = QPixmap::fromImage(img);

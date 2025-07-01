@@ -30,18 +30,18 @@ namespace TIGER_SLMManuDef
         QString supportFile = QDir(dir).filePath(baseName + "_s." + suffix);
         if (QFile::exists(supportFile))
         {
-            layerStatus.SLCLayersStatus = printDatas()->getModelAndSupportDatas(p_modelFilename.toStdString(), supportFile.toStdString());
+            layerStatus.allSLCLayers = printDatas()->getModelAndSupportDatas(p_modelFilename.toStdString(), supportFile.toStdString());
         }
         else
         {
-            layerStatus.SLCLayersStatus = printDatas()->getModelDatas(p_modelFilename.toStdString(), true);
+            layerStatus.allSLCLayers = printDatas()->getModelDatas(p_modelFilename.toStdString(), true);
         }
-        return layerStatus.SLCLayersStatus;
+        return layerStatus.allSLCLayers;
     }
 
     void CManuStatus::updataSLCLayerStatus()
     {
-        assert(currentLayer >= 0 && currentLayer < layerStatus.SLCLayersStatus.allSLCLayers.size());
-        layerStatus.currentSLCLayer = layerStatus.SLCLayersStatus.allSLCLayers[currentLayer];
+        assert(currentLayer >= 0 && currentLayer < layerStatus.allSLCLayers.pLayerDatas.size());
+        layerStatus.currentSLCLayer = layerStatus.allSLCLayers.pLayerDatas[currentLayer];
     }
 }
