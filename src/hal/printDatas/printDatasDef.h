@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "scanPath/scanPathDef.h"
 #include <QList>
 #include <QSizeF>
 #include <QBitArray>
@@ -40,22 +41,27 @@ namespace TIGER_PrintDatas
     struct pointDatas
     {
         float x, y;
+        bool operator==(pointDatas &p_coutour);
     };
 
     // 轮廓数据
     struct countourDatas
     {
         vector<pointDatas> points;
+        bool isClockwise(const vector<pointDatas>& contour);
         bool isClosed;
         bool isOuterContour;
         bool isModelContour;
     };
 
-    // 单层数据
+    // 单层轮廓数据
     struct layerDatas
     {
         float z;
+        bool existModel;
+        bool existSupport;
         vector<countourDatas> pContours;
+        vector<scanBlockDatas> pScanBlocks;
     };
 
     // SLC打印数据
@@ -65,7 +71,6 @@ namespace TIGER_PrintDatas
         float layerThickness;
         float lineWidth;
         float reservedSize;
-        bool isModelSlice;
         vector<layerDatas> pLayerDatas;
     };
 

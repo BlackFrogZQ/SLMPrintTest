@@ -5,8 +5,8 @@
 
 namespace TIGER_PrintDatas
 {
+    #define MINVALUE 0.0001
     constexpr double cInch = 25.4;
-#define MINVALUE 0.0001
 
     // 将点数转换为DPI: 根据字体大小（pointSize）和目标长度（len），计算所对应的 DPI（每英寸点数）值; (pointSize / len)表示pointSize有多长
     constexpr int toDpi(int pointSize, double len)
@@ -64,24 +64,4 @@ namespace TIGER_PrintDatas
     using CPointd = CPoint<double>;
     using CRecti = CRect<int>;
     using CRectd = CRect<double>;
-
-    struct CPrintRegion
-    {
-        bool positiveMove;
-        CRecti picRect;
-        double horizontalPos;
-        double printHeadStartPos;
-        double printHeadEndPos;
-        friend QDebug operator<<(QDebug out, const CPrintRegion &p_region)
-        {
-            out.noquote() << cnStr("CPrintRegion(") << Qt::endl
-                          << cnStr("\tpositiveMove:%1,").arg(p_region.positiveMove) << Qt::endl
-                          << cnStr("\thorizontalPos:%1,").arg(p_region.horizontalPos) << Qt::endl
-                          << cnStr("\tprintHeadStartPos:%1,").arg(p_region.printHeadStartPos) << Qt::endl
-                          << cnStr("\tprintHeadEndPos:%1,").arg(p_region.printHeadEndPos) << Qt::endl
-                          << cnStr("\tpicRect:") << p_region.picRect << Qt::endl
-                          << cnStr(")") << Qt::endl;
-            return out;
-        }
-    };
 }

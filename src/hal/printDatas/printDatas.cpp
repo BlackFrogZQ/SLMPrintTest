@@ -1,5 +1,5 @@
 ﻿#include "printDatas.h"
-#include "printDatasDef.h"
+#include "scanPath/scanPath.h"
 #include <QImage>
 #include <cstdint>
 #include <array>
@@ -87,14 +87,13 @@ namespace TIGER_PrintDatas
         pBbyteIndex = pBbyteIndex + 256;                         // 跳过256字节保留区
         uint8_t size = read<uint8_t>(pSLCByteContent, pBbyteIndex);
 
-        printSLCDatas pSLCDatas;
-        pSLCDatas.isModelSlice = p_isModel;
+        m_pSLCDatas = printSLCDatas();
         for (size_t i = 0; i < static_cast<int>(size); i++)
         {
-            pSLCDatas.initialHeight = read<float>(pSLCByteContent, pBbyteIndex);
-            pSLCDatas.layerThickness = read<float>(pSLCByteContent, pBbyteIndex);
-            pSLCDatas.lineWidth = read<float>(pSLCByteContent, pBbyteIndex);
-            pSLCDatas.reservedSize = read<float>(pSLCByteContent, pBbyteIndex);
+            m_pSLCDatas.initialHeight = read<float>(pSLCByteContent, pBbyteIndex);
+            m_pSLCDatas.layerThickness = read<float>(pSLCByteContent, pBbyteIndex);
+            m_pSLCDatas.lineWidth = read<float>(pSLCByteContent, pBbyteIndex);
+            m_pSLCDatas.reservedSize = read<float>(pSLCByteContent, pBbyteIndex);
         }
 
         while (true)
@@ -115,7 +114,6 @@ namespace TIGER_PrintDatas
                 uint32_t gapsNum = read<uint32_t>(pSLCByteContent, pBbyteIndex);
                 countourDatas contour;
                 contour.points.reserve(verticesNum);
-                contour.isModelContour = p_isModel;
                 for (size_t j = 0; j < verticesNum; j++)
                 {
                     pointDatas pPoint;
@@ -125,71 +123,99 @@ namespace TIGER_PrintDatas
                     pPoint.y = y;
                     contour.points.push_back(pPoint);
                 }
+                contour.points[0] == contour.points[contour.points.size() - 1] ? contour.isClosed = true : contour.isClosed = false;
+                contour.isOuterContour = !contour.isClockwise(contour.points);
+                contour.isModelContour = p_isModel;
                 pLayer.pContours.push_back(move(contour));
+                pLayer.existModel = p_isModel;
+                pLayer.existSupport = !p_isModel;
             }
-            pSLCDatas.pLayerDatas.push_back(move(pLayer));
+            m_pSLCDatas.pLayerDatas.push_back(move(pLayer));
         }
-        return pSLCDatas;
+        return m_pSLCDatas;
     }
 
     printSLCDatas CPrintDatas::getModelAndSupportDatas(const string& p_modelFileName, const string& p_supportFileName)
     {
         printSLCDatas modelDatas = getModelDatas(p_modelFileName, true);
-        printSLCDatas sliceDatas = getModelDatas(p_supportFileName, false);
+        printSLCDatas supportDatas = getModelDatas(p_supportFileName, false);
 
-        printSLCDatas mergedDatas;
-        mergedDatas.initialHeight  = sliceDatas.initialHeight;
-        mergedDatas.layerThickness = sliceDatas.layerThickness;
-        mergedDatas.lineWidth = modelDatas.lineWidth;
-        mergedDatas.reservedSize = modelDatas.reservedSize;
+        m_pSLCDatas = printSLCDatas();
+        m_pSLCDatas.initialHeight  = supportDatas.initialHeight;
+        m_pSLCDatas.layerThickness = supportDatas.layerThickness;
+        m_pSLCDatas.lineWidth = modelDatas.lineWidth;
+        m_pSLCDatas.reservedSize = modelDatas.reservedSize;
 
         const auto& pModelLayers = modelDatas.pLayerDatas;
-        const auto& pSliceLayers = sliceDatas.pLayerDatas;
+        const auto& pSupportLayers = supportDatas.pLayerDatas;
         size_t modelCount   = pModelLayers.size();
-        size_t supportCount = pSliceLayers.size();
+        size_t supportCount = pSupportLayers.size();
 
         constexpr float eps = 1e-6f;    // 用于浮点数比较的容差
         for (size_t i = 0; i < supportCount; ++i)
         {
-            float z = pSliceLayers[i].z;
+            float z = pSupportLayers[i].z;
             layerDatas layer;
+            layer.existSupport = true;
+            layer.existModel = false;
             layer.z = z;
+
+            for (auto& c : pSupportLayers[i].pContours)
+            {
+                layer.pContours.push_back(c);
+            }
 
             float idxF = (z - modelDatas.initialHeight) / modelDatas.layerThickness;
             int idx  = int(idxF + 0.5f);
             if (idx >= 0 && idx < (int)modelCount && fabs(pModelLayers[idx].z - z) < eps)
             {
+                layer.existModel = true;
                 for (auto& c : pModelLayers[idx].pContours)
                 {
                     layer.pContours.push_back(c);
                 }
             }
 
-            for (auto& c : pSliceLayers[i].pContours)
-            {
-                layer.pContours.push_back(c);
-            }
-
-            mergedDatas.pLayerDatas.push_back(move(layer));
+            m_pSLCDatas.pLayerDatas.push_back(move(layer));
         }
 
         for (size_t j = supportCount; j < modelCount; ++j)
         {
             layerDatas layer;
+            layer.existSupport = false;
+            layer.existModel = true;
             layer.z = pModelLayers[j].z;
             for (auto& c : pModelLayers[j].pContours)
             {
                 layer.pContours.push_back(c);
             }
-            mergedDatas.pLayerDatas.push_back(move(layer));
+            m_pSLCDatas.pLayerDatas.push_back(move(layer));
         }
 
-        return mergedDatas;
+        return m_pSLCDatas;
     }
 
-    CPrintDatas *printDatas()
+    CPrintDatas *_instance = nullptr;
+    class CGarboIScanPath
     {
-        static CPrintDatas p_printDatas;
-        return &p_printDatas;
+    public:
+        ~CGarboIScanPath()
+        {
+            if (_instance != nullptr)
+            {
+                delete _instance;
+                _instance = nullptr;
+            }
+        };
+    };
+    static CGarboIScanPath _garbo;
+}
+
+TIGER_PrintDatas::CPrintDatas *printDatas()
+{
+    if (TIGER_PrintDatas::_instance == nullptr)
+    {
+        TIGER_PrintDatas::_instance = TIGER_PrintDatas::pathCreator(TIGER_PrintDatas::sptLineFill);
     }
+    return TIGER_PrintDatas::_instance;
 }

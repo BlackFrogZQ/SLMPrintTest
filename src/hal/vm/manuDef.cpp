@@ -36,6 +36,7 @@ namespace TIGER_SLMManuDef
         {
             layerStatus.allSLCLayers = printDatas()->getModelDatas(p_modelFilename.toStdString(), true);
         }
+        // printDatas()->getScanBlock();
         return layerStatus.allSLCLayers;
     }
 
