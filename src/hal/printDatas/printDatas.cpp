@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
+using namespace std;
 namespace TIGER_PrintDatas
 {
     CPrintDatas::CPrintDatas()
@@ -215,7 +215,7 @@ TIGER_PrintDatas::CPrintDatas *printDatas()
 {
     if (TIGER_PrintDatas::_instance == nullptr)
     {
-        TIGER_PrintDatas::_instance = TIGER_PrintDatas::pathCreator(TIGER_PrintDatas::sptLineFill);
+        TIGER_PrintDatas::_instance = new TIGER_PrintDatas::CScanPath();
     }
     return TIGER_PrintDatas::_instance;
 }

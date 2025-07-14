@@ -1,9 +1,8 @@
 ﻿#include "scanPath.h"
 #include "scanPathDef.h"
 #include "basicDef.h"
-#include "lineFill/lineFill.h"
-#include "contourFill/contourFill.h"
-#include "blockFill/blockFill.h"
+#include "fillType/iFillType.h"
+#include "fillType/modelFill/lineFill/lineFill.h"
 #include "../printDatasDef.h"
 #include <vector>
 #include <cmath>
@@ -78,27 +77,37 @@ namespace TIGER_PrintDatas
         pBlock.scanLines.push_back(addLineDatas(outerPoints, ctOuter));
 
         // 添加内轮廓
+        vector<vector<pointDatas>> holesPoints;
         for (int idx : innerIdx)
         {
             pBlock.scanLines.push_back(addLineDatas(contours[idx].points, ctInner));
+            holesPoints.push_back(contours[idx].points);
         }
 
         // 添加扫描路径
         //TODO: 这里需要根据实际的扫描路径算法来生成扫描线数据
-        scanLineDatas pScanLine;
-        pScanLine.pContourType = ctScan;
+        vector<scanLineDatas> pScanLine;
         switch (p_regionType)
         {
         case rtModelContour:
-            /* code */
+            {
+                m_pFillType = new CLineFill();
+                float lineWidth = m_pSLCDatas.lineWidth;
+                float rotateAngle = 0.0f;
+                ScanDirection scanDir = sdBidirectional;
+                pScanLine = m_pFillType->generateRegionFill(outerPoints, holesPoints, lineWidth, rotateAngle, scanDir);
+            }
             break;
         case rtSupportContour:
-            /* code */
+            // generateRegionFill(const vector<pointDatas>& outer,  const vector<vector<pointDatas>>& holes);
             break;
         default:
             break;
         }
-        pBlock.scanLines.push_back(pScanLine);
+        for(auto &ln: pScanLine)
+        {
+            pBlock.scanLines.push_back(ln);
+        }
 
         p_layer.pScanBlocks.push_back(pBlock);
     }
@@ -112,23 +121,5 @@ namespace TIGER_PrintDatas
             pScanLine.points.push_back({pt.x, pt.y, 0.0f, 0.0f});
         }
         return pScanLine;
-    }
-}
-
-namespace TIGER_PrintDatas
-{
-    CScanPath *pathCreator(TIGER_PrintDatas::ScanPathType p_type)
-    {
-        TIGER_PrintDatas::CScanPath *path = nullptr;
-        switch (p_type)
-        {
-            case TIGER_PrintDatas::sptLineFill:
-                path = new TIGER_PrintDatas::CLineFill();
-                break;
-            default:
-                path = nullptr;
-                break;
-        }
-        return path;
     }
 }

@@ -14,9 +14,9 @@ namespace TIGER_PrintDatas
         virtual ~CPrintDatas();
         virtual void getScanBlock() = 0;
 
-        vector<vector<lineSegment>> getImageDatas(QImage p_buffer);
-        printSLCDatas getModelDatas(const string& p_fileName, bool p_isModel);
-        printSLCDatas getModelAndSupportDatas(const string& p_modelFileName, const string& p_supportFileName);
+        std::vector<std::vector<lineSegment>> getImageDatas(QImage p_buffer);
+        printSLCDatas getModelDatas(const std::string& p_fileName, bool p_isModel);
+        printSLCDatas getModelAndSupportDatas(const std::string& p_modelFileName, const std::string& p_supportFileName);
 
     protected:
         printSLCDatas m_pSLCDatas;

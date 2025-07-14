@@ -10,7 +10,7 @@ namespace TIGER_SLMManuDef
 {
     struct CLayerStatus
     {
-        vector<vector<lineSegment>> allSegments;
+        std::vector<std::vector<lineSegment>> allSegments;
         printSLCDatas allSLCLayers;
         layerDatas currentSLCLayer;
         void clear()

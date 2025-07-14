@@ -4,7 +4,6 @@
 #include <QSizeF>
 #include <QBitArray>
 #include <iostream>
-using namespace std;
 
 namespace TIGER_PrintDatas
 {
@@ -47,8 +46,8 @@ namespace TIGER_PrintDatas
     // 轮廓数据
     struct countourDatas
     {
-        vector<pointDatas> points;
-        bool isClockwise(const vector<pointDatas>& contour);
+        std::vector<pointDatas> points;
+        bool isClockwise(const std::vector<pointDatas>& contour);
         bool isClosed;
         bool isOuterContour;
         bool isModelContour;
@@ -60,8 +59,8 @@ namespace TIGER_PrintDatas
         float z;
         bool existModel;
         bool existSupport;
-        vector<countourDatas> pContours;
-        vector<scanBlockDatas> pScanBlocks;
+        std::vector<countourDatas> pContours;
+        std::vector<scanBlockDatas> pScanBlocks;
     };
 
     // SLC打印数据
@@ -71,11 +70,11 @@ namespace TIGER_PrintDatas
         float layerThickness;
         float lineWidth;
         float reservedSize;
-        vector<layerDatas> pLayerDatas;
+        std::vector<layerDatas> pLayerDatas;
     };
 
     template<typename T>
-    T read(string& fs, size_t& index)
+    T read(std::string& fs, std::size_t& index)
     {
         T value;
         memcpy(&value, fs.data() + index, sizeof(T));

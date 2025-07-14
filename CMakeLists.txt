@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.27.0)
 set(projectName SLMPrintTest CACHE STRING "项目名" FORCE)
 set(projectVersion 0.1.0 CACHE STRING "版本号" FORCE)
-project(${projectName} VERSION ${projectVersion})
+project(${projectName} VERSION ${projectVersion} LANGUAGES CXX)
 
 # add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 # add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
@@ -9,6 +9,9 @@ project(${projectName} VERSION ${projectVersion})
 # execute_process(
 #     COMMAND chcp 65001
 # )
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(DEFINED CMAKE_BUILD_TYPE)
     if(${_Debug})
@@ -74,12 +77,17 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     add_definitions(-DTrace)
 endif()
 
+file(GLOB CLIPPER2_SRC "${PROJECT_SOURCE_DIR}/include/clipper2/*.cpp" "${PROJECT_SOURCE_DIR}/include/clipper2/*.h")
 file(GLOB HMHaShuLIBS "${PROJECT_SOURCE_DIR}/lib/HMHaShu/*.lib")
 file(GLOB HMHaShuDlls "${PROJECT_SOURCE_DIR}/lib/HMHaShu/*.dll")
+file(GLOB clipper2LIBS "${PROJECT_SOURCE_DIR}/lib/clipper2/*.lib")
+file(GLOB clipper2Dlls "${PROJECT_SOURCE_DIR}/lib/clipper2/*.dll")
 # 所有非Qt通用dll库 不一定在统一目录 可直接追加目录
-set_property(GLOBAL APPEND PROPERTY LIBS ${HMHaShuLIBS})
+# set_property(GLOBAL APPEND PROPERTY LIBS ${HMHaShuLIBS})
+set_property(GLOBAL APPEND PROPERTY LIBS ${HMHaShuLIBS} ${clipper2LIBS})
 # 所有非Qt通用dll库 不一定在统一目录 可直接追加目录
-set_property(GLOBAL APPEND PROPERTY libDlls ${HMHaShuDlls})
+# set_property(GLOBAL APPEND PROPERTY libDlls ${HMHaShuDlls})
+set_property(GLOBAL APPEND PROPERTY libDlls ${HMHaShuDlls} ${clipper2Dlls})
 get_property(currentLibs GLOBAL PROPERTY LIBS)
 
 macro(Macro_SetOutPath outPath)
@@ -93,6 +101,7 @@ Macro_SetOutPath(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(./)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/HMHaShu)
+include_directories(${PROJECT_SOURCE_DIR}/include/clipper2)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/src/ui)
@@ -116,6 +125,7 @@ if(isRelease)
         main.cpp
         ${sources}
         ${versionRc}
+        ${CLIPPER2_SRC}
         )
 else()
     add_executable(${PROJECT_NAME}
@@ -123,6 +133,7 @@ else()
         main.cpp
         ${sources}
         ${versionRc}
+        ${CLIPPER2_SRC}
         )
 endif()
 

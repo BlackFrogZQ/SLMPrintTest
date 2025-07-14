@@ -1,5 +1,6 @@
 ﻿#include "printDatasDef.h"
 
+using namespace std;
 namespace TIGER_PrintDatas
 {
     bool pointDatas::operator==(pointDatas &p_coutour)
