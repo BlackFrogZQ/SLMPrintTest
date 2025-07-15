@@ -1,5 +1,7 @@
 ﻿#include "spreadState.h"
 #include "spreadAction.h"
+#include "plc/plcSigDef.h"
+#include "plc/modbusServer.h"
 
 namespace TIGER_VMSLM
 {

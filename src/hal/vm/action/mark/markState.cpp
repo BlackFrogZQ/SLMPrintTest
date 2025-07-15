@@ -1,9 +1,14 @@
 ﻿#include "markState.h"
 #include "markAction.h"
 #include "hal/vm/manuDef.h"
+#include "plc/plcSigDef.h"
+#include "plc/modbusServer.h"
+#include "megatron/megatronDef.h"
+#include "megatron/printMegatron/dzSTeGMCMegatron.h"
 #include "printDatas/printDatasDef.h"
-using namespace TIGER_PrintDatas;
 
+using namespace TIGER_PrintDatas;
+using namespace TIGER_Megatron;
 namespace TIGER_VMSLM
 {
     CMarkIdleState::CMarkIdleState(CMarkAction* p_action) : m_action(p_action)

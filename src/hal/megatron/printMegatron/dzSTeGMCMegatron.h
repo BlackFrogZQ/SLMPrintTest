@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "HM_HashuScan.h"
 #include "HM_HashuUDM.h"
+#include "hal/printDatas/printDatasDef.h"
 #include "../iMegatron.h"
 #include "../megatronDef.h"
 #include <windows.h>
@@ -25,6 +26,7 @@ namespace TIGER_Megatron
         void StopMark();
         void nativeEvent(MSG* p_message);
         void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments);
+        void creatUdmBin(TIGER_PrintDatas::layerDatas p_layerDatas);
 
     protected:
         LRESULT OnMsgDeviceEhco(WPARAM wParam, LPARAM lParam);

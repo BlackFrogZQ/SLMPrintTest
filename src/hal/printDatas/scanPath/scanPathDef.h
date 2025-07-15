@@ -4,12 +4,12 @@
 namespace TIGER_PrintDatas
 {
 #pragma region "扫描路径类型"
-    enum ScanPathType
+    enum ModelFillType
     {
-        sptLineFill = 0,
-        sptContourFill,
-        sptBlockFill,
-        sptNone
+        mftLineFill = 0,
+        mftContourFill,
+        mftBlockFill,
+        mftNone
     };
 
     enum RegionType

@@ -196,6 +196,11 @@ namespace TIGER_Megatron
         downloadMarkFile();
     }
 
+    void CDZSTeGMCMegatron::creatUdmBin(TIGER_PrintDatas::layerDatas p_layerDatas)
+    {
+
+    }
+
     MarkParameter* CDZSTeGMCMegatron::getMarkParameter()
     {
         MarkParameter* para = new MarkParameter[layerCount];

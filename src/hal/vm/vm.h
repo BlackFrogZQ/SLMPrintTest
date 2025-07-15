@@ -1,14 +1,13 @@
 ﻿#pragma once
 #include "ivm.h"
-#include "plc/plcSigDef.h"
-#include "plc/modbusServer.h"
-#include "megatron/megatronDef.h"
-#include "megatron/printMegatron/dzSTeGMCMegatron.h"
-#include "./action/iActionState.h"
-#include "./action/iAction.h"
 
-using namespace TIGER_Megatron;
-
+class CModbusServer;
+class IPlcController;
+namespace TIGER_Megatron
+{
+    class CDZSTeGMCMegatron;
+    class IMegatronController;
+}
 namespace TIGER_VMSLM
 {
     class IAction;
@@ -36,6 +35,7 @@ namespace TIGER_VMSLM
         virtual void nativeEvent(MSG* p_message) override;
         virtual void GMCStarMark() override;
         virtual void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments) override;
+        virtual void creatUdmBin(TIGER_PrintDatas::layerDatas p_layerDatas) override;
 
         virtual bool sendDiscreteInputs(int p_addr, bool p_value) override;
         virtual bool sendInputRegisters(int p_addr, bool p_value) override;
@@ -44,8 +44,8 @@ namespace TIGER_VMSLM
         CModbusServer *m_plcServer;
         IPlcController *m_plcControl;
 
-        CDZSTeGMCMegatron *m_megatron;
-        IMegatronController *m_megatronController;
+        TIGER_Megatron::CDZSTeGMCMegatron *m_megatron;
+        TIGER_Megatron::IMegatronController *m_megatronController;
 
         IAction *m_pManuAction;
         IAction *m_pManuOnceAction;

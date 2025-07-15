@@ -19,6 +19,7 @@ namespace TIGER_PrintDatas
         printSLCDatas getModelAndSupportDatas(const std::string& p_modelFileName, const std::string& p_supportFileName);
 
     protected:
+        CLaserPara *m_pLaserParas;
         printSLCDatas m_pSLCDatas;
     };
 }

@@ -7,19 +7,15 @@
 
 namespace TIGER_PrintDatas
 {
-    using CPicData = QBitArray;
-    using CPicDatas = QList<QBitArray>;
-    using CFrameData = QList<int>;
-
 #pragma region "激光参数"
     struct CLaserPara
     {
-        float laserLineWidth = 0.0765; // 激光线宽
-        int widthDpi = 300;            // 宽度DPI
+        float laserWidth = 0.0765f;
+        int widthDpi = 300;
         CLaserPara(float p_laserLineWidth = 0.0765, int p_widthDpi = 300)
-            : laserLineWidth(p_laserLineWidth), widthDpi(p_widthDpi)
+            : laserWidth(p_laserLineWidth), widthDpi(p_widthDpi)
         {
-            assert(laserLineWidth >= 0);
+            assert(laserWidth >= 0);
             assert(widthDpi > 0);
         }
     };

@@ -1,5 +1,6 @@
 ﻿#include "printDatas.h"
 #include "scanPath/scanPath.h"
+#include "system/basic.h"
 #include <QImage>
 #include <cstdint>
 #include <array>
@@ -13,10 +14,12 @@ namespace TIGER_PrintDatas
 {
     CPrintDatas::CPrintDatas()
     {
+        m_pLaserParas = new CLaserPara(0.0765, 300);
     }
 
     CPrintDatas::~CPrintDatas()
     {
+        delPtr(m_pLaserParas);
     }
 
     vector<vector<lineSegment>> CPrintDatas::getImageDatas(QImage p_buffer)
@@ -31,7 +34,6 @@ namespace TIGER_PrintDatas
         const float height = p_buffer.height();
         const float cx = width / 2;
         const float cy = height / 2;
-        CLaserPara *laserParas = new CLaserPara(0.0765, 300);
 
         vector<vector<lineSegment>> allSegments;
         allSegments.reserve(height);
@@ -56,9 +58,9 @@ namespace TIGER_PrintDatas
                     float xEnd = ((*p) >= 128) ? col_x - 1 : col_x;
 
                     // 坐标变换：图像中心为原点，右为x正，上为y正。并转换为单位为mm
-                    float transformedXStart = (xStart - cx) * laserParas->laserLineWidth;
-                    float transformedXEnd = (xEnd - cx) * laserParas->laserLineWidth;
-                    float transformedY = (cy - row_y) * laserParas->laserLineWidth;
+                    float transformedXStart = (xStart - cx) * m_pLaserParas->laserWidth;
+                    float transformedXEnd = (xEnd - cx) * m_pLaserParas->laserWidth;
+                    float transformedY = (cy - row_y) * m_pLaserParas->laserWidth;
 
                     rowSegments.push_back({transformedXStart, transformedXEnd, transformedY});
                     isSegment = false;
@@ -70,7 +72,6 @@ namespace TIGER_PrintDatas
                 allSegments.push_back(rowSegments);
             }
         }
-        delete laserParas;
         return allSegments;
     }
 

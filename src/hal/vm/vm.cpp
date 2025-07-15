@@ -1,7 +1,15 @@
 ﻿#include "vm.h"
 #include "ncDef.h"
+#include "plc/plcSigDef.h"
+#include "plc/modbusServer.h"
+#include "megatron/megatronDef.h"
+#include "megatron/printMegatron/dzSTeGMCMegatron.h"
 #include "./action/iAction.h"
+#include "./action/iActionState.h"
 
+using namespace std;
+using namespace TIGER_Megatron;
+using namespace TIGER_PrintDatas;
 namespace TIGER_VMSLM
 {
     CVM::CVM(HWND p_hWnd) : IVM(p_hWnd), m_megatron(nullptr)
@@ -24,7 +32,7 @@ namespace TIGER_VMSLM
             emit sigDownloadEnd();
         });
         connect(m_megatron, &CDZSTeGMCMegatron::sigExecProcess, this, [this](unsigned int p_value)
-        {
+        { 
             emit sigExecProcess(p_value);
         });
         connect(m_megatron, &CDZSTeGMCMegatron::sigError, this, [this](const QString &p_msg)
@@ -144,9 +152,14 @@ namespace TIGER_VMSLM
         }
     }
 
-    void CVM::creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments)
+    void CVM::creatUdmBin(vector<vector<lineSegment>> p_segments)
     {
         m_megatron->creatUdmBin(p_segments);
+    }
+
+    void CVM::creatUdmBin(layerDatas p_layerDatas)
+    {
+        m_megatron->creatUdmBin(p_layerDatas);
     }
 
     void CVM::GMCStarMark()

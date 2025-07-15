@@ -1,6 +1,7 @@
 ﻿#include "scanPath.h"
 #include "scanPathDef.h"
 #include "basicDef.h"
+#include "system/basic.h"
 #include "fillType/iFillType.h"
 #include "fillType/modelFill/lineFill/lineFill.h"
 #include "../printDatasDef.h"
@@ -11,11 +12,21 @@
 using namespace std;
 namespace TIGER_PrintDatas
 {
+    CScanPath::CScanPath()
+    {
+        m_pModelFillType = new CLineFill();
+    }
+
+    CScanPath::~CScanPath()
+    {
+        delPtr(m_pModelFillType);
+    }
+
     void CScanPath::getScanBlock()
     {
-        for (size_t i_layer = 0; i_layer < m_pSLCDatas.pLayerDatas.size(); i_layer++)
+        for (size_t layerId = 0; layerId < m_pSLCDatas.pLayerDatas.size(); layerId++)
         {
-            layerDatas& pLayer = m_pSLCDatas.pLayerDatas[i_layer];
+            layerDatas& pLayer = m_pSLCDatas.pLayerDatas[layerId];
             const auto& contours = pLayer.pContours;
             m_used.resize(contours.size(), false);
 
@@ -25,7 +36,7 @@ namespace TIGER_PrintDatas
                 for (size_t i_contour = 0; i_contour < contours.size(); i_contour++)
                 {
                     if(contours[i_contour].isModelContour || m_used[i_contour]) continue;
-                    getSingleScanBlock(pLayer, i_contour, rtSupportContour);
+                    getSingleScanBlock(pLayer, layerId, i_contour, rtSupportContour);
                 }
             }
 
@@ -35,13 +46,13 @@ namespace TIGER_PrintDatas
                 for (size_t i_contour = 0; i_contour < contours.size(); i_contour++)
                 {
                     if(!contours[i_contour].isModelContour || m_used[i_contour]) continue;
-                    getSingleScanBlock(pLayer, i_contour, rtModelContour);
+                    getSingleScanBlock(pLayer, layerId, i_contour, rtModelContour);
                 }
             }
         }
     }
 
-    void CScanPath::getSingleScanBlock(layerDatas& p_layer, const int p_contourId, const RegionType p_regionType)
+    void CScanPath::getSingleScanBlock(layerDatas& p_layer, const int p_layerId, const int p_contourId, const RegionType p_regionType)
     {
         const auto& contours = p_layer.pContours;
         const auto& outerPoints = contours[p_contourId].points;
@@ -62,14 +73,14 @@ namespace TIGER_PrintDatas
 
         // 寻找外轮廓内部所有的内轮廓
         vector<int> innerIdx;
-        for (size_t j = 0; j < contours.size(); ++j)
+        for (size_t contourId = 0; contourId < contours.size(); ++contourId)
         {
-            if (m_used[j] || contours[p_contourId].isOuterContour || !contours[p_contourId].isClosed) continue;
+            if (m_used[contourId] || contours[p_contourId].isOuterContour || !contours[p_contourId].isClosed) continue;
             if((p_regionType == rtModelContour && !contours[p_contourId].isModelContour) || (p_regionType == rtSupportContour && contours[p_contourId].isModelContour)) continue;
-            if (pointInPolygon(contours[j].points[0], outerPoints))
+            if (pointInPolygon(contours[contourId].points[0], outerPoints))
             {
-                innerIdx.push_back(j);
-                m_used[j] = true;
+                innerIdx.push_back(contourId);
+                m_used[contourId] = true;
             }
         }
 
@@ -91,11 +102,10 @@ namespace TIGER_PrintDatas
         {
         case rtModelContour:
             {
-                m_pFillType = new CLineFill();
-                float lineWidth = m_pSLCDatas.lineWidth;
-                float rotateAngle = 0.0f;
+                float lineWidth = m_pLaserParas->laserWidth;
+                float rotateAngle = (p_layerId % 3) * 45.0f;
                 ScanDirection scanDir = sdBidirectional;
-                pScanLine = m_pFillType->generateRegionFill(outerPoints, holesPoints, lineWidth, rotateAngle, scanDir);
+                pScanLine = m_pModelFillType->generateRegionFill(outerPoints, holesPoints, lineWidth, rotateAngle, scanDir);
             }
             break;
         case rtSupportContour:
