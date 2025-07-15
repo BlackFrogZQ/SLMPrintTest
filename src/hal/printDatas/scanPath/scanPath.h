@@ -12,7 +12,7 @@ namespace TIGER_PrintDatas
     public:
         CScanPath();
         ~CScanPath();
-        virtual void getScanBlock() override;
+        virtual printSLCDatas getScanBlock() override;
 
     protected:
         void getSingleScanBlock(layerDatas& p_layer, const int p_layerId, const int p_contourId, const RegionType p_regionType);

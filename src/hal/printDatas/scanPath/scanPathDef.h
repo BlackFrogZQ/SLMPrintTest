@@ -9,7 +9,7 @@ namespace TIGER_PrintDatas
         mftLineFill = 0,
         mftContourFill,
         mftBlockFill,
-        mftNone
+        mftMax
     };
 
     enum RegionType

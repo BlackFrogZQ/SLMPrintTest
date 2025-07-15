@@ -30,13 +30,13 @@ namespace TIGER_SLMManuDef
         QString supportFile = QDir(dir).filePath(baseName + "_s." + suffix);
         if (QFile::exists(supportFile))
         {
-            layerStatus.allSLCLayers = printDatas()->getModelAndSupportDatas(p_modelFilename.toStdString(), supportFile.toStdString());
+            printDatas()->getModelAndSupportDatas(p_modelFilename.toStdString(), supportFile.toStdString());
         }
         else
         {
-            layerStatus.allSLCLayers = printDatas()->getModelDatas(p_modelFilename.toStdString(), true);
+            printDatas()->getModelDatas(p_modelFilename.toStdString(), true);
         }
-        // printDatas()->getScanBlock();
+        layerStatus.allSLCLayers = printDatas()->getScanBlock();
         return layerStatus.allSLCLayers;
     }
 

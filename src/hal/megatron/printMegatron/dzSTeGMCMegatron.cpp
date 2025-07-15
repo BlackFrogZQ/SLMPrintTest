@@ -1,6 +1,8 @@
 ﻿#include "dzSTeGMCMegatron.h"
 #include "vm/ncDef.h"
+#include "system/basic.h"
 #include "printDatas/printDatasDef.h"
+#include "printDatas/scanPath/scanPathDef.h"
 #include <QTimer>
 
 using namespace TIGER_VMSLM;
@@ -30,11 +32,13 @@ namespace TIGER_Megatron
 {
     CDZSTeGMCMegatron::CDZSTeGMCMegatron(HWND p_hWnd): m_hWnd(p_hWnd), m_ipIndex(0), pErrorCode(HM_OK)
     {
+        m_pMarkParameter = new MarkParameter[mftMax];
         init();
     }
 
     CDZSTeGMCMegatron::~CDZSTeGMCMegatron()
     {
+        delPtr(m_pMarkParameter);
     }
 
     void CDZSTeGMCMegatron::init()
@@ -162,30 +166,26 @@ namespace TIGER_Megatron
         checkErrorCode(HM_StopMark(m_ipIndex), cnStr("停止打标"));
     }
 
-    void CDZSTeGMCMegatron::creatUdmBin(vector<vector<lineSegment>> p_segments)
+    void CDZSTeGMCMegatron::creatUdmBin(layerDatas p_layerDatas)
     {
         UDM_NewFile();
         UDM_Main();
         UDM_SetProtocol(DZSTMarkConnectPara()->MarkProtocol, Mark2D);
-        UDM_SetLayersPara(getMarkParameter(), layerCount);
+        UDM_SetLayersPara(getMarkParameter(), mftMax);
         int startAddress = UDM_RepeatStart(scanSystemParas()->MarkCount);
 
-        // 蛇形打印
-        for (size_t row = 0; row < p_segments.size(); ++row)
+        for (const auto& block : p_layerDatas.pScanBlocks)
         {
-            vector<lineSegment> segments = p_segments[row];
-            if (row % 2 == 1)
-                reverse(segments.begin(), segments.end());  // 奇数行反向
-
-            for (const auto& seg : segments)
+            for (const auto& line : block.scanLines)
             {
-                float x1 = seg.xStart;
-                float x2 = seg.xEnd;
-                if (row % 2 == 1)
-                    swap(x1, x2);  // 蛇形打印：反向走线
+                vector<structUdmPos> udmLine;
+                for (const auto& pt : line.points)
+                {
+                    structUdmPos pos = {pt.x, pt.y, pt.z, pt.a};
+                    udmLine.push_back(pos);
+                }
 
-                structUdmPos line[2] ={{x1, seg.y, 0, 0}, {x2, seg.y, 0, 0}};
-                UDM_AddPolyline2D(line, 2, 0);
+                UDM_AddPolyline2D(udmLine.data(), udmLine.size(), line.pContourType);
             }
         }
 
@@ -196,45 +196,40 @@ namespace TIGER_Megatron
         downloadMarkFile();
     }
 
-    void CDZSTeGMCMegatron::creatUdmBin(TIGER_PrintDatas::layerDatas p_layerDatas)
-    {
-
-    }
-
     MarkParameter* CDZSTeGMCMegatron::getMarkParameter()
     {
-        MarkParameter* para = new MarkParameter[layerCount];
-        for (size_t i = 0; i < layerCount; i++)
+        memset(m_pMarkParameter, 0, sizeof(MarkParameter) * mftMax);
+        for (size_t i = 0; i < mftMax; i++)
         {
             //振镜参数
-            para[i].MarkSpeed = scanSystemParas()->MarkSpeed;
-            para[i].JumpSpeed = scanSystemParas()->JumpSpeed;
-            para[i].PolygonDelay = scanSystemParas()->PolygonDelay;
-            para[i].JumpDelay = scanSystemParas()->JumpDelay;
-            para[i].MarkDelay = scanSystemParas()->MarkDelay;
-            para[i].MarkCount = scanSystemParas()->MarkCount;
+            m_pMarkParameter[i].MarkSpeed = scanSystemParas()->MarkSpeed;
+            m_pMarkParameter[i].JumpSpeed = scanSystemParas()->JumpSpeed;
+            m_pMarkParameter[i].PolygonDelay = scanSystemParas()->PolygonDelay;
+            m_pMarkParameter[i].JumpDelay = scanSystemParas()->JumpDelay;
+            m_pMarkParameter[i].MarkDelay = scanSystemParas()->MarkDelay;
+            m_pMarkParameter[i].MarkCount = scanSystemParas()->MarkCount;
 
             //激光参数
-            para[i].LaserOnDelay = laserParas()->LaserOnDelay;
-            para[i].LaserOffDelay = laserParas()->LaserOffDelay;
-            para[i].DutyCycle = laserParas()->DutyCycle;
-            para[i].Frequency = laserParas()->Frequency;
-            para[i].StandbyFrequency = laserParas()->StandbyFrequency;
-            para[i].StandbyDutyCycle = laserParas()->StandbyDutyCycle;
-            para[i].LaserPower = laserParas()->LaserPower;
-            para[i].AnalogMode = laserParas()->AnalogMode;
+            m_pMarkParameter[i].LaserOnDelay = laserParas()->LaserOnDelay;
+            m_pMarkParameter[i].LaserOffDelay = laserParas()->LaserOffDelay;
+            m_pMarkParameter[i].DutyCycle = laserParas()->DutyCycle;
+            m_pMarkParameter[i].Frequency = laserParas()->Frequency;
+            m_pMarkParameter[i].StandbyFrequency = laserParas()->StandbyFrequency;
+            m_pMarkParameter[i].StandbyDutyCycle = laserParas()->StandbyDutyCycle;
+            m_pMarkParameter[i].LaserPower = laserParas()->LaserPower;
+            m_pMarkParameter[i].AnalogMode = laserParas()->AnalogMode;
             if ( laserParas()->LaserDevice == cltSPI)
             {
-                para[i].AnalogMode = 1;
-                para[i].Waveform = 0;
+                m_pMarkParameter[i].AnalogMode = 1;
+                m_pMarkParameter[i].Waveform = 0;
             }
             else if ( laserParas()->LaserDevice == cltCO2)
             {
-                para[i].StandbyFrequency = 0;
-                para[i].StandbyDutyCycle = 0;
+                m_pMarkParameter[i].StandbyFrequency = 0;
+                m_pMarkParameter[i].StandbyDutyCycle = 0;
             }
         }
-        return para;
+        return m_pMarkParameter;
     }
 
     void CDZSTeGMCMegatron::downloadMarkFile()

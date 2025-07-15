@@ -25,7 +25,6 @@ namespace TIGER_Megatron
         void ContinueMark();
         void StopMark();
         void nativeEvent(MSG* p_message);
-        void creatUdmBin(std::vector<std::vector<TIGER_PrintDatas::lineSegment>> p_segments);
         void creatUdmBin(TIGER_PrintDatas::layerDatas p_layerDatas);
 
     protected:
@@ -54,6 +53,7 @@ namespace TIGER_Megatron
 
     private:
         HWND m_hWnd;
+        MarkParameter *m_pMarkParameter;
         int m_ipIndex;
         int pErrorCode;
     };

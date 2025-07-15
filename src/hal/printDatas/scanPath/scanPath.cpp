@@ -22,13 +22,13 @@ namespace TIGER_PrintDatas
         delPtr(m_pModelFillType);
     }
 
-    void CScanPath::getScanBlock()
+    printSLCDatas CScanPath::getScanBlock()
     {
         for (size_t layerId = 0; layerId < m_pSLCDatas.pLayerDatas.size(); layerId++)
         {
             layerDatas& pLayer = m_pSLCDatas.pLayerDatas[layerId];
             const auto& contours = pLayer.pContours;
-            m_used.resize(contours.size(), false);
+            m_used.assign(contours.size(), false);
 
             // 添加支撑轮廓扫描块
             if(pLayer.existSupport)
@@ -50,6 +50,7 @@ namespace TIGER_PrintDatas
                 }
             }
         }
+        return m_pSLCDatas;
     }
 
     void CScanPath::getSingleScanBlock(layerDatas& p_layer, const int p_layerId, const int p_contourId, const RegionType p_regionType)

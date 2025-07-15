@@ -9,6 +9,7 @@
 
 using namespace TIGER_PrintDatas;
 using namespace TIGER_Megatron;
+using namespace TIGER_SLMManuDef;
 namespace TIGER_VMSLM
 {
     CMarkIdleState::CMarkIdleState(CMarkAction* p_action) : m_action(p_action)
@@ -30,7 +31,7 @@ namespace TIGER_VMSLM
     void CDownloadMarkFile::run()
     {
         myInfo << cnStr("开始创建并下载打标文件");
-        m_pVM->creatUdmBin(TIGER_SLMManuDef::manuStatus()->layerStatus.allSegments);
+        m_pVM->creatUdmBin(manuStatus()->layerStatus.currentSLCLayer);
         GMCState()->setDownloadStatus(true);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
