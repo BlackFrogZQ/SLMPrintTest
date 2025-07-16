@@ -43,6 +43,7 @@ include_directories($ENV{QT_Dir}\\include\\QtSerialPort)
 include_directories($ENV{QT_Dir}\\include\\QtConcurrent)
 include_directories($ENV{QT_Dir}\\include\\QtMultimedia)
 include_directories($ENV{QT_Dir}\\include\\QtMultimediaWidgets)
+include_directories($ENV{QT_Dir}\\include\\QtOpenGL)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -50,7 +51,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 add_definitions(-DNOMINMAX)
 message("Looking for Qt...")
-find_package(Qt5 COMPONENTS Core Gui Network SerialBus Widgets SerialPort Concurrent Multimedia MultimediaWidgets Qml REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Network SerialBus Widgets SerialPort Concurrent Multimedia MultimediaWidgets  OpenGL Qml REQUIRED)
 
 if(${Qt5_FOUND})
     message("Found Qt " ${Qt5_VERSION})
@@ -69,7 +70,9 @@ set(Qt5model
     Qt5::Gui
     Qt5::Core
     Qt5::SerialPort
-    Qt5::Concurrent)
+    Qt5::Concurrent
+    Qt5::OpenGL
+    opengl32)
 
 set(isRelease TRUE)
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")

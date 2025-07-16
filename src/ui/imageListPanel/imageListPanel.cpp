@@ -2,6 +2,7 @@
 #include "imageItem.h"
 #include "graphicsWindow/graphicsView.h"
 #include "graphicsWindow/graphicsScene.h"
+#include "openGLWindow/glPathWidget.h"
 #include "hal/vm/ncDef.h"
 #include "hal/vm/vm.h"
 #include "hal/vm/manuDef.h"
@@ -15,6 +16,7 @@
 
 using namespace TIGER_VMSLM;
 using namespace TIGER_PrintDatas;
+using namespace TIGER_OpenGL;
 using namespace std;
 namespace TIGER_UI_SLM
 {
@@ -58,13 +60,17 @@ namespace TIGER_UI_SLM
         m_pScene = new TIGER_Graphics::CGraphicsScene(this);
         m_pView = new TIGER_Graphics::CGraphicsView(m_pScene);
         setPlatformSize(QSizeF(960, 540));
+        m_pGLPathWidget = new GLPathWidget(this);
+        m_pGLPathWidget->setMinimumSize(900, 900);
+        m_pGLPathWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     }
 
     void CImageListPanel::initLayout()
     {
         QHBoxLayout *pLayout = new QHBoxLayout;
         pLayout->addWidget(m_pListWidget);
-        pLayout->addWidget(m_pView);
+        // pLayout->addWidget(m_pView);
+        pLayout->addWidget(m_pGLPathWidget);
         pLayout->setSpacing(2);
         pLayout->setMargin(0);
         this->setLayout(pLayout);
@@ -230,6 +236,7 @@ namespace TIGER_UI_SLM
                 if (!file.isEmpty())
                 {
                     auto pAllLayers = TIGER_SLMManuDef::manuStatus()->getSLCPrintDatas(file);
+                    m_pGLPathWidget->setSLCData(pAllLayers);
                     setListWidgetShow(pAllLayers);
                 }
             });
@@ -333,5 +340,6 @@ namespace TIGER_UI_SLM
         QPixmap pix = icon.pixmap(m_pListWidget->iconSize());
         m_pScene->showImage(pix);
         m_pView->resetView();
+        m_pGLPathWidget->setLayerIndex(id);
     }
 }

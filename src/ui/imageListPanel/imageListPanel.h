@@ -9,6 +9,10 @@ namespace TIGER_Graphics
     class CGraphicsScene;
     class CGraphicsView;
 };
+namespace TIGER_OpenGL
+{
+    class GLPathWidget;
+};
 namespace TIGER_VMSLM
 {
     class CVM;
@@ -63,6 +67,7 @@ namespace TIGER_UI_SLM
         QListWidget *m_pListWidget;
         TIGER_Graphics::CGraphicsScene *m_pScene;
         TIGER_Graphics::CGraphicsView *m_pView;
+        TIGER_OpenGL::GLPathWidget* m_pGLPathWidget;
         int& m_currentLayer;
         QMenu* m_pContextMenu;
 
