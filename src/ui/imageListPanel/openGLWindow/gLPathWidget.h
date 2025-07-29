@@ -22,13 +22,14 @@ namespace TIGER_OpenGL
         void paintGL() override;
         void mousePressEvent(QMouseEvent *) override;
         void mouseMoveEvent(QMouseEvent *) override;
+        void mouseDoubleClickEvent(QMouseEvent *event) override;
         void wheelEvent(QWheelEvent *) override;
 
     private:
         TIGER_PrintDatas::printSLCDatas m_slcData;
-        int currentLayer = 0;
-        float offsetX = 0, offsetY = 0;
-        float zoom = 1.0f;
-        QPoint lastPos;
+        int m_currentLayer;
+        float offsetX, offsetY;
+        float zoom;
+        QPoint m_lastPos;
     };
 }

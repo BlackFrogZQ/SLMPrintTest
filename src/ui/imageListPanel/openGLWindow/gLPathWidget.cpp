@@ -2,14 +2,18 @@
 
 namespace TIGER_OpenGL
 {
-    GLPathWidget::GLPathWidget(QWidget* parent) : QOpenGLWidget(parent)
+    GLPathWidget::GLPathWidget(QWidget* parent) : QOpenGLWidget(parent), m_currentLayer(0), offsetX(0), offsetY(0), zoom(1.0f)
     {
+        setMouseTracking(true);
+        setFocusPolicy(Qt::StrongFocus);
+        setAttribute(Qt::WA_OpaquePaintEvent);
+        setAttribute(Qt::WA_NoSystemBackground);
     }
 
     void GLPathWidget::setSLCData(const TIGER_PrintDatas::printSLCDatas &data)
     {
         m_slcData = data;
-        currentLayer = 0;
+        m_currentLayer = 0;
         update();
     }
 
@@ -17,7 +21,7 @@ namespace TIGER_OpenGL
     {
         if (index >= 0 && index < m_slcData.pLayerDatas.size())
         {
-            currentLayer = index;
+            m_currentLayer = index;
             update();
         }
     }
@@ -64,35 +68,73 @@ namespace TIGER_OpenGL
         glVertex2f(-half, half);
         glEnd();
 
-        if (currentLayer < m_slcData.pLayerDatas.size())
+        if (m_currentLayer < m_slcData.pLayerDatas.size())
         {
             ScanPathRenderer renderer;
             renderer.initializeOpenGLFunctions();
-            renderer.drawLayer(m_slcData.pLayerDatas[currentLayer]);
+            renderer.drawLayer(m_slcData.pLayerDatas[m_currentLayer]);
         }
     }
 
     void GLPathWidget::mousePressEvent(QMouseEvent *e)
     {
-        lastPos = e->pos();
+        if (e->buttons() & Qt::LeftButton)
+        {
+            m_lastPos = e->pos();
+        }
     }
 
     void GLPathWidget::mouseMoveEvent(QMouseEvent *e)
     {
         if (e->buttons() & Qt::LeftButton)
         {
-            QPoint delta = e->pos() - lastPos;
-            offsetX += delta.x() / 100.0f;
-            offsetY -= delta.y() / 100.0f;
-            lastPos = e->pos();
+            QPoint delta = e->pos() - m_lastPos;
+            float dx = delta.x() / (width() * 0.5f) * (1.0f / zoom) * 200.0f;
+            float dy = -delta.y() / (height() * 0.5f) * (1.0f / zoom) * 200.0f;
+
+            offsetX += dx;
+            offsetY += dy;
+
+            m_lastPos = e->pos();
             update();
         }
     }
 
     void GLPathWidget::wheelEvent(QWheelEvent *e)
     {
-        zoom += e->angleDelta().y() / 1200.0f;
+        // 获取当前鼠标位置在视口中的坐标
+        QPointF pos = e->position();
+        float xRatio = (pos.x() / width()) * 2.0f - 1.0f;
+        float yRatio = 1.0f - (pos.y() / height()) * 2.0f;
+
+        float viewHalfWidth = 200.0f;
+        float aspect = static_cast<float>(height()) / width();
+        float viewHalfHeight = viewHalfWidth * aspect;
+
+        float worldX = xRatio * viewHalfWidth / zoom - offsetX;
+        float worldY = yRatio * viewHalfHeight / zoom - offsetY;
+
+        // 缩放
+        float scaleFactor = 1.0f + e->angleDelta().y() / 1200.0f;
+        float oldZoom = zoom;
+        zoom *= scaleFactor;
         if (zoom < 0.05f) zoom = 0.05f;
+
+        // 以鼠标为中心调整偏移
+        offsetX = offsetX + worldX * (1.0f - oldZoom / zoom);
+        offsetY = offsetY + worldY * (1.0f - oldZoom / zoom);
+
         update();
+    }
+
+    void GLPathWidget::mouseDoubleClickEvent(QMouseEvent *event)
+    {
+        if (event->button() == Qt::LeftButton)
+        {
+            zoom = 1.0f;
+            offsetX = 0.0f;
+            offsetY = 0.0f;
+            update();
+        }
     }
 }
