@@ -2,12 +2,13 @@
 
 namespace TIGER_OpenGL
 {
-    GLPathWidget::GLPathWidget(QWidget* parent) : QOpenGLWidget(parent), m_currentLayer(0), offsetX(0), offsetY(0), zoom(1.0f)
+    GLPathWidget::GLPathWidget(QWidget* parent) : QOpenGLWidget(parent), m_currentLayer(0), m_times(1.0)
     {
         setMouseTracking(true);
         setFocusPolicy(Qt::StrongFocus);
         setAttribute(Qt::WA_OpaquePaintEvent);
         setAttribute(Qt::WA_NoSystemBackground);
+        setFixedSize(960, 540);
     }
 
     void GLPathWidget::setSLCData(const TIGER_PrintDatas::printSLCDatas &data)
@@ -37,25 +38,24 @@ namespace TIGER_OpenGL
         glEnable(GL_LINE_SMOOTH);
     }
 
-    void GLPathWidget::resizeGL(int w, int h)
+    void GLPathWidget::resizeGL(int width, int height)
     {
-        glViewport(0, 0, w, h);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-
-        float halfWidth = 100.0f;
-        float aspect = static_cast<float>(h) / w;
-        glOrtho(-halfWidth, halfWidth, -halfWidth * aspect, halfWidth * aspect, -1, 1);
-
-        glMatrixMode(GL_MODELVIEW);
+		if (0 == height)
+		{
+			height = 1;
+		}
+		glViewport(0, 0, width, height);
     }
 
     void GLPathWidget::paintGL()
     {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glLoadIdentity();
-        glScalef(zoom, zoom, 1);
-        glTranslatef(offsetX, offsetY, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		int max = 5 * qMax(width(), height());
+		float w = this->width() / m_times / 2;
+		float h = this->height() / m_times / 2;
+		glOrtho(-w - m_viewMove.x(), w - m_viewMove.x(), -h - m_viewMove.y(), h - m_viewMove.y(), -max, max);
+        // glOrtho(-w, w, -h, h, -max, max); // 设置 OpenGL 世界坐标系范围的初始状态
 
         float printRegionSize = 180.0f;
         float half = printRegionSize / 2.0f;
@@ -76,64 +76,67 @@ namespace TIGER_OpenGL
         }
     }
 
-    void GLPathWidget::mousePressEvent(QMouseEvent *e)
-    {
-        if (e->buttons() & Qt::LeftButton)
-        {
-            m_lastPos = e->pos();
-        }
-    }
+	void GLPathWidget::setMove(QPoint p_point)
+	{
+		QPointF point = getPosition(p_point);
+		m_viewMove += point - m_lastMove;
+		m_lastMove = point;
+	}
 
-    void GLPathWidget::mouseMoveEvent(QMouseEvent *e)
-    {
-        if (e->buttons() & Qt::LeftButton)
-        {
-            QPoint delta = e->pos() - m_lastPos;
-            float dx = delta.x() / (width() * 0.5f) * (1.0f / zoom) * 200.0f;
-            float dy = -delta.y() / (height() * 0.5f) * (1.0f / zoom) * 200.0f;
+    // 将 窗口坐标（像素坐标） 转换为 OpenGL世界坐标（绘图坐标）
+    // 这里假设 OpenGL 世界坐标系的原点在窗口中心，x轴向右，y轴向上
+    // m_times 是缩放因子，决定了 OpenGL 世界坐标系的大小
+    // 例如，m_times = 1.0 时，窗口宽度为 960 像素时，OpenGL 世界坐标系的宽度为 960 / 1.0 = 960
+    // 如果 m_times = 2.0，则 OpenGL 世界坐标系的宽度为 960 / 2.0 = 480
+    // 这样可以实现缩放效果
+	QPointF GLPathWidget::getPosition(QPoint p_point)
+	{
+		float x = (p_point.x() - this->width() * 0.5) / m_times;
+		float y = -(p_point.y() - this->height() * 0.5) / m_times;
+		return QPointF(x, y);
+	}
 
-            offsetX += dx;
-            offsetY += dy;
+	void GLPathWidget::wheelEvent(QWheelEvent *event)
+	{
+		if (event->delta() > 0)
+		{
+			m_times *= 1.1;
+		}
+		else
+		{
+			m_times /= 1.1;
+		}
+		update();
+	}
 
-            m_lastPos = e->pos();
-            update();
-        }
-    }
+	void GLPathWidget::mousePressEvent(QMouseEvent *event)
+	{
+		if (event->button() == Qt::LeftButton)
+		{
+			QPoint pos = event->pos();
+			m_lastMove = getPosition(pos);
+		}
+	}
 
-    void GLPathWidget::wheelEvent(QWheelEvent *e)
-    {
-        // 获取当前鼠标位置在视口中的坐标
-        QPointF pos = e->position();
-        float xRatio = (pos.x() / width()) * 2.0f - 1.0f;
-        float yRatio = 1.0f - (pos.y() / height()) * 2.0f;
-
-        float viewHalfWidth = 200.0f;
-        float aspect = static_cast<float>(height()) / width();
-        float viewHalfHeight = viewHalfWidth * aspect;
-
-        float worldX = xRatio * viewHalfWidth / zoom - offsetX;
-        float worldY = yRatio * viewHalfHeight / zoom - offsetY;
-
-        // 缩放
-        float scaleFactor = 1.0f + e->angleDelta().y() / 1200.0f;
-        float oldZoom = zoom;
-        zoom *= scaleFactor;
-        if (zoom < 0.05f) zoom = 0.05f;
-
-        // 以鼠标为中心调整偏移
-        offsetX = offsetX + worldX * (1.0f - oldZoom / zoom);
-        offsetY = offsetY + worldY * (1.0f - oldZoom / zoom);
-
-        update();
-    }
+	void GLPathWidget::mouseMoveEvent(QMouseEvent *event)
+	{
+		if (event->x() >= 0.99*width() || event->x() <= 0.01*width() || event->y() <= 0.01*height() || event->y() >= 0.99*height())
+		{
+			return;
+		}
+		if (event->buttons() == Qt::LeftButton)
+		{
+			setMove(event->pos());
+			update();
+		}
+	}
 
     void GLPathWidget::mouseDoubleClickEvent(QMouseEvent *event)
     {
         if (event->button() == Qt::LeftButton)
         {
-            zoom = 1.0f;
-            offsetX = 0.0f;
-            offsetY = 0.0f;
+            m_times = 1.0;
+            m_viewMove = QPointF(0.0, 0.0);
             update();
         }
     }

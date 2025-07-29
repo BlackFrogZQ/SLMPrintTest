@@ -17,19 +17,24 @@ namespace TIGER_OpenGL
         void setLayerIndex(int index);
 
     protected:
+		QPointF getPosition(QPoint p_point);
+		void setMove(QPoint p_point);
+
+    protected:
         void initializeGL() override;
         void resizeGL(int w, int h) override;
         void paintGL() override;
+        void wheelEvent(QWheelEvent *) override;
         void mousePressEvent(QMouseEvent *) override;
         void mouseMoveEvent(QMouseEvent *) override;
         void mouseDoubleClickEvent(QMouseEvent *event) override;
-        void wheelEvent(QWheelEvent *) override;
 
     private:
         TIGER_PrintDatas::printSLCDatas m_slcData;
         int m_currentLayer;
-        float offsetX, offsetY;
-        float zoom;
-        QPoint m_lastPos;
+
+		QPointF m_lastMove;
+		QPointF m_viewMove;
+		double m_times;
     };
 }

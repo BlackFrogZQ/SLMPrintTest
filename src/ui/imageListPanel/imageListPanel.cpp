@@ -61,7 +61,7 @@ namespace TIGER_UI_SLM
         m_pView = new TIGER_Graphics::CGraphicsView(m_pScene);
         setPlatformSize(QSizeF(960, 540));
         m_pGLPathWidget = new GLPathWidget(this);
-        m_pGLPathWidget->setMinimumSize(900, 900);
+        m_pGLPathWidget->setMinimumSize(960, 540);
         m_pGLPathWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     }
 
