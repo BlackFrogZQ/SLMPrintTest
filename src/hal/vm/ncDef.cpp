@@ -2,16 +2,16 @@
 
 namespace TIGER_VMSLM
 {
-    CDZSTMarConnectkParas *DZSTMarkConnectPara()
+    CMarkConnectParas *MarkConnectPara()
     {
-        static CDZSTMarConnectkParas g_DZSTMarkConnectPara;
-        return &g_DZSTMarkConnectPara;
+        static CMarkConnectParas g_MarkConnectPara;
+        return &g_MarkConnectPara;
     }
 
-    CGalvoScanningSystemParas *scanSystemParas()
+    CGalvoMotorParas *motorParas()
     {
-        static CGalvoScanningSystemParas g_scanSystemParas;
-        return &g_scanSystemParas;
+        static CGalvoMotorParas g_motorParas;
+        return &g_motorParas;
     }
 
     CLaserParas *laserParas()
@@ -20,10 +20,10 @@ namespace TIGER_VMSLM
         return &g_laserParas;
     }
 
-    CMarkShapeParas *markShapeParas()
+    CMarkParameter *getMarkParameter()
     {
-        static CMarkShapeParas g_markShapeParas;
-        return &g_markShapeParas;
+        static CMarkParameter g_markParameter;
+        return &g_markParameter;
     }
 
     CPLCParas *plcParas()

@@ -170,9 +170,9 @@ namespace TIGER_Megatron
     {
         UDM_NewFile();
         UDM_Main();
-        UDM_SetProtocol(DZSTMarkConnectPara()->MarkProtocol, Mark2D);
+        UDM_SetProtocol(MarkConnectPara()->MarkProtocol, Mark2D);
         UDM_SetLayersPara(getMarkParameter(), mftMax);
-        int startAddress = UDM_RepeatStart(scanSystemParas()->MarkCount);
+        int startAddress = UDM_RepeatStart(motorParas()->MarkCount);
 
         for (const auto& block : p_layerDatas.pScanBlocks)
         {
@@ -202,12 +202,12 @@ namespace TIGER_Megatron
         for (size_t i = 0; i < mftMax; i++)
         {
             //振镜参数
-            m_pMarkParameter[i].MarkSpeed = scanSystemParas()->MarkSpeed;
-            m_pMarkParameter[i].JumpSpeed = scanSystemParas()->JumpSpeed;
-            m_pMarkParameter[i].PolygonDelay = scanSystemParas()->PolygonDelay;
-            m_pMarkParameter[i].JumpDelay = scanSystemParas()->JumpDelay;
-            m_pMarkParameter[i].MarkDelay = scanSystemParas()->MarkDelay;
-            m_pMarkParameter[i].MarkCount = scanSystemParas()->MarkCount;
+            m_pMarkParameter[i].MarkSpeed = motorParas()->MarkSpeed;
+            m_pMarkParameter[i].JumpSpeed = motorParas()->JumpSpeed;
+            m_pMarkParameter[i].PolygonDelay = motorParas()->PolygonDelay;
+            m_pMarkParameter[i].JumpDelay = motorParas()->JumpDelay;
+            m_pMarkParameter[i].MarkDelay = motorParas()->MarkDelay;
+            m_pMarkParameter[i].MarkCount = motorParas()->MarkCount;
 
             //激光参数
             m_pMarkParameter[i].LaserOnDelay = laserParas()->LaserOnDelay;

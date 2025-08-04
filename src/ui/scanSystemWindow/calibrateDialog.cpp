@@ -1,0 +1,238 @@
+﻿#include "calibrateDialog.h"
+#include "markGraph/markGraphDef.h"
+#include "markGraph/iMarkGraph.h"
+#include "hal/vm/vm.h"
+#include "hal/vm/ncDef.h"
+#include "system/basic.h"
+#include <QGroupBox>
+#include <QLineEdit>
+#include <QLabel>
+#include <QList>
+#include <QComboBox>
+#include <QGridLayout>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QProgressBar>
+#include <QPushButton>
+
+using namespace TIGER_MarkGraph;
+using namespace TIGER_VMSLM;
+const QSize listWidgetSize(150, 150);
+const int labelWidth = 250;
+const int editWidth = 100;
+const int controlHeight = 30;
+CalibrateDialog::CalibrateDialog(QWidget *parent, CVM *p_pVM) : QDialog(parent), m_pVM(p_pVM)
+{
+    setWindowTitle("Calibrate");
+    initLayout();
+    this->layout()->setSizeConstraint(QLayout::SetFixedSize);
+    setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+}
+
+void CalibrateDialog::initLayout()
+{
+    QGroupBox *groupMarkParas = new QGroupBox(cnStr("打标参数"));
+    groupMarkParas->setLayout(initParasLayout());
+    groupMarkParas->setAlignment(Qt::AlignHCenter);
+    groupMarkParas->setObjectName("markParasGroup");
+    groupMarkParas->setStyleSheet("#markParasGroup::title {" "background-color:rgb(94, 163, 224);" "subcontrol-origin: margin;" "subcontrol-position: top center;" "padding: 0 10px;" "border-radius: 3px;" "}");
+
+    QGroupBox *groupMarkOperate = new QGroupBox(cnStr("打标操作"));
+    groupMarkOperate->setLayout(initOperateLayout());
+    groupMarkOperate->setAlignment(Qt::AlignHCenter);
+    groupMarkOperate->setObjectName("markOperateGroup");
+    groupMarkOperate->setStyleSheet("#markOperateGroup::title {" "background-color:rgb(94, 163, 224);" "subcontrol-origin: margin;" "subcontrol-position: top center;" "padding: 0 10px;" "border-radius: 3px;" "}");
+
+    m_progress = new QProgressBar();
+    m_progress->setRange(0, 100);
+    m_progress->setValue(0);
+
+    QVBoxLayout *pLayout = new QVBoxLayout;
+    pLayout->addStretch();
+    pLayout->addWidget(groupMarkParas);
+    pLayout->addSpacing(10);
+    pLayout->addStretch();
+    pLayout->addWidget(groupMarkOperate);
+    pLayout->addStretch();
+    pLayout->addWidget(m_progress);
+    pLayout->addStretch();
+    pLayout->setSpacing(2);
+    pLayout->setMargin(10);
+    pLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    this->setLayout(pLayout);
+}
+
+void CalibrateDialog::initOperate()
+{
+    m_pRoundRadio = new QRadioButton(cnStr("圆形"));
+    m_pGridRadio = new QRadioButton(cnStr("网格"));
+    m_pSpiralFillRadio = new QRadioButton(cnStr("螺旋填充"));
+    m_pPathIndicateCheck = new QCheckBox(cnStr("显示路径指示"));
+    m_pRoundRadio->setChecked(true);
+    m_pPathIndicateCheck->setChecked(true);
+
+    m_pMarkShapeParas = new CMarkShapeParas;
+    m_pMarkRangeEdit = new QLineEdit(QString::number(m_pMarkShapeParas->markRange));
+    m_pMarkRangeEdit->setFixedSize(editWidth, controlHeight);
+    m_pRowAndColEdit = new QLineEdit(QString::number(m_pMarkShapeParas->rowAndCol));
+    m_pRowAndColEdit->setFixedSize(editWidth, controlHeight);
+    m_pDiameterEdit = new QLineEdit(QString::number(m_pMarkShapeParas->diameter));
+    m_pDiameterEdit->setFixedSize(editWidth, controlHeight);
+
+    const QHash<int, QString> cMarkBtnNames =
+    {
+        {cmbiStartMark, cnStr("开始打标")},
+        {cmbiPauseMark, cnStr("暂停打标")},
+        {cmbiContinueMark, cnStr("继续打标")},
+        {cmbiStopMark, cnStr("停止打标")}
+    };
+    assert(cMarkBtnNames.size() == cmbiMax);
+    m_pMarkOperateBtns.resize(cmbiMax);
+    for (int i = 0; i < cmbiMax; i++)
+    {
+        m_pMarkOperateBtns[i] = new QPushButton();
+        m_pMarkOperateBtns[i]->setText(cMarkBtnNames[i]);
+    }
+}
+
+QVBoxLayout* CalibrateDialog::initOperateLayout()
+{
+    initOperate();
+
+    QHBoxLayout *pMarkShapeLayout = new QHBoxLayout;
+    pMarkShapeLayout->addWidget(new QLabel(cnStr("打标图形：")));
+    pMarkShapeLayout->addWidget(m_pRoundRadio);
+    pMarkShapeLayout->addWidget(m_pGridRadio);
+    pMarkShapeLayout->addWidget(m_pSpiralFillRadio);
+    pMarkShapeLayout->addWidget(m_pPathIndicateCheck);
+
+    QHBoxLayout *pShapeParasLayout = new QHBoxLayout;
+    pShapeParasLayout->addWidget(new QLabel(cnStr("形状参数：")));
+    pShapeParasLayout->addStretch();
+    pShapeParasLayout->addWidget(new QLabel(cnStr("打标范围(mm)")));
+    pShapeParasLayout->addWidget(m_pMarkRangeEdit);
+    pShapeParasLayout->addStretch();
+    pShapeParasLayout->addWidget(new QLabel(cnStr("行列数")));
+    pShapeParasLayout->addWidget(m_pRowAndColEdit);
+    pShapeParasLayout->addStretch();
+    pShapeParasLayout->addWidget(new QLabel(cnStr("直径(mm)")));
+    pShapeParasLayout->addWidget(m_pDiameterEdit);
+
+    QHBoxLayout *pBtnsLayout = new QHBoxLayout;
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiStartMark]);
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiPauseMark]);
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiContinueMark]);
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiStopMark]);
+    pBtnsLayout->addStretch();
+    pBtnsLayout->setSpacing(0);
+    pBtnsLayout->setMargin(0);
+
+    QVBoxLayout *pOperateLayout = new QVBoxLayout;
+    pOperateLayout->addStretch();
+    pOperateLayout->addLayout(pMarkShapeLayout);
+    pOperateLayout->addStretch();
+    pOperateLayout->addLayout(pShapeParasLayout);
+    pOperateLayout->addStretch();
+    pOperateLayout->addLayout(pBtnsLayout);
+    pOperateLayout->addStretch();
+    pOperateLayout->setSpacing(2);
+    pOperateLayout->setMargin(10);
+    pOperateLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    return pOperateLayout;
+}
+
+void CalibrateDialog::initParas()
+{
+    m_pMotorParasEdits.resize(mpMax);
+    m_pMotorParasLabels.resize(mpMax);
+    m_pLaserParasEdits.resize(lpMax);
+    m_pLaserParasLabels.resize(lpMax);
+
+    const QHash<int, markParasHash> cMotorparasNames =
+    {
+        {mpMarkSpeed, {cnStr("打标速度(mm/s)"), QString::number(getMarkParameter()->motorParas.MarkSpeed)}},
+        {mpJumpSpeed, {cnStr("跳转速度(mm/s)"), QString::number(getMarkParameter()->motorParas.JumpSpeed)}},
+        {mpMarkDelay, {cnStr("打标延时(us)"), QString::number(getMarkParameter()->motorParas.MarkDelay)}},
+        {mpJumpDelay, {cnStr("跳转延时(us)"), QString::number(getMarkParameter()->motorParas.JumpDelay)}},
+        {mpPolygonDelay, {cnStr("转弯延时(us)"), QString::number(getMarkParameter()->motorParas.PolygonDelay)}},
+        {mpMarkCount, {cnStr("打标次数"), QString::number(getMarkParameter()->motorParas.MarkCount)}}
+    };
+    const QHash<int, markParasHash> cLaserParasNames =
+    {
+        {lpLaserPower, {cnStr("激光能量百分比(0~100)"), QString::number(getMarkParameter()->laserParas.LaserPower)}},
+        {lpLaserOnDelay, {cnStr("开激光延时(us)"), QString::number(getMarkParameter()->laserParas.LaserOnDelay)}},
+        {lpLaserOffDelay, {cnStr("关激光延时(us)"), QString::number(getMarkParameter()->laserParas.LaserOffDelay)}},
+        {lpQDelay, {cnStr("出光Q频率延时(us)"), QString::number(getMarkParameter()->laserParas.QDelay)}},
+        {lpDutyCycle, {cnStr("出光时占空比(0~1)"), QString::number(getMarkParameter()->laserParas.DutyCycle)}}
+    };
+
+    for(int i = 0; i < mpMax; i++)
+    {
+        m_pMotorParasLabels[i] = new QLabel(cMotorparasNames[i].pName);
+        m_pMotorParasEdits[i] = new QLineEdit(cMotorparasNames[i].pValue);
+    }
+    for(int i = 0; i < lpMax; i++)
+    {
+        m_pLaserParasLabels[i] = new QLabel(cLaserParasNames[i].pName);
+        m_pLaserParasEdits[i] = new QLineEdit(cLaserParasNames[i].pValue);
+    }
+    m_pLaserDevice = new QComboBox;
+    m_pLaserDevice->addItems({cnStr("IPG"), cnStr("SPI"), cnStr("CO2/紫外"), cnStr("其他")});
+}
+
+QVBoxLayout* CalibrateDialog::initParasLayout()
+{
+    initParas();
+    auto fixSize = [&](QWidget *p_widget, int p_width)
+    {
+        p_widget->setFixedSize(p_width, controlHeight);
+    };
+
+    auto createGridLayout = [&](const QVector<QLabel*> &labels, const QVector<QLineEdit*> &edits) -> QGridLayout*
+    {
+        QGridLayout *layout = new QGridLayout;
+        const int columnCount = 2;
+
+        for (int i = 0; i < labels.size(); ++i)
+        {
+            int row = i / columnCount;
+            int col = (i % columnCount) * 2;
+
+            fixSize(labels[i], labelWidth);
+            fixSize(edits[i], editWidth);
+
+            layout->addWidget(labels[i], row, col);
+            layout->addWidget(edits[i], row, col + 1);
+        }
+        layout->setHorizontalSpacing(10);
+        layout->setVerticalSpacing(8);
+        return layout;
+    };
+
+    QGroupBox *groupMotorParas = new QGroupBox(cnStr("电机参数"));
+    groupMotorParas->setObjectName("motorParasGroup");
+    groupMotorParas->setAlignment(Qt::AlignLeft);
+    groupMotorParas->setLayout(createGridLayout(m_pMotorParasLabels, m_pMotorParasEdits));
+    QGridLayout *laserLayout = createGridLayout(m_pLaserParasLabels, m_pLaserParasEdits);
+    QLabel *laserTypeLabel = new QLabel(cnStr("激光器类型"));
+    fixSize(laserTypeLabel, labelWidth);
+    fixSize(m_pLaserDevice, editWidth);
+    laserLayout->addWidget(laserTypeLabel, 2, 2);
+    laserLayout->addWidget(m_pLaserDevice, 2, 3);
+    QGroupBox *groupLaserParas = new QGroupBox(cnStr("激光参数"));
+    groupLaserParas->setLayout(laserLayout);
+    groupLaserParas->setObjectName("laserParasGroup");
+
+    QVBoxLayout *parasLayout = new QVBoxLayout;
+    parasLayout->addWidget(groupMotorParas);
+    parasLayout->addSpacing(10);
+    parasLayout->addWidget(groupLaserParas);
+    parasLayout->addStretch();
+    parasLayout->setSpacing(10);
+    parasLayout->setContentsMargins(10, 10, 10, 10);
+    return parasLayout;
+}

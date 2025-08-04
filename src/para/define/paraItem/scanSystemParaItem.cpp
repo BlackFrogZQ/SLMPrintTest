@@ -13,8 +13,8 @@ namespace TIGER_ParaItemDef
         CDZSTMarkPara() : IParaItem(cnStr("DZSTMarkConnectPara"), cnStr("振镜卡通信参数"), true)
         {
             CParaNode *node = nullptr;
-            _AddNode(m_currentNode, pntString, "ip", "ip", true, "", &DZSTMarkConnectPara()->ip);
-            _AddNode(m_currentNode, pntEnum, "MarkProtocol", "打标协议", true, "SPI*XY2-100*SL2", &DZSTMarkConnectPara()->MarkProtocol);
+            _AddNode(m_currentNode, pntString, "ip", "ip", true, "", &MarkConnectPara()->ip);
+            _AddNode(m_currentNode, pntEnum, "MarkProtocol", "打标协议", true, "SPI*XY2-100*SL2", &MarkConnectPara()->MarkProtocol);
         };
     };
     IParaItem *DZSTMarkParaItem()
@@ -29,12 +29,12 @@ namespace TIGER_ParaItemDef
         CScanSystemPara() : IParaItem(cnStr("GalvoScanningSystemParas"), cnStr("振镜扫描系统参数"), true)
         {
             CParaNode *node = nullptr;
-            _AddNode(m_currentNode, pntUInt, "MarkSpeed", "打标速度", true, "mm/s", &scanSystemParas()->MarkSpeed);
-            _AddNode(m_currentNode, pntUInt, "JumpSpeed", "跳转速度", true, "mm/s", &scanSystemParas()->JumpSpeed);
-            _AddNode(m_currentNode, pntUInt, "MarkDelay", "打标延时", true, "us", &scanSystemParas()->MarkDelay);
-            _AddNode(m_currentNode, pntUInt, "JumpDelay", "跳转延时", true, "us", &scanSystemParas()->JumpDelay);
-            _AddNode(m_currentNode, pntUInt, "PolygonDelay", "转弯延时", true, "us", &scanSystemParas()->PolygonDelay);
-            _AddNode(m_currentNode, pntUInt, "MarkCount", "打标次数", true, "", &scanSystemParas()->MarkCount);
+            _AddNode(m_currentNode, pntUInt, "MarkSpeed", "打标速度", true, "mm/s", &motorParas()->MarkSpeed);
+            _AddNode(m_currentNode, pntUInt, "JumpSpeed", "跳转速度", true, "mm/s", &motorParas()->JumpSpeed);
+            _AddNode(m_currentNode, pntUInt, "MarkDelay", "打标延时", true, "us", &motorParas()->MarkDelay);
+            _AddNode(m_currentNode, pntUInt, "JumpDelay", "跳转延时", true, "us", &motorParas()->JumpDelay);
+            _AddNode(m_currentNode, pntUInt, "PolygonDelay", "转弯延时", true, "us", &motorParas()->PolygonDelay);
+            _AddNode(m_currentNode, pntUInt, "MarkCount", "打标次数", true, "", &motorParas()->MarkCount);
         };
     };
     IParaItem *scanSystemParaItem()

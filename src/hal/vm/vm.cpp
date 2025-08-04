@@ -93,7 +93,7 @@ namespace TIGER_VMSLM
         m_plcServer->setPlcIP(CModbusServer::CPlcIP(cnStr("PLC"), plcParas()->ip, plcParas()->ipPort, plcParas()->ipMAC));
         m_plcServer->connectPlc();
 
-        m_megatron->setMegatronIP(CMegatronIP(cnStr("振镜控制卡"), DZSTMarkConnectPara()->ip));
+        m_megatron->setMegatronIP(CMegatronIP(cnStr("振镜控制卡"), MarkConnectPara()->ip));
         m_megatron->connectMegatron();
     }
 

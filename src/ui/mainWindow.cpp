@@ -64,7 +64,7 @@ void CMainWindow::init()
 
     m_pManuPanel = new CManuPanel(m_pVM);
     m_pShowSlicePanel = new CImageListPanel(this, m_pVM);
-    m_pMenuBar = new CMainWindowMenuBar(this);
+    m_pMenuBar = new CMainWindowMenuBar(this, m_pVM);
 
     QVBoxLayout *pLayout = new QVBoxLayout();
     pLayout->addWidget(m_pMenuBar);

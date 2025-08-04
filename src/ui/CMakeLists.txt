@@ -6,6 +6,7 @@ add_subdirectory(menuBar)
 add_subdirectory(inputDialog)
 add_subdirectory(imageListPanel)
 add_subdirectory(control)
+add_subdirectory(scanSystemWindow)
 
 aux_source_directory(. DIR_SYSTEM_SRCS)
 add_library(uiLib ${DIR_SYSTEM_SRCS})
@@ -18,4 +19,5 @@ target_link_libraries(uiLib
     menuBarLib
     inputDialogLib
     imageListPanelLib
-    controlWindowLib)
+    controlWindowLib
+    scanSystemWindowLib)

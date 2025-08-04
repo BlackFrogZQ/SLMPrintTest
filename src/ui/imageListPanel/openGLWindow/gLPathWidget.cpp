@@ -2,6 +2,8 @@
 
 namespace TIGER_OpenGL
 {
+    const QSize cPlatformSize(180, 180);
+
     GLPathWidget::GLPathWidget(QWidget* parent) : QOpenGLWidget(parent), m_currentLayer(0), m_times(1.0)
     {
         setMouseTracking(true);
@@ -56,15 +58,14 @@ namespace TIGER_OpenGL
 		float h = this->height() / m_times / 2;
 		glOrtho(-w - m_viewMove.x(), w - m_viewMove.x(), -h - m_viewMove.y(), h - m_viewMove.y(), -max, max);
 
-        float printRegionSize = 180.0f;
-        float half = printRegionSize / 2.0f;
-
+		float pW = cPlatformSize.width() / 2;
+		float pH = cPlatformSize.height() / 2;
         glColor3f(1.0f, 1.0f, 1.0f);
         glBegin(GL_QUADS);
-        glVertex2f(-half, -half);
-        glVertex2f(half, -half);
-        glVertex2f(half, half);
-        glVertex2f(-half, half);
+        glVertex2f(-pW, -pH);
+        glVertex2f(pW, -pH);
+        glVertex2f(pW, pH);
+        glVertex2f(-pW, pH);
         glEnd();
 
         if (m_currentLayer < m_slcData.pLayerDatas.size())
