@@ -3,7 +3,7 @@
 
 namespace TIGER_MarkGraph
 {
-    class CCircle : public IMarkGraph
+    class CSpiralFill : public IMarkGraph
     {
     public:
         virtual markGraphDatas* getGraphDatas(const CMarkShapeParas *p_markShapeParas) override;

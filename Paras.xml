@@ -8,7 +8,7 @@
             <value>1</value>
         </MarkProtocol>
     </DZSTMarkConnectPara>
-    <GalvoScanningSystemParas remark="/" cnName="振镜扫描系统参数" visible="1">
+    <CGalvoMotorParas remark="/" cnName="振镜电机参数" visible="1">
         <MarkSpeed remark="mm/s" cnName="打标速度" visible="1">
             <value>1000</value>
         </MarkSpeed>
@@ -27,7 +27,7 @@
         <MarkCount remark="" cnName="打标次数" visible="1">
             <value>1</value>
         </MarkCount>
-    </GalvoScanningSystemParas>
+    </CGalvoMotorParas>
     <CLaserParas remark="/" cnName="激光参数" visible="1">
         <LaserDevice remark="IPG*SPI*CO2/紫外" cnName="激光器类型" visible="1">
             <value>1</value>

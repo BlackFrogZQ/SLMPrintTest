@@ -2,11 +2,9 @@
 
 namespace TIGER_MarkGraph
 {
-    IMarkGraph::IMarkGraph()
+    markLineDatas IMarkGraph::showPathIndicate()
     {
-    }
-
-    IMarkGraph::~IMarkGraph()
-    {
+        markLineDatas pLineDatas;
+        return pLineDatas;
     }
 }

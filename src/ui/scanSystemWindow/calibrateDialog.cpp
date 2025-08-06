@@ -1,9 +1,11 @@
 ﻿#include "calibrateDialog.h"
 #include "markGraph/markGraphDef.h"
 #include "markGraph/iMarkGraph.h"
+#include "markGraph/markGraphCreator.h"
 #include "hal/vm/vm.h"
 #include "hal/vm/ncDef.h"
 #include "system/basic.h"
+#include "control/btnSmart/btnSmart.h"
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QLabel>
@@ -14,14 +16,16 @@
 #include <QCheckBox>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QButtonGroup>
 
 using namespace TIGER_MarkGraph;
 using namespace TIGER_VMSLM;
+using namespace TIGER_UI_BtnSmart;
 const QSize listWidgetSize(150, 150);
 const int labelWidth = 250;
 const int editWidth = 100;
 const int controlHeight = 30;
-CalibrateDialog::CalibrateDialog(QWidget *parent, CVM *p_pVM) : QDialog(parent), m_pVM(p_pVM)
+CalibrateDialog::CalibrateDialog(QWidget *parent, CVM *p_pVM) : QDialog(parent), m_pVM(p_pVM), m_pMarkGraph(nullptr)
 {
     setWindowTitle("Calibrate");
     initLayout();
@@ -64,21 +68,6 @@ void CalibrateDialog::initLayout()
 
 void CalibrateDialog::initOperate()
 {
-    m_pRoundRadio = new QRadioButton(cnStr("圆形"));
-    m_pGridRadio = new QRadioButton(cnStr("网格"));
-    m_pSpiralFillRadio = new QRadioButton(cnStr("螺旋填充"));
-    m_pPathIndicateCheck = new QCheckBox(cnStr("显示路径指示"));
-    m_pRoundRadio->setChecked(true);
-    m_pPathIndicateCheck->setChecked(true);
-
-    m_pMarkShapeParas = new CMarkShapeParas;
-    m_pMarkRangeEdit = new QLineEdit(QString::number(m_pMarkShapeParas->markRange));
-    m_pMarkRangeEdit->setFixedSize(editWidth, controlHeight);
-    m_pRowAndColEdit = new QLineEdit(QString::number(m_pMarkShapeParas->rowAndCol));
-    m_pRowAndColEdit->setFixedSize(editWidth, controlHeight);
-    m_pDiameterEdit = new QLineEdit(QString::number(m_pMarkShapeParas->diameter));
-    m_pDiameterEdit->setFixedSize(editWidth, controlHeight);
-
     const QHash<int, QString> cMarkBtnNames =
     {
         {cmbiStartMark, cnStr("开始打标")},
@@ -90,9 +79,31 @@ void CalibrateDialog::initOperate()
     m_pMarkOperateBtns.resize(cmbiMax);
     for (int i = 0; i < cmbiMax; i++)
     {
-        m_pMarkOperateBtns[i] = new QPushButton();
+        const QSize cButtonSize(120, 60);
+        m_pMarkOperateBtns[i] = new CBtnSmart("btn", cButtonSize);
         m_pMarkOperateBtns[i]->setText(cMarkBtnNames[i]);
     }
+    connect(m_pMarkOperateBtns[cmbiStartMark], &CBtnSmart::sigClick, this, [this]{ m_pVM->startMark(); });
+
+    m_pMarkShapeParas = new CMarkShapeParas;
+    m_pMarkRangeEdit = new QLineEdit(QString::number(m_pMarkShapeParas->markRange));
+    m_pMarkRangeEdit->setFixedSize(editWidth, controlHeight);
+    m_pRowAndColEdit = new QLineEdit(QString::number(m_pMarkShapeParas->rowAndCol));
+    m_pRowAndColEdit->setFixedSize(editWidth, controlHeight);
+    m_pDiameterEdit = new QLineEdit(QString::number(m_pMarkShapeParas->diameter));
+    m_pDiameterEdit->setFixedSize(editWidth, controlHeight);
+
+    m_pRoundRadio = new QRadioButton(cnStr("圆形"));
+    m_pGridRadio = new QRadioButton(cnStr("网格"));
+    m_pSpiralFillRadio = new QRadioButton(cnStr("螺旋填充"));
+    m_pPathIndicateCheck = new QCheckBox(cnStr("显示路径指示"));
+    m_pShapeButtonGroup = new QButtonGroup(this);
+    m_pShapeButtonGroup->addButton(m_pRoundRadio, 0);
+    m_pShapeButtonGroup->addButton(m_pGridRadio, 1);
+    m_pShapeButtonGroup->addButton(m_pSpiralFillRadio, 2);
+    connect(m_pShapeButtonGroup, QOverload<int, bool>::of(&QButtonGroup::idToggled), this, &CalibrateDialog::radioToggled);
+    m_pPathIndicateCheck->setChecked(true);
+    m_pRoundRadio->setChecked(true);
 }
 
 QVBoxLayout* CalibrateDialog::initOperateLayout()
@@ -128,8 +139,6 @@ QVBoxLayout* CalibrateDialog::initOperateLayout()
     pBtnsLayout->addStretch();
     pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiStopMark]);
     pBtnsLayout->addStretch();
-    pBtnsLayout->setSpacing(0);
-    pBtnsLayout->setMargin(0);
 
     QVBoxLayout *pOperateLayout = new QVBoxLayout;
     pOperateLayout->addStretch();
@@ -139,7 +148,7 @@ QVBoxLayout* CalibrateDialog::initOperateLayout()
     pOperateLayout->addStretch();
     pOperateLayout->addLayout(pBtnsLayout);
     pOperateLayout->addStretch();
-    pOperateLayout->setSpacing(2);
+    pOperateLayout->setSpacing(15);
     pOperateLayout->setMargin(10);
     pOperateLayout->setSizeConstraint(QLayout::SetMinimumSize);
     return pOperateLayout;
@@ -235,4 +244,19 @@ QVBoxLayout* CalibrateDialog::initParasLayout()
     parasLayout->setSpacing(10);
     parasLayout->setContentsMargins(10, 10, 10, 10);
     return parasLayout;
+}
+
+void CalibrateDialog::radioToggled(int p_id, bool p_checked)
+{
+    if (!p_checked) return;
+    assert(m_pMarkShapeParas != nullptr);
+    m_pMarkShapeParas->shapeType = static_cast<TIGER_MarkGraph::CMarkShape>(p_id);
+
+    if (m_pMarkGraph)
+    {
+        delete m_pMarkGraph;
+        m_pMarkGraph = nullptr;
+    }
+    m_pMarkGraph = TIGER_MarkGraph::CMarkGraphCreator::createMarkGraph(m_pMarkShapeParas->shapeType);
+    assert(m_pMarkGraph != nullptr);
 }

@@ -9,7 +9,13 @@ namespace TIGER_VMSLM
 namespace TIGER_MarkGraph
 {
     struct CMarkShapeParas;
+    class IMarkGraph;
+    class CMarkGraphCreator;
 }
+namespace TIGER_UI_BtnSmart
+{
+    class CBtnSmart;
+};
 class QLabel;
 class QLineEdit;
 class QComboBox;
@@ -17,6 +23,7 @@ class QProgressBar;
 class QPushButton;
 class QRadioButton;
 class QCheckBox;
+class QButtonGroup;
 class CalibrateDialog : public QDialog
 {
     Q_OBJECT
@@ -29,6 +36,7 @@ protected:
     void initOperate();
     QVBoxLayout* initOperateLayout();
     QVBoxLayout* initParasLayout();
+    void radioToggled(int p_id, bool p_checked);
 
 protected:
     struct markParasHash
@@ -66,6 +74,8 @@ protected:
 
 private:
     TIGER_VMSLM::CVM *m_pVM;
+    TIGER_MarkGraph::IMarkGraph *m_pMarkGraph;
+
     QVector<QLabel*> m_pMotorParasLabels;
     QVector<QLineEdit*> m_pMotorParasEdits;
     QVector<QLabel*> m_pLaserParasLabels;
@@ -75,12 +85,13 @@ private:
     QRadioButton *m_pRoundRadio;
     QRadioButton *m_pGridRadio;
     QRadioButton *m_pSpiralFillRadio;
+    QButtonGroup* m_pShapeButtonGroup;
     QCheckBox *m_pPathIndicateCheck;
     TIGER_MarkGraph::CMarkShapeParas *m_pMarkShapeParas;
     QLineEdit *m_pMarkRangeEdit;
     QLineEdit *m_pRowAndColEdit;
     QLineEdit *m_pDiameterEdit;
-    QVector<QPushButton*> m_pMarkOperateBtns;
+    QVector<TIGER_UI_BtnSmart::CBtnSmart *>  m_pMarkOperateBtns;
 
     QProgressBar *m_progress;
 };

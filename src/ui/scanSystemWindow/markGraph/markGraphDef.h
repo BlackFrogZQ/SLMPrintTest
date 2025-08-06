@@ -1,8 +1,11 @@
 ﻿#pragma once
 #include "system/basic.h"
+#include <vector>
 
 namespace TIGER_MarkGraph
 {
+    constexpr double M_PI = 3.14159265358979323846;
+    constexpr float laserWidth = 0.0765f;
 #pragma region "打标形状参数"
     enum CMarkShape
     {
@@ -11,13 +14,32 @@ namespace TIGER_MarkGraph
         cmsSpiralFill,
         cmsMax
     };
-    const QStringList cmarkSape = {cnStr("圆形"), cnStr("网格"), cnStr("螺旋填充")};
+    const QStringList cmarkShape = {cnStr("圆形"), cnStr("网格"), cnStr("螺旋填充")};
     struct CMarkShapeParas
     {
         CMarkShape shapeType = cmsCircle;
         unsigned int markRange = 100;
         unsigned int rowAndCol = 10;
         unsigned int diameter = 2;
+        bool showPathIndicate = true;
+    };
+#pragma endregion
+
+#pragma region "打标数据"
+    struct markDatas
+    {
+        float x;
+        float y;
+        float z;
+        float a;
+    };
+    struct markLineDatas
+    {
+        std::vector<markDatas> points;
+    };
+    struct markGraphDatas
+    {
+        std::vector<markLineDatas> markLines;
     };
 #pragma endregion
 }

@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "system/basic.h"
+#include "hal/printDatas/printDatasDef.h"
 
+using namespace TIGER_PrintDatas;
 namespace TIGER_VMSLM
 {
 #pragma region "振镜卡通信参数"
@@ -73,10 +75,28 @@ namespace TIGER_VMSLM
 #pragma endregion
 
 #pragma region "打标参数"
+    enum CMarkType : int
+    {
+        cmtOuterContour = 0,
+        cmtInnerContour,
+        cmtSupportContour,
+        cmtScanFill,
+        cmtMarkTest,
+        cmtUnKnown
+    };
+    const QStringList cmarkType = {cnStr("外轮廓"), cnStr("内轮廓"), cnStr("支撑"), cnStr("扫描填充")};
+    struct CMarkParas
+    {
+        CMarkType markType;
+        CGalvoMotorParas motorParas;
+        CLaserParas laserParas;
+    };
     struct CMarkParameter
     {
         CGalvoMotorParas motorParas;
         CLaserParas laserParas;
+        layerDatas printDatas;
+        bool isMark;
     };
     CMarkParameter *getMarkParameter();
 #pragma endregion

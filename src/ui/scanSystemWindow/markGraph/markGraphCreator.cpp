@@ -1,29 +1,22 @@
 ﻿#include "markGraphCreator.h"
 #include "circle/circle.h"
+#include "grid/grid.h"
+#include "spiralFill/spiralFill.h"
 
-TIGER_MarkGraph::IMarkGraph* m_pMarkGraph = nullptr;
 namespace TIGER_MarkGraph
 {
-    IMarkGraph* CMarkGraphCreator::createMarkGraph(const CMarkShapeParas& p_markShapeParas)
+    IMarkGraph* CMarkGraphCreator::createMarkGraph(const CMarkShape p_shapeTypes)
     {
-        switch (p_markShapeParas.shapeType)
+        switch (p_shapeTypes)
         {
         case cmsCircle:
-            m_pMarkGraph = new Circle();
-            break;
+            return new CCircle();
+        case cmsGrid:
+            return new CGrid();
+        case cmsSpiralFill:
+            return new CSpiralFill();
         default:
-            break;
-        }
-        assert(m_pMarkGraph != nullptr);
-        return m_pMarkGraph;
-    }
-
-    void CMarkGraphCreator::freeMarkGraphObject()
-    {
-        if (m_pMarkGraph != nullptr)
-        {
-            delete m_pMarkGraph;
-            m_pMarkGraph = nullptr;
+            return nullptr;
         }
     }
 }

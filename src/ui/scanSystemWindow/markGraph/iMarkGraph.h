@@ -5,13 +5,9 @@ namespace TIGER_MarkGraph
     class IMarkGraph
     {
     public:
-        IMarkGraph();
-        ~IMarkGraph();
+        virtual markGraphDatas* getGraphDatas(const CMarkShapeParas *p_markShapeParas) = 0;
 
     protected:
-        virtual void getGraphDatas() = 0;
-
-    protected:
-        CMarkShapeParas m_markShapeParas;
+        markLineDatas showPathIndicate();
     };
 }

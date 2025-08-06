@@ -13,6 +13,10 @@
 	<file>res/menu/onBottom.png</file>
 	<file>res/menu/onTop.png</file>
 	<file>res/menu/hide.png</file>
+	<file>res/button/btn-1.png</file>
+	<file>res/button/btn-2.png</file>
+	<file>res/button/btn-3.png</file>
+	<file>res/button/btn-4.png</file>
 	<file>res/button/down-1.png</file>
 	<file>res/button/down-2.png</file>
 	<file>res/button/down-3.png</file>

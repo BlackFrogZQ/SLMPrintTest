@@ -26,7 +26,7 @@ namespace TIGER_ParaItemDef
     class CScanSystemPara : public IParaItem
     {
     public:
-        CScanSystemPara() : IParaItem(cnStr("GalvoScanningSystemParas"), cnStr("振镜扫描系统参数"), true)
+        CScanSystemPara() : IParaItem(cnStr("CGalvoMotorParas"), cnStr("振镜电机参数"), true)
         {
             CParaNode *node = nullptr;
             _AddNode(m_currentNode, pntUInt, "MarkSpeed", "打标速度", true, "mm/s", &motorParas()->MarkSpeed);
