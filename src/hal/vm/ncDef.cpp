@@ -20,10 +20,10 @@ namespace TIGER_VMSLM
         return &g_laserParas;
     }
 
-    CMarkParameter *getMarkParameter()
+    CMarkDatas *getMarkDatas()
     {
-        static CMarkParameter g_markParameter;
-        return &g_markParameter;
+        static CMarkDatas g_markDatas;
+        return &g_markDatas;
     }
 
     CPLCParas *plcParas()

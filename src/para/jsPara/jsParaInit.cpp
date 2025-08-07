@@ -8,8 +8,6 @@ namespace TIGER_ParaDef
     void initParaRootNode()
     {
         paraRootNode()->appendChildren(DZSTMarkParaItem()->currentNode());
-        paraRootNode()->appendChildren(scanSystemParaItem()->currentNode());
-        paraRootNode()->appendChildren(laserParasItem()->currentNode());
         paraRootNode()->appendChildren(PLCParaItem()->currentNode());
         paraService()->setFileName(cnStr("Paras.xml"));
     }

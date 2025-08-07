@@ -21,7 +21,6 @@
 using namespace TIGER_MarkGraph;
 using namespace TIGER_VMSLM;
 using namespace TIGER_UI_BtnSmart;
-const QSize listWidgetSize(150, 150);
 const int labelWidth = 250;
 const int editWidth = 100;
 const int controlHeight = 30;
@@ -83,7 +82,13 @@ void CalibrateDialog::initOperate()
         m_pMarkOperateBtns[i] = new CBtnSmart("btn", cButtonSize);
         m_pMarkOperateBtns[i]->setText(cMarkBtnNames[i]);
     }
-    connect(m_pMarkOperateBtns[cmbiStartMark], &CBtnSmart::sigClick, this, [this]{ m_pVM->startMark(); });
+    connect(m_pMarkOperateBtns[cmbiStartMark], &CBtnSmart::sigClick, this, [this]
+        {
+            assert(m_pVM);
+            updateMarkParas();
+            updateMarkDatas();
+            m_pVM->startMark();
+        });
 
     m_pMarkShapeParas = new CMarkShapeParas;
     m_pMarkRangeEdit = new QLineEdit(QString::number(m_pMarkShapeParas->markRange));
@@ -163,20 +168,20 @@ void CalibrateDialog::initParas()
 
     const QHash<int, markParasHash> cMotorparasNames =
     {
-        {mpMarkSpeed, {cnStr("打标速度(mm/s)"), QString::number(getMarkParameter()->motorParas.MarkSpeed)}},
-        {mpJumpSpeed, {cnStr("跳转速度(mm/s)"), QString::number(getMarkParameter()->motorParas.JumpSpeed)}},
-        {mpMarkDelay, {cnStr("打标延时(us)"), QString::number(getMarkParameter()->motorParas.MarkDelay)}},
-        {mpJumpDelay, {cnStr("跳转延时(us)"), QString::number(getMarkParameter()->motorParas.JumpDelay)}},
-        {mpPolygonDelay, {cnStr("转弯延时(us)"), QString::number(getMarkParameter()->motorParas.PolygonDelay)}},
-        {mpMarkCount, {cnStr("打标次数"), QString::number(getMarkParameter()->motorParas.MarkCount)}}
+        {mpMarkSpeed, {cnStr("打标速度(mm/s)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkSpeed)}},
+        {mpJumpSpeed, {cnStr("跳转速度(mm/s)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].motorParas.JumpSpeed)}},
+        {mpMarkDelay, {cnStr("打标延时(us)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkDelay)}},
+        {mpJumpDelay, {cnStr("跳转延时(us)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].motorParas.JumpDelay)}},
+        {mpPolygonDelay, {cnStr("转弯延时(us)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].motorParas.PolygonDelay)}},
+        {mpMarkCount, {cnStr("打标次数"), QString::number(getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkCount)}}
     };
     const QHash<int, markParasHash> cLaserParasNames =
     {
-        {lpLaserPower, {cnStr("激光能量百分比(0~100)"), QString::number(getMarkParameter()->laserParas.LaserPower)}},
-        {lpLaserOnDelay, {cnStr("开激光延时(us)"), QString::number(getMarkParameter()->laserParas.LaserOnDelay)}},
-        {lpLaserOffDelay, {cnStr("关激光延时(us)"), QString::number(getMarkParameter()->laserParas.LaserOffDelay)}},
-        {lpQDelay, {cnStr("出光Q频率延时(us)"), QString::number(getMarkParameter()->laserParas.QDelay)}},
-        {lpDutyCycle, {cnStr("出光时占空比(0~1)"), QString::number(getMarkParameter()->laserParas.DutyCycle)}}
+        {lpLaserPower, {cnStr("激光能量百分比(0~100)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserPower)}},
+        {lpLaserOnDelay, {cnStr("开激光延时(us)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserOnDelay)}},
+        {lpLaserOffDelay, {cnStr("关激光延时(us)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserOffDelay)}},
+        {lpQDelay, {cnStr("出光Q频率延时(us)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].laserParas.QDelay)}},
+        {lpDutyCycle, {cnStr("出光时占空比(0~1)"), QString::number(getMarkDatas()->markParas[cmtMarkTest].laserParas.DutyCycle)}}
     };
 
     for(int i = 0; i < mpMax; i++)
@@ -259,4 +264,30 @@ void CalibrateDialog::radioToggled(int p_id, bool p_checked)
     }
     m_pMarkGraph = TIGER_MarkGraph::CMarkGraphCreator::createMarkGraph(m_pMarkShapeParas->shapeType);
     assert(m_pMarkGraph != nullptr);
+}
+
+void CalibrateDialog::updateMarkDatas()
+{
+    assert(m_pMarkGraph);
+    m_pMarkShapeParas->markRange = m_pMarkRangeEdit->text().toDouble();
+    m_pMarkShapeParas->rowAndCol = m_pRowAndColEdit->text().toUInt();
+    m_pMarkShapeParas->diameter = m_pDiameterEdit->text().toDouble();
+    m_pMarkShapeParas->showPathIndicate = m_pPathIndicateCheck->isChecked();
+    getMarkDatas()->printDatas = *m_pMarkGraph->getGraphDatas(m_pMarkShapeParas);
+}
+
+void CalibrateDialog::updateMarkParas()
+{
+    getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkSpeed = m_pMotorParasEdits[mpMarkSpeed]->text().toUInt();
+    getMarkDatas()->markParas[cmtMarkTest].motorParas.JumpSpeed = m_pMotorParasEdits[mpJumpSpeed]->text().toUInt();
+    getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkDelay = m_pMotorParasEdits[mpMarkDelay]->text().toUInt();
+    getMarkDatas()->markParas[cmtMarkTest].motorParas.JumpDelay = m_pMotorParasEdits[mpJumpDelay]->text().toUInt();
+    getMarkDatas()->markParas[cmtMarkTest].motorParas.PolygonDelay = m_pMotorParasEdits[mpPolygonDelay]->text().toUInt();
+    getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkCount = m_pMotorParasEdits[mpMarkCount]->text().toUInt();
+    getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserPower = m_pLaserParasEdits[lpLaserPower]->text().toDouble();
+    getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserOnDelay = m_pLaserParasEdits[lpLaserOnDelay]->text().toDouble();
+    getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserOffDelay = m_pLaserParasEdits[lpLaserOffDelay]->text().toDouble();
+    getMarkDatas()->markParas[cmtMarkTest].laserParas.QDelay = m_pLaserParasEdits[lpQDelay]->text().toDouble();
+    getMarkDatas()->markParas[cmtMarkTest].laserParas.DutyCycle = m_pLaserParasEdits[lpDutyCycle]->text().toDouble();
+    getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserDevice = static_cast<CLaserDevice>(m_pLaserDevice->currentIndex());
 }

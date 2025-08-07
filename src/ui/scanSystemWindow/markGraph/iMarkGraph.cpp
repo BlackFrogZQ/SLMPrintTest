@@ -1,10 +1,11 @@
 ﻿#include "iMarkGraph.h"
 
+using namespace TIGER_PrintDatas;
 namespace TIGER_MarkGraph
 {
-    markLineDatas IMarkGraph::showPathIndicate()
+    layerDatas IMarkGraph::showPathIndicate()
     {
-        markLineDatas pLineDatas;
+        layerDatas pLineDatas;
         return pLineDatas;
     }
 }

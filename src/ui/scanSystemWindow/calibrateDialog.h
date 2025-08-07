@@ -36,7 +36,10 @@ protected:
     void initOperate();
     QVBoxLayout* initOperateLayout();
     QVBoxLayout* initParasLayout();
+
     void radioToggled(int p_id, bool p_checked);
+    void updateMarkDatas();
+    void updateMarkParas();
 
 protected:
     struct markParasHash

@@ -82,23 +82,22 @@ namespace TIGER_VMSLM
         cmtSupportContour,
         cmtScanFill,
         cmtMarkTest,
-        cmtUnKnown
+        cmtMax
     };
-    const QStringList cmarkType = {cnStr("外轮廓"), cnStr("内轮廓"), cnStr("支撑"), cnStr("扫描填充")};
+    const QStringList cmarkTypeStr = {cnStr("外轮廓"), cnStr("内轮廓"), cnStr("支撑"), cnStr("扫描填充")};
+    const QStringList cmarkTypeEnStr = {"OuterContour", "InnerContour",  "SupportContour",  "ScanFill"};
     struct CMarkParas
     {
         CMarkType markType;
         CGalvoMotorParas motorParas;
         CLaserParas laserParas;
     };
-    struct CMarkParameter
+    struct CMarkDatas
     {
-        CGalvoMotorParas motorParas;
-        CLaserParas laserParas;
+        CMarkParas markParas[cmtMax];
         layerDatas printDatas;
-        bool isMark;
     };
-    CMarkParameter *getMarkParameter();
+    CMarkDatas *getMarkDatas();
 #pragma endregion
 
 #pragma region "PLC参数"

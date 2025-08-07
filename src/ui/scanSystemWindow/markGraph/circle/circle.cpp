@@ -1,11 +1,12 @@
 ﻿#include "circle.h"
 
+using namespace TIGER_PrintDatas;
 namespace TIGER_MarkGraph
 {
-    markGraphDatas* CCircle::getGraphDatas(const CMarkShapeParas *p_markShapeParas)
+    layerDatas* CCircle::getGraphDatas(const CMarkShapeParas *p_markShapeParas)
     {
         assert(p_markShapeParas != nullptr);
-        auto* p_graph = new markGraphDatas;
+        auto* p_graph = new layerDatas;
 
         const unsigned int rows = p_markShapeParas->rowAndCol;
         const unsigned int cols = p_markShapeParas->rowAndCol;
@@ -15,6 +16,7 @@ namespace TIGER_MarkGraph
         const float spacingX = range / (cols - 1);
         const float spacingY = range / (rows - 1);
 
+        scanBlockDatas block;
         for (unsigned int row = 0; row < rows; ++row)
         {
             for (unsigned int col = 0; col < cols; ++col)
@@ -22,24 +24,25 @@ namespace TIGER_MarkGraph
                 float centerX = -range / 2.0f + col * spacingX;
                 float centerY =  range / 2.0f - row * spacingY;
 
-                markLineDatas circleLine;
+                scanLineDatas circleLine;
                 const int pointCount = 61;
                 const float angleStep = 2 * static_cast<float>(M_PI) / (pointCount - 1);
 
                 for (int i = 0; i < pointCount; ++i)
                 {
                     float angle = i * angleStep;
-                    markDatas pt;
+                    printPoint pt;
                     pt.x = centerX + radius * std::cos(angle);
                     pt.y = centerY + radius * std::sin(angle);
                     pt.z = 0.0f;
                     pt.a = 0.0f;
                     circleLine.points.push_back(pt);
                 }
-
-                p_graph->markLines.push_back(circleLine);
+                block.scanLines.push_back(circleLine);
             }
         }
+        p_graph->pScanBlocks.push_back(block);
+
         return p_graph;
     }
 }

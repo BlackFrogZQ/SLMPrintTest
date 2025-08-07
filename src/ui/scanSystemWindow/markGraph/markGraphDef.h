@@ -24,22 +24,4 @@ namespace TIGER_MarkGraph
         bool showPathIndicate = true;
     };
 #pragma endregion
-
-#pragma region "打标数据"
-    struct markDatas
-    {
-        float x;
-        float y;
-        float z;
-        float a;
-    };
-    struct markLineDatas
-    {
-        std::vector<markDatas> points;
-    };
-    struct markGraphDatas
-    {
-        std::vector<markLineDatas> markLines;
-    };
-#pragma endregion
 }
