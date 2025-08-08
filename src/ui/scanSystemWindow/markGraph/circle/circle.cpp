@@ -25,6 +25,7 @@ namespace TIGER_MarkGraph
                 float centerY =  range / 2.0f - row * spacingY;
 
                 scanLineDatas circleLine;
+                circleLine.pMarkType = TIGER_VMSLM::cmtMarkTest;
                 const int pointCount = 61;
                 const float angleStep = 2 * static_cast<float>(M_PI) / (pointCount - 1);
 

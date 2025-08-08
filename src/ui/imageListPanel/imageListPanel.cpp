@@ -238,6 +238,7 @@ namespace TIGER_UI_SLM
                     auto pAllLayers = TIGER_SLMManuDef::manuStatus()->getSLCPrintDatas(file);
                     m_pGLPathWidget->setSLCData(pAllLayers);
                     setListWidgetShow(pAllLayers);
+                    TIGER_SLMManuDef::manuStatus()->updataSLCLayerStatus();
                 }
             });
         m_pContextMenu->addAction(pAction);

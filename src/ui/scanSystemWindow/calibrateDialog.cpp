@@ -284,10 +284,13 @@ void CalibrateDialog::updateMarkParas()
     getMarkDatas()->markParas[cmtMarkTest].motorParas.JumpDelay = m_pMotorParasEdits[mpJumpDelay]->text().toUInt();
     getMarkDatas()->markParas[cmtMarkTest].motorParas.PolygonDelay = m_pMotorParasEdits[mpPolygonDelay]->text().toUInt();
     getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkCount = m_pMotorParasEdits[mpMarkCount]->text().toUInt();
+
     getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserPower = m_pLaserParasEdits[lpLaserPower]->text().toDouble();
     getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserOnDelay = m_pLaserParasEdits[lpLaserOnDelay]->text().toDouble();
     getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserOffDelay = m_pLaserParasEdits[lpLaserOffDelay]->text().toDouble();
     getMarkDatas()->markParas[cmtMarkTest].laserParas.QDelay = m_pLaserParasEdits[lpQDelay]->text().toDouble();
     getMarkDatas()->markParas[cmtMarkTest].laserParas.DutyCycle = m_pLaserParasEdits[lpDutyCycle]->text().toDouble();
     getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserDevice = static_cast<CLaserDevice>(m_pLaserDevice->currentIndex());
+
+    getMarkDatas()->isSLCDatas = false;
 }

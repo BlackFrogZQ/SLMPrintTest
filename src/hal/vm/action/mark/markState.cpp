@@ -31,7 +31,7 @@ namespace TIGER_VMSLM
     void CDownloadMarkFile::run()
     {
         myInfo << cnStr("开始创建并下载打标文件");
-        m_pVM->creatUdmBin(manuStatus()->layerStatus.currentSLCLayer);
+        m_pVM->creatUdmBin(getMarkDatas()->printDatas);
         GMCState()->setDownloadStatus(true);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }

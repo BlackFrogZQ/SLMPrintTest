@@ -10,6 +10,7 @@
 #include <cstdint>
 
 using namespace std;
+using namespace TIGER_VMSLM;
 namespace TIGER_PrintDatas
 {
     CScanPath::CScanPath()
@@ -64,7 +65,7 @@ namespace TIGER_PrintDatas
         if(!contours[p_contourId].isClosed)
         {
             m_used[p_contourId] = true;
-            pBlock.scanLines.push_back(addLineDatas(outerPoints, ctOuter));
+            pBlock.scanLines.push_back(addLineDatas(outerPoints, ctOuter, (p_regionType == rtModelContour) ? cmtOuterContour : cmtSupportContour));
             p_layer.pScanBlocks.push_back(pBlock);
             return;
         }
@@ -86,13 +87,13 @@ namespace TIGER_PrintDatas
         }
 
         // 添加外轮廓
-        pBlock.scanLines.push_back(addLineDatas(outerPoints, ctOuter));
+        pBlock.scanLines.push_back(addLineDatas(outerPoints, ctOuter, (p_regionType == rtModelContour) ? cmtOuterContour : cmtSupportContour));
 
         // 添加内轮廓
         vector<vector<pointDatas>> holesPoints;
         for (int idx : innerIdx)
         {
-            pBlock.scanLines.push_back(addLineDatas(contours[idx].points, ctInner));
+            pBlock.scanLines.push_back(addLineDatas(contours[idx].points, ctInner, (p_regionType == rtModelContour) ? cmtInnerContour : cmtSupportContour));
             holesPoints.push_back(contours[idx].points);
         }
 
@@ -123,10 +124,11 @@ namespace TIGER_PrintDatas
         p_layer.pScanBlocks.push_back(pBlock);
     }
 
-    scanLineDatas CScanPath::addLineDatas(vector<pointDatas> p_points, contourType p_contourType)
+    scanLineDatas CScanPath::addLineDatas(vector<pointDatas> p_points, contourType p_contourType, CMarkType p_markType)
     {
         scanLineDatas pScanLine;
         pScanLine.pContourType = p_contourType;
+        pScanLine.pMarkType = p_markType;
         for (const auto& pt : p_points)
         {
             pScanLine.points.push_back({pt.x, pt.y, 0.0f, 0.0f});

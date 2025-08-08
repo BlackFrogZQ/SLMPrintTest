@@ -16,7 +16,7 @@ namespace TIGER_PrintDatas
 
     protected:
         void getSingleScanBlock(layerDatas& p_layer, const int p_layerId, const int p_contourId, const RegionType p_regionType);
-        scanLineDatas addLineDatas(std::vector<pointDatas> p_points, contourType p_contourType);
+        scanLineDatas addLineDatas(std::vector<pointDatas> p_points, contourType p_contourType, TIGER_VMSLM::CMarkType p_markType);
 
     private:
         std::vector<bool> m_used;

@@ -33,7 +33,7 @@ namespace TIGER_VMSLM
         assert(plcServerData()->colis(cpcReady) == true);
         m_updateLayerFuture = QtConcurrent::run([this]
         {
-            manuStatus()->updateLayerStatus();
+            manuStatus()->updataSLCLayerStatus();
             QMetaObject::invokeMethod(m_action, "sigSliceUpdate", Qt::QueuedConnection);
         });
         m_pVM->manuOnce();

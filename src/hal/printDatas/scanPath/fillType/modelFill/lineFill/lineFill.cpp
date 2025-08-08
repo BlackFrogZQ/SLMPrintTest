@@ -80,6 +80,7 @@ namespace TIGER_PrintDatas
 
                     scanLineDatas ln;
                     ln.pContourType = ctScan;
+                    ln.pMarkType = TIGER_VMSLM::cmtScanFill;
 
                     // 确定扫描方向：
                     // - 单向模式(sdUnidirectional)总是正向

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "markGraphDef.h"
-#include "hal/printDatas/printDatasDef.h"
+#include "hal/vm/ncDef.h"
 
 namespace TIGER_MarkGraph
 {

@@ -26,6 +26,7 @@ namespace TIGER_MarkGraph
                 float centerY =  range / 2.0f - row * spacingY;
 
                 scanLineDatas spiralLine;
+                spiralLine.pMarkType = TIGER_VMSLM::cmtMarkTest;
                 float theta = 0.0f;
                 const float dTheta = 0.1f;
 

@@ -22,6 +22,7 @@ namespace TIGER_MarkGraph
         {
             float y = topY - row * spacingY;
             scanLineDatas hLine;
+            hLine.pMarkType = TIGER_VMSLM::cmtMarkTest;
             hLine.points.push_back({ leftX, y, 0, 0 });
             hLine.points.push_back({ leftX + range, y, 0, 0 });
             block.scanLines.push_back(hLine);
@@ -31,6 +32,7 @@ namespace TIGER_MarkGraph
         {
             float x = leftX + col * spacingX;
             scanLineDatas vLine;
+            vLine.pMarkType = TIGER_VMSLM::cmtMarkTest;
             vLine.points.push_back({ x, topY, 0, 0 });
             vLine.points.push_back({ x, topY - range, 0, 0 });
             block.scanLines.push_back(vLine);

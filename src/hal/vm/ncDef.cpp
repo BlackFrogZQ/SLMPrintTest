@@ -8,18 +8,6 @@ namespace TIGER_VMSLM
         return &g_MarkConnectPara;
     }
 
-    CGalvoMotorParas *motorParas()
-    {
-        static CGalvoMotorParas g_motorParas;
-        return &g_motorParas;
-    }
-
-    CLaserParas *laserParas()
-    {
-        static CLaserParas g_laserParas;
-        return &g_laserParas;
-    }
-
     CMarkDatas *getMarkDatas()
     {
         static CMarkDatas g_markDatas;

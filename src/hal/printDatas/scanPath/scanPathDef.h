@@ -1,6 +1,10 @@
 ﻿#pragma once
 #include <vector>
 
+namespace TIGER_VMSLM
+{
+    enum CMarkType : int;
+}
 namespace TIGER_PrintDatas
 {
 #pragma region "扫描路径类型"
@@ -37,6 +41,7 @@ namespace TIGER_PrintDatas
 
     struct scanLineDatas
     {
+        TIGER_VMSLM::CMarkType pMarkType;
         contourType pContourType;
         std::vector<printPoint> points;
     };

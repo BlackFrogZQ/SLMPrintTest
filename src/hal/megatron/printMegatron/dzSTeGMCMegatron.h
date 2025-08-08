@@ -1,15 +1,10 @@
 ﻿#pragma once
 #include "HM_HashuScan.h"
 #include "HM_HashuUDM.h"
-#include "hal/printDatas/printDatasDef.h"
+#include "hal/vm/ncDef.h"
 #include "../iMegatron.h"
 #include "../megatronDef.h"
 #include <windows.h>
-
-namespace TIGER_PrintDatas
-{
-    struct lineSegment;
-}
 
 namespace TIGER_Megatron
 {

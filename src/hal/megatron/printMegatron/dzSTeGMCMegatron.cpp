@@ -1,13 +1,10 @@
 ﻿#include "dzSTeGMCMegatron.h"
 #include "vm/ncDef.h"
 #include "system/basic.h"
-#include "printDatas/printDatasDef.h"
-#include "printDatas/scanPath/scanPathDef.h"
 #include <QTimer>
 
 using namespace TIGER_VMSLM;
 using namespace TIGER_PrintDatas;
-
 namespace TIGER_Megatron
 {
     QString CDZSTeGMCMegatron::formatErrorMsg(QString p_error, GMC_STATUS errorCode)
@@ -171,8 +168,8 @@ namespace TIGER_Megatron
         UDM_NewFile();
         UDM_Main();
         UDM_SetProtocol(MarkConnectPara()->MarkProtocol, Mark2D);
-        UDM_SetLayersPara(getMarkParameter(), mftMax);
-        int startAddress = UDM_RepeatStart(motorParas()->MarkCount);
+        UDM_SetLayersPara(getMarkParameter(), cmtMax);
+        int startAddress = UDM_RepeatStart(RepeatMarkCount);
 
         for (const auto& block : p_layerDatas.pScanBlocks)
         {
@@ -185,7 +182,7 @@ namespace TIGER_Megatron
                     udmLine.push_back(pos);
                 }
 
-                UDM_AddPolyline2D(udmLine.data(), udmLine.size(), line.pContourType);
+                UDM_AddPolyline2D(udmLine.data(), udmLine.size(), line.pMarkType);
             }
         }
 
@@ -198,37 +195,45 @@ namespace TIGER_Megatron
 
     MarkParameter* CDZSTeGMCMegatron::getMarkParameter()
     {
-        memset(m_pMarkParameter, 0, sizeof(MarkParameter) * mftMax);
-        for (size_t i = 0; i < mftMax; i++)
-        {
-            //振镜参数
-            m_pMarkParameter[i].MarkSpeed = motorParas()->MarkSpeed;
-            m_pMarkParameter[i].JumpSpeed = motorParas()->JumpSpeed;
-            m_pMarkParameter[i].PolygonDelay = motorParas()->PolygonDelay;
-            m_pMarkParameter[i].JumpDelay = motorParas()->JumpDelay;
-            m_pMarkParameter[i].MarkDelay = motorParas()->MarkDelay;
-            m_pMarkParameter[i].MarkCount = motorParas()->MarkCount;
+        MarkParameter *m_pMarkParameter = new MarkParameter[cmtMax];
 
-            //激光参数
-            m_pMarkParameter[i].LaserOnDelay = laserParas()->LaserOnDelay;
-            m_pMarkParameter[i].LaserOffDelay = laserParas()->LaserOffDelay;
-            m_pMarkParameter[i].DutyCycle = laserParas()->DutyCycle;
-            m_pMarkParameter[i].Frequency = laserParas()->Frequency;
-            m_pMarkParameter[i].StandbyFrequency = laserParas()->StandbyFrequency;
-            m_pMarkParameter[i].StandbyDutyCycle = laserParas()->StandbyDutyCycle;
-            m_pMarkParameter[i].LaserPower = laserParas()->LaserPower;
-            m_pMarkParameter[i].AnalogMode = laserParas()->AnalogMode;
-            if ( laserParas()->LaserDevice == cltSPI)
+        for (size_t i = 0; i < cmtMax; i++)
+        {
+            const CGalvoMotorParas& motor = getMarkDatas()->markParas[i].motorParas;
+            const CLaserParas& laser = getMarkDatas()->markParas[i].laserParas;
+
+            m_pMarkParameter[i].MarkSpeed = motor.MarkSpeed;
+            m_pMarkParameter[i].JumpSpeed = motor.JumpSpeed;
+            m_pMarkParameter[i].MarkDelay = motor.MarkDelay;
+            m_pMarkParameter[i].JumpDelay = motor.JumpDelay;
+            m_pMarkParameter[i].PolygonDelay = motor.PolygonDelay;
+            m_pMarkParameter[i].MarkCount = motor.MarkCount;
+
+            m_pMarkParameter[i].LaserOnDelay = laser.LaserOnDelay;
+            m_pMarkParameter[i].LaserOffDelay = laser.LaserOffDelay;
+            m_pMarkParameter[i].DutyCycle = laser.DutyCycle;
+            m_pMarkParameter[i].Frequency = laser.Frequency;
+            m_pMarkParameter[i].StandbyFrequency = laser.StandbyFrequency;
+            m_pMarkParameter[i].StandbyDutyCycle = laser.StandbyDutyCycle;
+            m_pMarkParameter[i].LaserPower = laser.LaserPower;
+            m_pMarkParameter[i].AnalogMode = laser.AnalogMode;
+            m_pMarkParameter[i].PulseWidthMode = laser.PulseWidthMode;
+            m_pMarkParameter[i].PulseWidth = laser.PulseWidth;
+            m_pMarkParameter[i].FPKDelay = laser.FPKDelay;
+            m_pMarkParameter[i].FPKLength = laser.FPKLength;
+            m_pMarkParameter[i].QDelay = laser.QDelay;
+            if ( laser.LaserDevice == cltSPI)
             {
                 m_pMarkParameter[i].AnalogMode = 1;
                 m_pMarkParameter[i].Waveform = 0;
             }
-            else if ( laserParas()->LaserDevice == cltCO2)
+            else if ( laser.LaserDevice == cltCO2)
             {
                 m_pMarkParameter[i].StandbyFrequency = 0;
                 m_pMarkParameter[i].StandbyDutyCycle = 0;
             }
         }
+
         return m_pMarkParameter;
     }
 

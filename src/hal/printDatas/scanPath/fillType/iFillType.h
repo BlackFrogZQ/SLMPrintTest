@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include "iFillTypeDef.h"
+#include "hal/vm/ncDef.h"
 #include "../../printDatasDef.h"
 #include "../scanPathDef.h"
+
 namespace TIGER_PrintDatas
 {
     class IFillType

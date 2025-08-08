@@ -3,9 +3,8 @@
 
 namespace TIGER_Megatron
 {
-#define PI 3.1415926
-#define layerCount 1
 #define Mark2D 0
+#define RepeatMarkCount 1
 typedef unsigned char byte2;
 typedef int32_t GMC_STATUS;
 constexpr int cReconnectInterval = 1000;   // 硬件掉线后重连时间，单位ms

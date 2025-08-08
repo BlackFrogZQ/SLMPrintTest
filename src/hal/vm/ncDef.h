@@ -40,7 +40,6 @@ namespace TIGER_VMSLM
             MarkCount = 1;
         }
     };
-    CGalvoMotorParas *motorParas();
 #pragma endregion
 
 #pragma region "激光参数"
@@ -71,7 +70,6 @@ namespace TIGER_VMSLM
         CLaserParas::CLaserParas()
         {}
     };
-    CLaserParas *laserParas();
 #pragma endregion
 
 #pragma region "打标参数"
@@ -88,7 +86,6 @@ namespace TIGER_VMSLM
     const QStringList cmarkTypeEnStr = {"OuterContour", "InnerContour",  "SupportContour",  "ScanFill"};
     struct CMarkParas
     {
-        CMarkType markType;
         CGalvoMotorParas motorParas;
         CLaserParas laserParas;
     };
@@ -96,6 +93,7 @@ namespace TIGER_VMSLM
     {
         CMarkParas markParas[cmtMax];
         layerDatas printDatas;
+        bool isSLCDatas;
     };
     CMarkDatas *getMarkDatas();
 #pragma endregion

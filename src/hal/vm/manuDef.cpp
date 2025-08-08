@@ -1,9 +1,11 @@
 ﻿#include "manuDef.h"
 #include "system/systemService.h"
+#include "hal/vm/ncDef.h"
 #include <QImage>
 #include <QFileInfo>
 #include <QDir>
 
+using namespace TIGER_VMSLM;
 namespace TIGER_SLMManuDef
 {
     static CManuStatus g_manuStatus;
@@ -44,5 +46,7 @@ namespace TIGER_SLMManuDef
     {
         assert(currentLayer >= 0 && currentLayer < layerStatus.allSLCLayers.pLayerDatas.size());
         layerStatus.currentSLCLayer = layerStatus.allSLCLayers.pLayerDatas[currentLayer];
+        getMarkDatas()->printDatas = layerStatus.currentSLCLayer;
+        getMarkDatas()->isSLCDatas = true;
     }
 }
