@@ -52,7 +52,7 @@ namespace TIGER_VMSLM
     };
     struct CLaserParas
     {
-        CLaserDevice LaserDevice = cltIPG;       // 激光器类型
+        CLaserDevice LaserDevice = cltSPI;       // 激光器类型
         double LaserOnDelay = 111;               // 开激光延时(单位us)
         double LaserOffDelay = 111;              // 关激光延时(单位us)
         double FPKDelay;                         // 首脉冲抑制延时(单位us)
@@ -62,7 +62,7 @@ namespace TIGER_VMSLM
         double Frequency = 20;                   // 出光时频率kHz
         double StandbyFrequency = 20;            // 不出光Q频率(单位kHz);
         double StandbyDutyCycle = 0.5;           // 不出光Q占空比(0~1);
-        double LaserPower = 50;                  // 激光能量百分比(0~100)，50代表50%
+        double LaserPower = 15;                  // 激光能量百分比(0~100)，50代表50%
         unsigned int AnalogMode = 0;             // 1代表使用模拟量输出来控制激光器能量（0~10V）
         unsigned int Waveform = 1;               // SPI激光器波形号（0~63）
         unsigned int PulseWidthMode;             // 0,不开启MOPA脉宽使能模式， 1,开启MOPA激光器脉宽使能

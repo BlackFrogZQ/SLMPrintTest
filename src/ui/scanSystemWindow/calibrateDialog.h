@@ -29,6 +29,7 @@ class CalibrateDialog : public QDialog
     Q_OBJECT
 public:
     explicit CalibrateDialog(QWidget *parent = nullptr, TIGER_VMSLM::CVM *p_pVM = nullptr);
+    ~CalibrateDialog() override;
 
 protected:
     void initLayout();

@@ -6,6 +6,7 @@
 #include "system/systemService.h"
 #include "scanSystemWindow/calibrateDialog.h"
 #include "hal/vm/vm.h"
+#include "hal/vm/manuDef.h"
 #include <QToolButton>
 #include <QHBoxLayout>
 
@@ -168,5 +169,7 @@ void CMainWindowMenuBar::slotSetGlavo()
     {
         CalibrateDialog dialog(this, m_pVM);
         dialog.exec();
+        if (auto s = TIGER_SLMManuDef::manuStatus(); s->existSLCDatas)
+            s->updataSLCLayerStatus();
     }
 }

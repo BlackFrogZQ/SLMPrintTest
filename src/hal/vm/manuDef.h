@@ -28,6 +28,7 @@ namespace TIGER_SLMManuDef
         void updateLayerStatus();
         printSLCDatas getSLCPrintDatas(const QString& p_modelFilename);
         void updataSLCLayerStatus();
+        bool existSLCDatas = false;
     };
     CManuStatus *manuStatus();
 }

@@ -32,6 +32,21 @@ CalibrateDialog::CalibrateDialog(QWidget *parent, CVM *p_pVM) : QDialog(parent),
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
 }
 
+CalibrateDialog::~CalibrateDialog()
+{
+    delPtr(m_pMarkGraph);
+    delPtr(m_pMarkShapeParas);
+    for (auto &btn : m_pMarkOperateBtns)
+    {
+        delPtr(btn);
+    }
+    m_pMarkOperateBtns.clear();
+    m_pMotorParasLabels.clear();
+    m_pMotorParasEdits.clear();
+    m_pLaserParasLabels.clear();
+    m_pLaserParasEdits.clear();
+}
+
 void CalibrateDialog::initLayout()
 {
     QGroupBox *groupMarkParas = new QGroupBox(cnStr("打标参数"));
@@ -196,6 +211,7 @@ void CalibrateDialog::initParas()
     }
     m_pLaserDevice = new QComboBox;
     m_pLaserDevice->addItems({cnStr("IPG"), cnStr("SPI"), cnStr("CO2/紫外"), cnStr("其他")});
+    m_pLaserDevice->setCurrentIndex(getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserDevice);
 }
 
 QVBoxLayout* CalibrateDialog::initParasLayout()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ParameterRoot remark="" cnName="ParameterRoot" visible="1">
-    <DZSTMarkConnectPara remark="/" cnName="振镜卡连接参数" visible="1">
+    <DZSTMarkConnectPara remark="/" cnName="振镜卡通信参数" visible="1">
         <ip remark="" cnName="ip" visible="1">
             <value>172.18.34.227</value>
         </ip>
@@ -30,7 +30,7 @@
             </GalvoMotorParas>
             <LaserParas remark="" cnName="激光参数" visible="1">
                 <LaserDevice remark="IPG*SPI*CO2/紫外" cnName="激光器类型" visible="1">
-                    <value>0</value>
+                    <value>1</value>
                 </LaserDevice>
                 <LaserOnDelay remark="us" cnName="开激光延时" visible="1">
                     <value>111</value>
@@ -60,7 +60,7 @@
                     <value>0.5</value>
                 </StandbyDutyCycle>
                 <LaserPower remark="(0~100)%, 50代表50%" cnName="激光能量百分比" visible="1">
-                    <value>50</value>
+                    <value>15</value>
                 </LaserPower>
                 <AnalogMode remark="0~10V" cnName="激光器能量" visible="1">
                     <value>0</value>
@@ -99,7 +99,7 @@
             </GalvoMotorParas>
             <LaserParas remark="" cnName="激光参数" visible="1">
                 <LaserDevice remark="IPG*SPI*CO2/紫外" cnName="激光器类型" visible="1">
-                    <value>0</value>
+                    <value>1</value>
                 </LaserDevice>
                 <LaserOnDelay remark="us" cnName="开激光延时" visible="1">
                     <value>111</value>
@@ -129,7 +129,7 @@
                     <value>0.5</value>
                 </StandbyDutyCycle>
                 <LaserPower remark="(0~100)%, 50代表50%" cnName="激光能量百分比" visible="1">
-                    <value>50</value>
+                    <value>15</value>
                 </LaserPower>
                 <AnalogMode remark="0~10V" cnName="激光器能量" visible="1">
                     <value>0</value>
@@ -168,7 +168,7 @@
             </GalvoMotorParas>
             <LaserParas remark="" cnName="激光参数" visible="1">
                 <LaserDevice remark="IPG*SPI*CO2/紫外" cnName="激光器类型" visible="1">
-                    <value>0</value>
+                    <value>1</value>
                 </LaserDevice>
                 <LaserOnDelay remark="us" cnName="开激光延时" visible="1">
                     <value>111</value>
@@ -198,7 +198,7 @@
                     <value>0.5</value>
                 </StandbyDutyCycle>
                 <LaserPower remark="(0~100)%, 50代表50%" cnName="激光能量百分比" visible="1">
-                    <value>50</value>
+                    <value>15</value>
                 </LaserPower>
                 <AnalogMode remark="0~10V" cnName="激光器能量" visible="1">
                     <value>0</value>
@@ -237,7 +237,7 @@
             </GalvoMotorParas>
             <LaserParas remark="" cnName="激光参数" visible="1">
                 <LaserDevice remark="IPG*SPI*CO2/紫外" cnName="激光器类型" visible="1">
-                    <value>0</value>
+                    <value>1</value>
                 </LaserDevice>
                 <LaserOnDelay remark="us" cnName="开激光延时" visible="1">
                     <value>111</value>
@@ -267,7 +267,7 @@
                     <value>0.5</value>
                 </StandbyDutyCycle>
                 <LaserPower remark="(0~100)%, 50代表50%" cnName="激光能量百分比" visible="1">
-                    <value>50</value>
+                    <value>15</value>
                 </LaserPower>
                 <AnalogMode remark="0~10V" cnName="激光器能量" visible="1">
                     <value>0</value>
@@ -286,13 +286,13 @@
     </DZSTMarkConnectPara>
     <PLCConnectPara remark="/" cnName="PLC通信参数" visible="1">
         <ip remark="" cnName="ip" visible="1">
-            <value>192.168.0.2</value>
+            <value>192.168.0.32</value>
         </ip>
         <port remark="" cnName="通道" visible="1">
             <value>502</value>
         </port>
         <mac remark="" cnName="端口" visible="1">
-            <value>10</value>
+            <value>64</value>
         </mac>
     </PLCConnectPara>
 </ParameterRoot>
