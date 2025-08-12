@@ -3,62 +3,62 @@
 #include "system/basic.h"
 enum CPlcColis : unsigned char
 {
-    cpcReady = 0,
-    cpcSpreadEnd,
-    cpcSpreading,
-    cpcTemp4,
-    cpcTemp5,
-    cpcTemp6,
-    cpcTemp7,
-    cpcTemp8,
-    cpcTemp9,
-    cpcTemp10,
-    cpcMax
+    plccReady = 0,
+    plccSpreading,
+    plccSpreadEnd,
+    plccTemp4,
+    plccTemp5,
+    plccTemp6,
+    plccTemp7,
+    plccTemp8,
+    plccTemp9,
+    plccTemp10,
+    plccMax
 };
 
 enum CPcDiscreteInputs : unsigned char
 {
-    cpdcStartSpread = 0,
-    cpdcStartMark,
-    cpdcTemp3,
-    cpdcTemp4,
-    cpdcTemp5,
-    cpdcTemp6,
-    cpdcTemp7,
-    cpdcTemp8,
-    cpdcTemp9,
-    cpdcTemp10,
-    cpdcMax
+    pcdReady = 0,
+    pcdStartSpread,
+    pcdStopSpread,
+    pcdStartMark,
+    pcdTemp5,
+    pcdTemp6,
+    pcdTemp7,
+    pcdTemp8,
+    pcdTemp9,
+    pcdTemp10,
+    pcdMax
 };
 
 enum CPcInputRegisters : unsigned char
 {
-    cpdTemp1 = 0,
-    cpdTemp2,
-    cpdTemp3,
-    cpdTemp4,
-    cpdTemp5,
-    cpdTemp6,
-    cpdTemp7,
-    cpdTemp8,
-    cpdTemp9,
-    cpdTemp10,
-    cpdMax
+    pciTemp1 = 0,
+    pciTemp2,
+    pciTemp3,
+    pciTemp4,
+    pciTemp5,
+    pciTemp6,
+    pciTemp7,
+    pciTemp8,
+    pciTemp9,
+    pciTemp10,
+    pciMax
 };
 
 enum CPlcHoldRegisters : unsigned char
 {
-    cphTemp1 = 0,
-    cphTemp2,
-    cphTemp3,
-    cphTemp4,
-    cphTemp5,
-    cphTemp6,
-    cphTemp7,
-    cphTemp8,
-    cphTemp9,
-    cphTemp10,
-    cphMax
+    plchTemp1 = 0,
+    plchTemp2,
+    plchTemp3,
+    plchTemp4,
+    plchTemp5,
+    plchTemp6,
+    plchTemp7,
+    plchTemp8,
+    plchTemp9,
+    plchTemp10,
+    plchMax
 };
 
 class CPLCServerData : public QLabel
@@ -79,10 +79,10 @@ signals:
 
 protected:
     bool isConnected = false;
-    bool plcColis[cpcMax] = {0};
-    bool pcDiscreteInputs[cpdcMax] = {0};
-    quint16 pcInputRegisters[cpdMax] = {0};
-    quint16 plcHoldRegisters[cphMax] = {0};
+    bool plcColis[plccMax] = {0};
+    bool pcDiscreteInputs[pcdMax] = {0};
+    quint16 pcInputRegisters[pciMax] = {0};
+    quint16 plcHoldRegisters[plchMax] = {0};
 };
 
 CPLCServerData *plcServerData();

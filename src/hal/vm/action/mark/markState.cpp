@@ -33,6 +33,7 @@ namespace TIGER_VMSLM
         myInfo << cnStr("开始创建并下载打标文件");
         m_pVM->creatUdmBin(getMarkDatas()->printDatas);
         GMCState()->setDownloadStatus(true);
+        GMCState()->setMarkFileStatus(false);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
     }
 
@@ -55,10 +56,10 @@ namespace TIGER_VMSLM
 
     void CStartMark::run()
     {
-        // assert(plcServerData()->colis(cpcReady) == true);
-        // assert(plcServerData()->colis(cpcSpreadEnd) == true);
+        // assert(plcServerData()->colis(plccReady) == true);
+        // assert(plcServerData()->colis(plccSpreadEnd) == true);
         myInfo << cnStr("开始打标");
-        m_pVM->sendDiscreteInputs(cpdcStartMark, true);
+        m_pVM->sendDiscreteInputs(pcdStartMark, true);
         m_pVM->GMCStarMark();
         GMCState()->setMarkingStatus(true);
         QTimer::singleShot(cSenMessageInterval, this, [this]{ runing(); });
@@ -75,7 +76,7 @@ namespace TIGER_VMSLM
 
         if (GMCState()->getMarkingStatus() == false)
         {
-            m_pVM->sendDiscreteInputs(cpdcStartMark, false);
+            m_pVM->sendDiscreteInputs(pcdStartMark, false);
             myInfo << cnStr("打标完成");
             changeState(m_action->m_idle);
             return;

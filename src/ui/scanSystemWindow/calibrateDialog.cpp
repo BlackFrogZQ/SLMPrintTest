@@ -2,6 +2,8 @@
 #include "markGraph/markGraphDef.h"
 #include "markGraph/iMarkGraph.h"
 #include "markGraph/markGraphCreator.h"
+#include "ui/control/ledLab.h"
+#include "ui/control/btnSmart/btnSmart.h"
 #include "hal/vm/vm.h"
 #include "hal/vm/ncDef.h"
 #include "system/basic.h"
@@ -21,6 +23,7 @@
 using namespace TIGER_MarkGraph;
 using namespace TIGER_VMSLM;
 using namespace TIGER_UI_BtnSmart;
+using namespace TIGER_UI_CONTROL;
 const int labelWidth = 250;
 const int editWidth = 100;
 const int controlHeight = 30;
@@ -30,17 +33,26 @@ CalibrateDialog::CalibrateDialog(QWidget *parent, CVM *p_pVM) : QDialog(parent),
     initLayout();
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+    vmStatusUpdated();
+
+    connect(m_pVM, &CVM::sigExecProcess, this, &CalibrateDialog::markProgressUpdated);
 }
 
 CalibrateDialog::~CalibrateDialog()
 {
     delPtr(m_pMarkGraph);
+    delPtr(m_pLaserDevice);
+    delPtr(m_pRoundRadio);
+    delPtr(m_pGridRadio);
+    delPtr(m_pSpiralFillRadio);
+    delPtr(m_pShapeButtonGroup);
+    delPtr(m_pPathIndicateCheck);
     delPtr(m_pMarkShapeParas);
-    for (auto &btn : m_pMarkOperateBtns)
-    {
-        delPtr(btn);
-    }
-    m_pMarkOperateBtns.clear();
+    delPtr(m_pMarkRangeEdit);
+    delPtr(m_pRowAndColEdit);
+    delPtr(m_pDiameterEdit);
+    delPtr(m_ledLab);
+    delPtr(m_progress);
     m_pMotorParasLabels.clear();
     m_pMotorParasEdits.clear();
     m_pLaserParasLabels.clear();
@@ -78,100 +90,6 @@ void CalibrateDialog::initLayout()
     pLayout->setMargin(10);
     pLayout->setSizeConstraint(QLayout::SetMinimumSize);
     this->setLayout(pLayout);
-}
-
-void CalibrateDialog::initOperate()
-{
-    const QHash<int, QString> cMarkBtnNames =
-    {
-        {cmbiStartMark, cnStr("开始打标")},
-        {cmbiPauseMark, cnStr("暂停打标")},
-        {cmbiContinueMark, cnStr("继续打标")},
-        {cmbiStopMark, cnStr("停止打标")}
-    };
-    assert(cMarkBtnNames.size() == cmbiMax);
-    m_pMarkOperateBtns.resize(cmbiMax);
-    for (int i = 0; i < cmbiMax; i++)
-    {
-        const QSize cButtonSize(120, 60);
-        m_pMarkOperateBtns[i] = new CBtnSmart("btn", cButtonSize);
-        m_pMarkOperateBtns[i]->setText(cMarkBtnNames[i]);
-    }
-    connect(m_pMarkOperateBtns[cmbiStartMark], &CBtnSmart::sigClick, this, [this]
-        {
-            assert(m_pVM);
-            updateMarkParas();
-            updateMarkDatas();
-            m_pVM->startMark();
-        });
-
-    m_pMarkShapeParas = new CMarkShapeParas;
-    m_pMarkRangeEdit = new QLineEdit(QString::number(m_pMarkShapeParas->markRange));
-    m_pMarkRangeEdit->setFixedSize(editWidth, controlHeight);
-    m_pRowAndColEdit = new QLineEdit(QString::number(m_pMarkShapeParas->rowAndCol));
-    m_pRowAndColEdit->setFixedSize(editWidth, controlHeight);
-    m_pDiameterEdit = new QLineEdit(QString::number(m_pMarkShapeParas->diameter));
-    m_pDiameterEdit->setFixedSize(editWidth, controlHeight);
-
-    m_pRoundRadio = new QRadioButton(cnStr("圆形"));
-    m_pGridRadio = new QRadioButton(cnStr("网格"));
-    m_pSpiralFillRadio = new QRadioButton(cnStr("螺旋填充"));
-    m_pPathIndicateCheck = new QCheckBox(cnStr("显示路径指示"));
-    m_pShapeButtonGroup = new QButtonGroup(this);
-    m_pShapeButtonGroup->addButton(m_pRoundRadio, 0);
-    m_pShapeButtonGroup->addButton(m_pGridRadio, 1);
-    m_pShapeButtonGroup->addButton(m_pSpiralFillRadio, 2);
-    connect(m_pShapeButtonGroup, QOverload<int, bool>::of(&QButtonGroup::idToggled), this, &CalibrateDialog::radioToggled);
-    m_pPathIndicateCheck->setChecked(true);
-    m_pRoundRadio->setChecked(true);
-}
-
-QVBoxLayout* CalibrateDialog::initOperateLayout()
-{
-    initOperate();
-
-    QHBoxLayout *pMarkShapeLayout = new QHBoxLayout;
-    pMarkShapeLayout->addWidget(new QLabel(cnStr("打标图形：")));
-    pMarkShapeLayout->addWidget(m_pRoundRadio);
-    pMarkShapeLayout->addWidget(m_pGridRadio);
-    pMarkShapeLayout->addWidget(m_pSpiralFillRadio);
-    pMarkShapeLayout->addWidget(m_pPathIndicateCheck);
-
-    QHBoxLayout *pShapeParasLayout = new QHBoxLayout;
-    pShapeParasLayout->addWidget(new QLabel(cnStr("形状参数：")));
-    pShapeParasLayout->addStretch();
-    pShapeParasLayout->addWidget(new QLabel(cnStr("打标范围(mm)")));
-    pShapeParasLayout->addWidget(m_pMarkRangeEdit);
-    pShapeParasLayout->addStretch();
-    pShapeParasLayout->addWidget(new QLabel(cnStr("行列数")));
-    pShapeParasLayout->addWidget(m_pRowAndColEdit);
-    pShapeParasLayout->addStretch();
-    pShapeParasLayout->addWidget(new QLabel(cnStr("直径(mm)")));
-    pShapeParasLayout->addWidget(m_pDiameterEdit);
-
-    QHBoxLayout *pBtnsLayout = new QHBoxLayout;
-    pBtnsLayout->addStretch();
-    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiStartMark]);
-    pBtnsLayout->addStretch();
-    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiPauseMark]);
-    pBtnsLayout->addStretch();
-    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiContinueMark]);
-    pBtnsLayout->addStretch();
-    pBtnsLayout->addWidget(m_pMarkOperateBtns[cmbiStopMark]);
-    pBtnsLayout->addStretch();
-
-    QVBoxLayout *pOperateLayout = new QVBoxLayout;
-    pOperateLayout->addStretch();
-    pOperateLayout->addLayout(pMarkShapeLayout);
-    pOperateLayout->addStretch();
-    pOperateLayout->addLayout(pShapeParasLayout);
-    pOperateLayout->addStretch();
-    pOperateLayout->addLayout(pBtnsLayout);
-    pOperateLayout->addStretch();
-    pOperateLayout->setSpacing(15);
-    pOperateLayout->setMargin(10);
-    pOperateLayout->setSizeConstraint(QLayout::SetMinimumSize);
-    return pOperateLayout;
 }
 
 void CalibrateDialog::initParas()
@@ -267,6 +185,105 @@ QVBoxLayout* CalibrateDialog::initParasLayout()
     return parasLayout;
 }
 
+void CalibrateDialog::initOperate()
+{
+    const QHash<int, QString> cMarkBtnNames =
+    {
+        {cmbiStartMark, cnStr("开始打标")},
+        {cmbiPauseMark, cnStr("暂停打标")},
+        {cmbiContinueMark, cnStr("继续打标")},
+        {cmbiStopMark, cnStr("停止打标")}
+    };
+    m_ledLab = new TIGER_UI_CONTROL::CLedLab(this);
+    m_ledLab->setShowBackground(false);
+    assert(cMarkBtnNames.size() == cmbiMax);
+    m_ledLab->m_pButtons.resize(cmbiMax);
+    for (int i = 0; i < cmbiMax; i++)
+    {
+        const QSize cButtonSize(120, 60);
+        m_ledLab->m_pButtons[i] = new CBtnSmart("btn", cButtonSize);
+        m_ledLab->m_pButtons[i]->setText(cMarkBtnNames[i]);
+    }
+    connect(m_ledLab->m_pButtons[cmbiStartMark], &CBtnSmart::sigClick, this, [this]
+        {
+            assert(m_pVM);
+            markParasUpdated();
+            markDatasUpdated();
+            m_pVM->startMark();
+        });
+    connect(m_ledLab->m_pButtons[cmbiPauseMark], &CBtnSmart::sigClick, m_pVM, &CVM::GMCPauseMark);
+    connect(m_ledLab->m_pButtons[cmbiContinueMark], &CBtnSmart::sigClick, m_pVM, &CVM::GMCContinueMark);
+    connect(m_ledLab->m_pButtons[cmbiStopMark], &CBtnSmart::sigClick, m_pVM, &CVM::GMCStopMark);
+
+    m_pMarkShapeParas = new CMarkShapeParas;
+    m_pMarkRangeEdit = new QLineEdit(QString::number(m_pMarkShapeParas->markRange));
+    m_pMarkRangeEdit->setFixedSize(editWidth, controlHeight);
+    m_pRowAndColEdit = new QLineEdit(QString::number(m_pMarkShapeParas->rowAndCol));
+    m_pRowAndColEdit->setFixedSize(editWidth, controlHeight);
+    m_pDiameterEdit = new QLineEdit(QString::number(m_pMarkShapeParas->diameter));
+    m_pDiameterEdit->setFixedSize(editWidth, controlHeight);
+
+    m_pRoundRadio = new QRadioButton(cnStr("圆形"));
+    m_pGridRadio = new QRadioButton(cnStr("网格"));
+    m_pSpiralFillRadio = new QRadioButton(cnStr("螺旋填充"));
+    m_pPathIndicateCheck = new QCheckBox(cnStr("显示路径指示"));
+    m_pShapeButtonGroup = new QButtonGroup(this);
+    m_pShapeButtonGroup->addButton(m_pRoundRadio, 0);
+    m_pShapeButtonGroup->addButton(m_pGridRadio, 1);
+    m_pShapeButtonGroup->addButton(m_pSpiralFillRadio, 2);
+    connect(m_pShapeButtonGroup, QOverload<int, bool>::of(&QButtonGroup::idToggled), this, &CalibrateDialog::radioToggled);
+    m_pPathIndicateCheck->setChecked(true);
+    m_pRoundRadio->setChecked(true);
+}
+
+QVBoxLayout* CalibrateDialog::initOperateLayout()
+{
+    initOperate();
+
+    QHBoxLayout *pMarkShapeLayout = new QHBoxLayout;
+    pMarkShapeLayout->addWidget(new QLabel(cnStr("打标图形：")));
+    pMarkShapeLayout->addWidget(m_pRoundRadio);
+    pMarkShapeLayout->addWidget(m_pGridRadio);
+    pMarkShapeLayout->addWidget(m_pSpiralFillRadio);
+    pMarkShapeLayout->addWidget(m_pPathIndicateCheck);
+
+    QHBoxLayout *pShapeParasLayout = new QHBoxLayout;
+    pShapeParasLayout->addWidget(new QLabel(cnStr("形状参数：")));
+    pShapeParasLayout->addStretch();
+    pShapeParasLayout->addWidget(new QLabel(cnStr("打标范围(mm)")));
+    pShapeParasLayout->addWidget(m_pMarkRangeEdit);
+    pShapeParasLayout->addStretch();
+    pShapeParasLayout->addWidget(new QLabel(cnStr("行列数")));
+    pShapeParasLayout->addWidget(m_pRowAndColEdit);
+    pShapeParasLayout->addStretch();
+    pShapeParasLayout->addWidget(new QLabel(cnStr("直径(mm)")));
+    pShapeParasLayout->addWidget(m_pDiameterEdit);
+
+    QHBoxLayout *pBtnsLayout = new QHBoxLayout;
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_ledLab->m_pButtons[cmbiStartMark]);
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_ledLab->m_pButtons[cmbiPauseMark]);
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_ledLab->m_pButtons[cmbiContinueMark]);
+    pBtnsLayout->addStretch();
+    pBtnsLayout->addWidget(m_ledLab->m_pButtons[cmbiStopMark]);
+    pBtnsLayout->addStretch();
+
+    QVBoxLayout *pOperateLayout = new QVBoxLayout;
+    pOperateLayout->addStretch();
+    pOperateLayout->addLayout(pMarkShapeLayout);
+    pOperateLayout->addStretch();
+    pOperateLayout->addLayout(pShapeParasLayout);
+    pOperateLayout->addStretch();
+    pOperateLayout->addLayout(pBtnsLayout);
+    pOperateLayout->addStretch();
+    pOperateLayout->setSpacing(15);
+    pOperateLayout->setMargin(10);
+    pOperateLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    return pOperateLayout;
+}
+
 void CalibrateDialog::radioToggled(int p_id, bool p_checked)
 {
     if (!p_checked) return;
@@ -282,7 +299,7 @@ void CalibrateDialog::radioToggled(int p_id, bool p_checked)
     assert(m_pMarkGraph != nullptr);
 }
 
-void CalibrateDialog::updateMarkDatas()
+void CalibrateDialog::markDatasUpdated()
 {
     assert(m_pMarkGraph);
     m_pMarkShapeParas->markRange = m_pMarkRangeEdit->text().toDouble();
@@ -292,7 +309,7 @@ void CalibrateDialog::updateMarkDatas()
     getMarkDatas()->printDatas = *m_pMarkGraph->getGraphDatas(m_pMarkShapeParas);
 }
 
-void CalibrateDialog::updateMarkParas()
+void CalibrateDialog::markParasUpdated()
 {
     getMarkDatas()->markParas[cmtMarkTest].motorParas.MarkSpeed = m_pMotorParasEdits[mpMarkSpeed]->text().toUInt();
     getMarkDatas()->markParas[cmtMarkTest].motorParas.JumpSpeed = m_pMotorParasEdits[mpJumpSpeed]->text().toUInt();
@@ -309,4 +326,38 @@ void CalibrateDialog::updateMarkParas()
     getMarkDatas()->markParas[cmtMarkTest].laserParas.LaserDevice = static_cast<CLaserDevice>(m_pLaserDevice->currentIndex());
 
     getMarkDatas()->isSLCDatas = false;
+}
+
+void CalibrateDialog::markProgressUpdated(int p_value)
+{
+    m_progress->setValue(p_value);
+}
+
+void CalibrateDialog::vmStatusUpdated()
+{
+    if(!m_pVM->m_vmStatusInfo.GMCConnected)
+    {
+        m_ledLab->setBtns(false);
+        return;
+    }
+    switch (m_pVM->m_vmStatusInfo.vmMarkStatus)
+    {
+    case cmsIdle:
+        m_ledLab->setBtns(true);
+        break;
+    case cmsStartMark:
+        m_ledLab->setBtns(true);
+        break;
+    case cmsPauseMark:
+        m_ledLab->setBtns(true);
+        break;
+    case cmsContinueMark:
+        m_ledLab->setBtns(true);
+        break;
+    case cmsStopMark:
+        m_ledLab->setBtns(true);
+        break;
+    default:
+        break;
+    }
 }

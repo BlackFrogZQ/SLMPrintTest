@@ -12,10 +12,10 @@ namespace TIGER_MarkGraph
     class IMarkGraph;
     class CMarkGraphCreator;
 }
-namespace TIGER_UI_BtnSmart
+namespace TIGER_UI_CONTROL
 {
-    class CBtnSmart;
-};
+    class CLedLab;
+}
 class QLabel;
 class QLineEdit;
 class QComboBox;
@@ -39,8 +39,10 @@ protected:
     QVBoxLayout* initParasLayout();
 
     void radioToggled(int p_id, bool p_checked);
-    void updateMarkDatas();
-    void updateMarkParas();
+    void markDatasUpdated();
+    void markParasUpdated();
+    void markProgressUpdated(int p_value);
+    void vmStatusUpdated();
 
 protected:
     struct markParasHash
@@ -95,7 +97,7 @@ private:
     QLineEdit *m_pMarkRangeEdit;
     QLineEdit *m_pRowAndColEdit;
     QLineEdit *m_pDiameterEdit;
-    QVector<TIGER_UI_BtnSmart::CBtnSmart *>  m_pMarkOperateBtns;
+    TIGER_UI_CONTROL::CLedLab *m_ledLab;
 
     QProgressBar *m_progress;
 };

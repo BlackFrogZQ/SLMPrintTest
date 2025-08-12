@@ -5,7 +5,7 @@
 #include <QPainterPath>
 namespace TIGER_UI_CONTROL
 {
-    CLedLab::CLedLab(QWidget *parent) : QLabel(parent)
+    CLedLab::CLedLab(QWidget *parent) : QLabel(parent), m_showBackground(true)
     {
         setFont(cFont);
         setAttribute(Qt::WA_TranslucentBackground);
@@ -24,11 +24,17 @@ namespace TIGER_UI_CONTROL
         paint.setRenderHint(QPainter::Antialiasing);
         QPainterPath path;
         path.addRoundedRect(this->rect(), 5, 5);
+
         // Qt默认颜色
-        paint.fillPath(path, QColor(240, 240, 240));
-        paint.setPen(QPen(QColor(128, 128, 128), 2));
-        paint.drawPath(path);
+        if (m_showBackground)
+        {
+            paint.fillPath(path, QColor(240, 240, 240));
+            paint.setPen(QPen(QColor(128, 128, 128), 2));
+            paint.drawPath(path);
+        }
+
         QLabel::paintEvent(event);
+        paint.end();
     }
 
     void CLedLab::setBtns(bool p_isNormal)

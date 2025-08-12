@@ -19,6 +19,8 @@ namespace TIGER_UI_SLM
     {
         init();
         initLayout();
+        connect(m_pVM, &CVM::sigVMStatusUpdate, this, &CManuPanel::vmStatusUpdated);
+        vmStatusUpdated();
     }
     CManuPanel::~CManuPanel()
     {
@@ -79,5 +81,39 @@ namespace TIGER_UI_SLM
         pLayout->setSizeConstraint(QLayout::SetMinimumSize);
         this->setMinimumSize(pLayout->sizeHint());
         this->setLayout(pLayout);
+    }
+
+    void CManuPanel::vmStatusUpdated()
+    {
+        if(!m_pVM->m_vmStatusInfo.GMCConnected || !m_pVM->m_vmStatusInfo.plcConnected)
+        {
+            setBtns(false);
+            return;
+        }
+        switch (m_pVM->m_vmStatusInfo.vmWorkStatus)
+        {
+        case vmsIdle:
+            setBtns(true);
+            break;
+        case vmsStartManu:
+            setOnlyCheckBtn(cbiStartManu);
+            m_pButtons[cbiPauseManu]->setNormal();
+            break;
+        case vmsPauseManu:
+            setOnlyCheckBtn(cbiPauseManu);
+            break;
+        case vmsManuOnce:
+            setOnlyCheckBtn(cbiManuOnce);
+            break;
+        case vmsSpread:
+            setOnlyCheckBtn(cbiSpread);
+            break;
+        case vmsMark:
+            setOnlyCheckBtn(cbiAutoMark);
+            break;
+        default:
+            setBtns(false);
+            break;
+        }
     }
 }

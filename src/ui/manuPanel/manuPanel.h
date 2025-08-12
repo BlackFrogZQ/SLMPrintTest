@@ -19,6 +19,9 @@ namespace TIGER_UI_SLM
         void init();
         void initLayout();
 
+    protected slots:
+        void vmStatusUpdated();
+
     protected:
         enum CButtonID
         {

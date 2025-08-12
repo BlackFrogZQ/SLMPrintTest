@@ -30,7 +30,7 @@ namespace TIGER_VMSLM
 
     void CManuOnceCycle::run()
     {
-        assert(plcServerData()->colis(cpcReady) == true);
+        assert(plcServerData()->colis(plccReady) == true);
         m_updateLayerFuture = QtConcurrent::run([this]
         {
             manuStatus()->updataSLCLayerStatus();

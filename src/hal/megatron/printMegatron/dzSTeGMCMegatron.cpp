@@ -29,7 +29,7 @@ namespace TIGER_Megatron
 {
     CDZSTeGMCMegatron::CDZSTeGMCMegatron(HWND p_hWnd): m_hWnd(p_hWnd), m_ipIndex(0), pErrorCode(HM_OK)
     {
-        m_pMarkParameter = new MarkParameter[mftMax];
+        m_pMarkParameter = new MarkParameter[cmtMax];
         init();
     }
 
@@ -123,7 +123,7 @@ namespace TIGER_Megatron
     LRESULT CDZSTeGMCMegatron::OnMsgUDMDownloadEnd(WPARAM wParam, LPARAM lParam)
     {
         GMCState()->setDownloadStatus(false);
-        printError(cnStr("UDM下载完成"));
+        GMCState()->setMarkFileStatus(true);
         emit sigDownloadEnd();
         return 0;
     }
@@ -131,7 +131,6 @@ namespace TIGER_Megatron
     LRESULT CDZSTeGMCMegatron::OnMsgUDMRunHalt(WPARAM wParam, LPARAM lParam)
     {
         GMCState()->setMarkingStatus(false);
-        // printError(cnStr("打标完成"));
         emit sigMarkEnd();
         return 0;
     }
@@ -195,8 +194,6 @@ namespace TIGER_Megatron
 
     MarkParameter* CDZSTeGMCMegatron::getMarkParameter()
     {
-        MarkParameter *m_pMarkParameter = new MarkParameter[cmtMax];
-
         for (size_t i = 0; i < cmtMax; i++)
         {
             const CGalvoMotorParas& motor = getMarkDatas()->markParas[i].motorParas;

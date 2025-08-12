@@ -105,15 +105,15 @@ void CModbusServer::dataChanged(QModbusDataUnit::RegisterType table, int address
         switch (table)
         {
         case QModbusDataUnit::Coils:
-            assert(addr >= 0 && addr < cpcMax);
+            assert(addr >= 0 && addr < plccMax);
             plcServerData()->plcColis[addr] = (vaule != 0);
             break;
         case QModbusDataUnit::DiscreteInputs:
-            assert(addr >= 0 && addr < cpdcMax);
+            assert(addr >= 0 && addr < pcdMax);
             plcServerData()->pcDiscreteInputs[addr] = (vaule != 0);
             break;
         case QModbusDataUnit::HoldingRegisters:
-            assert(addr >= 0 && addr < cphMax);
+            assert(addr >= 0 && addr < plchMax);
             plcServerData()->plcHoldRegisters[addr] = vaule;
             break;
         default:

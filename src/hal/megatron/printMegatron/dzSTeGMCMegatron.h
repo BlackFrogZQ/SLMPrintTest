@@ -58,12 +58,14 @@ namespace TIGER_Megatron
     public:
         void setDownloadStatus(bool p_isDownload) { m_bIsDownload = p_isDownload; }
         void setMarkingStatus(bool p_isMarking) { m_bIsMarking = p_isMarking; }
+        void setMarkFileStatus(bool p_isExist) { m_bExistMarkFile = p_isExist;}
         bool getDownloadStatus() const { return m_bIsDownload; }
         bool getMarkingStatus() const { return m_bIsMarking; }
 
     private:
-        bool m_bIsDownload = false; // 是否下载打标文件
-        bool m_bIsMarking = false;  // 是否正在打标
+        bool m_bIsDownload = false;
+        bool m_bIsMarking = false;
+        bool m_bExistMarkFile = false;
     };
     CDZSTeGMCState *GMCState();
 }
